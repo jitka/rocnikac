@@ -2,3 +2,6 @@ hypercube-0.7/
 hypercube
 hypercube-cli
 tmp/
+*.swp
+program-dbg
+program-opt
