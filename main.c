@@ -1,20 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #define N 5
-#define GREEN 1
+#define TRUE 1
+#define FALSE 0
+#define NONE 0
+#define GREEN 1 //zeleny zacina
 #define RED 2
 
 int timer=0;
 
-
-void print_adjacency_matrix(int player, int m[N][N], char * text){
+void print_adjacency_matrix(int m[N][N],char *text){
 	char title[100];
-       	if (player==GREEN)
-		sprintf(title,"tmp/%d-green%s",timer,text);
-       	if (player==RED)
-		sprintf(title,"tmp/%d-red%s",timer,text);
+	sprintf(title,"tmp/%d%s",timer++,text);
 	FILE *F = fopen(title,"w");
-//	printf("%s\n",title);
 	fprintf(F,"%d\n",N);
 	for (int i=0; i<N; i++){
 		for (int j=0; j<N; j++)
@@ -27,21 +25,49 @@ void print_adjacency_matrix(int player, int m[N][N], char * text){
 void color_edge(int player, int m[N][N], int u, int v){
 	m[u][v]=player;
 	m[v][u]=player;
-	timer++;
+}
+
+int has_four(int player, int m[N][N]){
+	return TRUE;
+}
+
+int red_plays(int m[N][N]){
+	return RED;
+}
+
+int green_plays(int m[N][N]){
+	for (int i=0; i<N; i++)
+		for (int j=i+1; j<N; j++)
+			if (m[N][N]==NONE){
+				color_edge(GREEN,m,i,j);
+				if (has_four(GREEN,m)){
+					color_edge(NONE,m,i,j);
+					return GREEN;
+				}
+				if (red_plays(m)==GREEN)
+					return GREEN;
+			}
 }
 
 int main(){
 
-	int m[N][N]; //používá se ta část kde je první souřadnice vyšší
+	int m[N][N];
 	for (int i=0; i<N; i++)
 		for (int j=0; j<N; j++)
-			m[i][j]=0;
-	
-	print_adjacency_matrix(RED,m,"");
+			m[i][j]=NONE;
+/*	
+	print_adjacency_matrix(m,"");
 	color_edge(GREEN,m,2,3);
-	print_adjacency_matrix(GREEN,m,"");
+	print_adjacency_matrix(m,"");
 	color_edge(RED,m,4,1);
-	print_adjacency_matrix(RED,m,"");
+	print_adjacency_matrix(m,"");
+*/
 
+	//ma zelny=prvni zarucenou vyhru?
+	if (green_plays(m) == GREEN)
+		printf("ve hre na K%d ma prvni vyhravajici strategii\n",N);
+	else
+		printf("ve hre na K%d ma druhy neprohravajici strategii\n",N);
+		
 	return 0;
 }
