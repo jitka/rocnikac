@@ -98,16 +98,15 @@ fixpointy n (vel:permutace) =
         in nasobek n (nasobek n obarveni1 obarveni2) $ fixpointy n permutace
 
 --generuje vsechny setrizene zpusoby jak nastitat k
-typyPermutaci n = rozdel' 1 n
+typyPermutaci n = map reverse $ rozdel' 1 n
         where
         rozdel' _ 0 = [[]]
         rozdel' k n | k > n = []
                     | otherwise = map (k:) (rozdel' k (n-k)) ++ rozdel' (k+1) n
 
---kolik permutaci toho typu je
-pocetTakovych permutace = k5' permutace where
-        k5' [] = 1
-        k5' (vel:permutace) = ((vel+(sum permutace)) `nad` vel )*(product [1..vel-1])*(k5' permutace)
+--kolik permutaci toho typu je TODO toto je asi blbe
+fac x = product [1..x]
+pocetTakovych permutace = (fac $ sum permutace) `div` ((product permutace) * (product $ map fac $ map genericLength $ group permutace))
 
 --pocet stavu hry po nejakem tahu az na izomorfizmus 
 f2 n tah = (sum $ map (\per -> (k4 n tah per)*(pocetTakovych per)) $ typyPermutaci n) `div` (product [1..n]) where
@@ -120,7 +119,7 @@ f6 n = let tabulka = (map (\p -> (p,fixpointy n p)) $ typyPermutaci n) `using` p
            barvy tah = ((tah+1)`div`2, tah`div`2)
            vytahni tah permutace = snd $ head $ (filter (\(b,_) -> ( b == barvy tah )) $ vytahni' permutace) ++ [((undefined,undefined),0)]
            vysl n tah = (sum $ map (\per -> (vytahni tah per)*(pocetTakovych per)) $ typyPermutaci n) `div` (product [1..n])
-        in tabulka `deepseq` map (\tah -> (tah,f1 n tah, vysl n tah )) [1..(n`nad`2)]
+        in tabulka `deepseq` map (\tah -> (tah,l $ f1 n tah,l $ vysl n tah )) [1..(n`nad`2)]
 
 main = print $ map (\x -> (x,f6 x)) [8..18]
 
