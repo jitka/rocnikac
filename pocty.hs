@@ -76,6 +76,7 @@ f1 n tah = let pul = ((tah+1) `div` 2)
 --
 --
 
+-- [((zelena,cervena),pocet)]
 scvrkavani :: Integer -> [((Integer,Integer),Integer)] -> [((Integer,Integer),Integer)]
 scvrkavani n x = filter (\x->snd x /= 0) $ assocs $  accumArray (+) 0 ((0,0),(n`nad`2,n`nad`2)) x
 
@@ -104,9 +105,11 @@ typyPermutaci n = map reverse $ rozdel' 1 n
         rozdel' k n | k > n = []
                     | otherwise = map (k:) (rozdel' k (n-k)) ++ rozdel' (k+1) n
 
---kolik permutaci toho typu je TODO toto je asi blbe
+--kolik permutaci toho typu je
 fac x = product [1..x]
-pocetTakovych permutace = (fac $ sum permutace) `div` ((product permutace) * (product $ map fac $ map genericLength $ group permutace))
+vyber [] = 1
+vyber (p:permutace) = ((sum (p:permutace)) `nad` p) * (fac (p-1)) * (vyber permutace)
+pocetTakovych permutace = (vyber permutace) * (product $ map fac $ map genericLength $ group permutace)
 
 --pocet stavu hry po nejakem tahu az na izomorfizmus 
 f2 n tah = (sum $ map (\per -> (k4 n tah per)*(pocetTakovych per)) $ typyPermutaci n) `div` (product [1..n]) where
