@@ -3,6 +3,6 @@ hrany usporadam abecedne podle cisel vrcholu kam vedou a kazde dam
 dva bity intu kam ulozim barvu nebo ze neni obarvena
 
 grafy na 17 nebo 18 hranach ukladam podobne jen hrany rozdelim do skupinek
-po 17 a jejich stavy popisu dohromady cislem v dvojkove soustave
-to prevedu do dvojkove soutavavy a ulozim do 27 bitu intu.
+po 3 a jejich stavy popisu dohromady cislem v dvojkove soustave
+to prevedu do dvojkove soutavavy a ulozim do 5 bitu intu.
 
