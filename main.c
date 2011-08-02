@@ -1,19 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#define N 5
+#define N 6
 #define CACHE_SIZE 20//logaritmus velikosti 20..33M 25..1G
 #define TRUE 1
 #define FALSE 0
-#define GREEN 0
-#define RED 1
+#define GREEN 1
+#define RED 2
 
 
 typedef uint64_t luint;
 int timer=0;
 
 #if N > 16
-//5-ciferne cisla v dvojkove a 3-ciferne v trojkove soustave
+//5-ciferne cisla v dvojkove 
+//a 3-ciferne v trojkove soustave zapsane do sesti bitu
 uint short_to_long[32];
 uint long_to_short[64];
 #endif
@@ -25,6 +26,11 @@ static inline void swap_uint(uint *x, uint *y){
 	uint tmp = *x;
 	*x = *y;
 	*y = tmp;
+}
+
+static inline void copy_graph(luint m1[4], luint m2[4]){
+	for (int i = 0; i < 4; i++)
+		m1[i] = m2[i];
 }
 
 static inline void binary_luint(luint n){
@@ -44,12 +50,13 @@ static inline void binary_uint(uint n){
 }
 
 
-static inline void set_edge_color(int player, luint m[4], int *hash, uint u, uint v){
-	//zeleny 10 cerveny 01 zadna 00
+static inline int set_edge_color(int player, luint m[4], int hash, uint u, uint v){
+	//poradove cislo hrany
 	if ( u < v )
 		swap_uint(&u,&v);
 	int pos = (u*(u+1))/2 + v;
-	*hash = *hash ^ cache_numbers[player][pos];
+	printf("%d-%d pos%d\n",u,v,pos);
+	//zeleny 10 cerveny 01 zadna 00
 #if N > 16
 	int pos5 = (pos/3)*5; //zacatek klicovich peti bitu
 	uint o = 0; //tech pet klicovich bitu
@@ -62,16 +69,20 @@ static inline void set_edge_color(int player, luint m[4], int *hash, uint u, uin
 #else
 	m[(pos*2+player)/64] |= (1llu)<<((pos*2+player)%64);
 #endif
+
+//	printf("kon\n");
+	//nova hodnota hasovaci fce TODO T
+	return hash ^ cache_numbers[player][pos];
 }
 
-static inline int get_edge_color(luint m[4], int u, int v){
+static inline int get_edge_color(luint m[4], uint u, uint v){
 	//return 0 zadna 1 zelena 2 cervena
-	int pos; //poradi dane hrany
-	if (u > v){
-		pos = (u*(u+1))/2 + v;
-	} else {
-		pos = (v*(v+1))/2 + u;
-	}
+	
+	//poradove cislo hrany
+	if ( u < v )
+		swap_uint(&u,&v);
+	int pos = (u*(u+1))/2 + v;
+
 #if N > 16
 	int pos5 = (pos/3)*5; //zacatek klicovich peti bitu
 	luint x = 0; //tech pet klicovich bitu
@@ -85,7 +96,7 @@ static inline int get_edge_color(luint m[4], int u, int v){
 
 void print_adjacency_matrix(luint m[4],char *text){
 	char title[100];
-	sprintf(title,"tmp/%d%s",timer,text);
+	sprintf(title,"tmp/%d%s",timer++,text);
 	FILE *F = fopen(title,"w");
 	fprintf(F,"%d\n",N);
 	for (int i=0; i<N; i++){
@@ -98,12 +109,14 @@ void print_adjacency_matrix(luint m[4],char *text){
 }
 
 static inline void evaluation_1(uint m[N][N],uint evaluation[N]){
+	//vsechny vrcholy jsou si rovny
 	m[0][0]=m[0][0];
 	for (int i=0; i<N; i++)
 		evaluation[i] = 0;
 }
 
 static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
+	//vraci stupne vrcholu
 	for (int i=0; i<N; i++){
 		evaluation[i] = 0u;
 		for (int j=0; j<N; j++)
@@ -113,6 +126,7 @@ static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
 }
 
 static inline void normalization(luint m[4]){
+	//TODO netestovane
 	//prevede m na matici sousednosti
 	uint adjacency_matrix[N][N];
 	for (int i=0; i<N; i++)
@@ -155,7 +169,7 @@ static inline void normalization(luint m[4]){
 	for (uint i=0; i<N; i++)
 		for (uint j=0; j<N; j++)
 			if (adjacency_matrix[i][j]>0)
-				set_edge_color(adjacency_matrix[i][j]-1,&m[0],NULL,i,j);
+				set_edge_color(adjacency_matrix[i][j]-1,m,0,i,j);
 	
 }
 
@@ -167,7 +181,7 @@ static inline void cache_init(){
 }
 
 int number_of_threat(int player,luint m[4], int u, int v){
-	//TODO netestovane
+	//TODO netestovane, zatim nepouzivane, melo by to ale vracet i kde
 	player++; //aby cislo hrace odpovidalo barve jeho hrany
 	int third[N]; //ktere vrcholy spolu s u,v tvori barevny troj
 	int count = 0;
@@ -204,7 +218,7 @@ int number_of_threat(int player,luint m[4], int u, int v){
 }
 
 int win(int player, luint m[4], int u, int v){
-	//TODO netestovane
+	//TODO netestovane, pouziva se
 	player++; //aby cislo hrace odpovidalo barve jeho hrany
 	int third[N]; //ktere vrcholy spolu s u,v tvori barevny trojuhernik
 	int count = 0;
@@ -222,6 +236,7 @@ int win(int player, luint m[4], int u, int v){
 }
 
 int minimax(int player, luint m[4], int depth, int hash){
+	//TODO netestovane
 	int max = -1;
 	int min = 1;
 	luint m2[4];
@@ -231,12 +246,14 @@ int minimax(int player, luint m[4], int depth, int hash){
 	for (uint i=0; i<N; i++)
 		for (uint j=i+1; j<N; j++){
 			if (get_edge_color(m,i,j) == 0){
+//	print_adjacency_matrix(m,"");
+//	normalization(m);
+//	timer++;
 				//nepouzita hrana zkusim ji
 				for (int i = 0; i < 4; i++)
 					m2[i]=m[i];
-				hash2 = hash;
 				//TODO mam hrozbu? kolik?
-				set_edge_color(player,m2,&hash2,i,j);
+				hash2 = set_edge_color(player,m2,hash,i,j);
 				if (win(player,m2,i,j)){
 					if (player == GREEN)
 						return 1;
@@ -277,26 +294,21 @@ int main(){
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
 	}
-	
-	printf("vysl %d\n",minimax(GREEN,m,0,0));
-	
-/*	print_adjacency_matrix(m,"");
 
-	set_edge_color(GREEN,m,6,2);
-	timer++;
-	print_adjacency_matrix(m,"");
-	
-	set_edge_color(RED,m,4,2);
-	timer++;
-	print_adjacency_matrix(m,"");
+//	printf("vysl %d\n",minimax(GREEN,m,0,0));
 
-	set_edge_color(RED,m,12,2);
-	timer++;
-	print_adjacency_matrix(m,"");
 
-	normalization(m);
-	timer++;
-	print_adjacency_matrix(m,"");
-*/
+	set_edge_color(GREEN,m,0,1,2);
+//	set_edge_color(RED,m,0,4,2);
+//	set_edge_color(RED,m,0,0,1);
+//	set_edge_color(RED,m,0,0,3);
+//	set_edge_color(RED,m,0,5,4);
+//	set_edge_color(RED,m,0,0,6);
+	set_edge_color(RED,m,0,4,3);
+	print_adjacency_matrix(m,"pred");
+
+//	normalization(m);
+//	print_adjacency_matrix(m,"po");
+
 	return 0;
 }
