@@ -35,10 +35,11 @@ static inline void copy_graph(luint m1[4], luint m2[4]){
 
 static inline void binary_luint(luint n){
 	for (int i = 0; i < 64; i++){
-		if (i%5==0)
+		if (i%2==0)
 			printf(" ");
 		printf("%d", !!(n&(1llu<<i)) );
 	}
+	printf("\n");
 }
 
 static inline void binary_uint(uint n){
@@ -47,15 +48,17 @@ static inline void binary_uint(uint n){
 			printf(" ");
 		printf("%d", !!(n&(1<<i)) );
 	}
+	printf("\n");
 }
 
 
 static inline int set_edge_color(int player, luint m[4], int hash, uint u, uint v){
+
 	//poradove cislo hrany
 	if ( u < v )
 		swap_uint(&u,&v);
 	int pos = (u*(u+1))/2 + v;
-	printf("%d-%d pos%d\n",u,v,pos);
+
 	//zeleny 10 cerveny 01 zadna 00
 #if N > 16
 	int pos5 = (pos/3)*5; //zacatek klicovich peti bitu
@@ -66,8 +69,10 @@ static inline int set_edge_color(int player, luint m[4], int hash, uint u, uint 
 	n = long_to_short[ short_to_long[o] | (1llu << ((pos%3)*2+player)) ];
 	for (int i = 0; i < 5; i++)
 		m[(pos5+i)/64] |= ( (luint) !!(n & (1<<i)) ) * (1llu<<((pos5+i)%64)) ;
+
 #else
-	m[(pos*2+player)/64] |= (1llu)<<((pos*2+player)%64);
+	//pos*2+player-1 je bit kde ma byt jednicka
+	m[(pos*2+player-1)/64] |= (1llu)<<((pos*2+player-1)%64);
 #endif
 
 	//nova hodnota hasovaci fce TODO T
@@ -298,16 +303,42 @@ int main(){
 
 
 	set_edge_color(GREEN,m,0,1,2);
-//	set_edge_color(RED,m,0,4,2);
-//	set_edge_color(RED,m,0,0,1);
-//	set_edge_color(RED,m,0,0,3);
-//	set_edge_color(RED,m,0,5,4);
-//	set_edge_color(RED,m,0,0,6);
+	set_edge_color(RED,m,0,4,2);
+	set_edge_color(RED,m,0,0,1);
+	set_edge_color(RED,m,0,0,3);
+	set_edge_color(RED,m,0,5,4);
+	set_edge_color(RED,m,0,0,6);
 	set_edge_color(RED,m,0,4,3);
 	print_adjacency_matrix(m,"pred");
 
-//	normalization(m);
-//	print_adjacency_matrix(m,"po");
+	normalization(m);
+	print_adjacency_matrix(m,"po");
+
+	for (int i=0; i<4; i++){
+		m[i]=0llu;
+	}
+	set_edge_color(RED,m,0,1,4);
+	set_edge_color(RED,m,0,3,5);
+	set_edge_color(RED,m,0,2,4);
+	set_edge_color(RED,m,0,0,1);
+	set_edge_color(RED,m,0,5,3);
+	set_edge_color(RED,m,0,2,1);
+	print_adjacency_matrix(m,"pred");
+
+	normalization(m);
+	print_adjacency_matrix(m,"po");
+
+	for (int i=0; i<4; i++){
+		m[i]=0llu;
+	}
+	set_edge_color(RED,m,0,1,4);
+	set_edge_color(RED,m,0,3,5);
+	set_edge_color(RED,m,0,2,4);
+	print_adjacency_matrix(m,"pred");
+
+	normalization(m);
+	print_adjacency_matrix(m,"po");
+
 
 	return 0;
 }
