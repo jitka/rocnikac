@@ -70,9 +70,8 @@ static inline int set_edge_color(int player, luint m[4], int hash, uint u, uint 
 	m[(pos*2+player)/64] |= (1llu)<<((pos*2+player)%64);
 #endif
 
-//	printf("kon\n");
 	//nova hodnota hasovaci fce TODO T
-	return hash ^ cache_numbers[player][pos];
+	return hash ^ cache_numbers[player-1][pos];
 }
 
 static inline int get_edge_color(luint m[4], uint u, uint v){
