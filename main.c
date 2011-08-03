@@ -130,7 +130,6 @@ static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
 }
 
 static inline void normalization(luint m[4]){
-	//TODO netestovane
 	//prevede m na matici sousednosti
 	uint adjacency_matrix[N][N];
 	for (int i=0; i<N; i++)
@@ -222,8 +221,6 @@ int number_of_threat(int player,luint m[4], int u, int v){
 }
 
 int win(int player, luint m[4], int u, int v){
-	//TODO netestovane, pouziva se
-	player++; //aby cislo hrace odpovidalo barve jeho hrany
 	int third[N]; //ktere vrcholy spolu s u,v tvori barevny trojuhernik
 	int count = 0;
 	for (int i = 0; i < N; i++){
@@ -301,7 +298,7 @@ int main(){
 
 //	printf("vysl %d\n",minimax(GREEN,m,0,0));
 
-
+	/*
 	set_edge_color(GREEN,m,0,1,2);
 	set_edge_color(RED,m,0,4,2);
 	set_edge_color(RED,m,0,0,1);
@@ -338,7 +335,7 @@ int main(){
 
 	normalization(m);
 	print_adjacency_matrix(m,"po");
-
+*/
 
 	return 0;
 }
