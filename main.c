@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#define N 6
-#define CACHE_SIZE 20//logaritmus velikosti 20..33M 25..1G
+#define N 5
+#define CACHE_SIZE 20//logaritmus stavu ktere tam budou
 #define TRUE 1
 #define FALSE 0
 #define GREEN 1
@@ -19,8 +19,16 @@ uint short_to_long[32];
 uint long_to_short[64];
 #endif
 
-luint cache[1<<CACHE_SIZE];
+luint cache[4*(1<<CACHE_SIZE)];
 uint cache_numbers[2][(N*(N+1))/2];
+
+static inline int next(int i){
+	if (i==GREEN)
+		return RED;
+	if (i==RED)
+		return GREEN;
+	return 42;
+}
 
 static inline void swap_uint(uint *x, uint *y){
 	uint tmp = *x;
@@ -99,6 +107,8 @@ static inline int get_edge_color(luint m[4], uint u, uint v){
 }
 
 void print_adjacency_matrix(luint m[4],char *text){
+	if (timer>19)
+		return;
 	char title[100];
 	sprintf(title,"tmp/%d%s",timer++,text);
 	FILE *F = fopen(title,"w");
@@ -145,6 +155,8 @@ static inline void normalization(luint m[4]){
 	printf("\n");
 */
 	//tridit zaroven permutace a matici
+	//TODO nebylo by tu rychlejsi nejdriv vymyslet na kolik nejmene
+	//a ktera prehozeni to jde?
 	inline void swap(int x, int y){
 		//sloupce
 		for (int i=0; i<N; i++)
@@ -183,41 +195,52 @@ static inline void cache_init(){
 	}
 }
 
-int number_of_threat(int player,luint m[4], int u, int v){
-	//TODO netestovane, zatim nepouzivane, melo by to ale vracet i kde
-	player++; //aby cislo hrace odpovidalo barve jeho hrany
-	int third[N]; //ktere vrcholy spolu s u,v tvori barevny troj
+int threats(int player, luint m[4], int u, int v, int *x, int *y){
+	//player pravhe hraje na u,v kolik tim udela hrozeb?
+	//pokud jednu tak se jeji misto ulozi do x,y
+	//hrozba vypada a) jako dva trojuhelniky mezi jejichz vrcholy neni obarvena hrana
+	//nebo b) trojuhelnik prilepeny na stene jineho
+	int third[N]; //ktere vrcholy spolu s u,v tvori barevny trojuhernik
 	int count = 0;
+	int threat = 0;
 	for (int i = 0; i < N; i++){
 		if (i==u || i==v)
 			continue;
 		if (get_edge_color(m,u,i) == player && get_edge_color(m,v,i) == player)
 			third[count++]=i;
 	}
-	int threat = 0;
-	while (count > 0){
-		//z K4 chybi ta naproti
-		for (int i = 0; i < count-1; i++)
-			if (get_edge_color(m,third[i],third[count]) == 0){
-				//druhy tam musi hrat
+	//a)
+	for (int i = 0; i < count; i++)
+		for (int j = i+1; j < count; j++)
+			if (get_edge_color(m,third[i],third[j]) == 0){
+				*x = third[i];
+				*y = third[j];
 				threat++;
 			}
-		//z K4 chybi hrana na boku
-		for (int i = 0; i < N; i++){
-			if (i==third[count])
+	//b)
+	for (int i = 0; i < count; i++)
+		for (int j = 0; j < N; j++){
+			if (j == u || j == v || j == third[i])
 				continue;
-			if (get_edge_color(m,u,i) == player 
-			   && get_edge_color(m,third[count],i) == player
-			   && get_edge_color(m,v,i) == 0)
+			if ( 		get_edge_color(m,third[i],j) == player &&
+					get_edge_color(m,u,j) == player &&
+					get_edge_color(m,v,j) == 0
+					){
+				*x = third[i];
+				*y = j;
 				threat++;
-			if (get_edge_color(m,v,i) == player 
-			   && get_edge_color(m,third[count],i) == player
-			   && get_edge_color(m,u,i) == 0)
+			}
+			if ( 		get_edge_color(m,third[i],j) == player &&
+					get_edge_color(m,v,j) == player &&
+					get_edge_color(m,u,j) == 0
+					){
+				*x = third[i];
+				*y = j;
 				threat++;
+			}
 		}
-		count--;
-	}
 	return threat;
+
 }
 
 int win(int player, luint m[4], int u, int v){
@@ -236,32 +259,95 @@ int win(int player, luint m[4], int u, int v){
 	return FALSE;
 }
 
-int minimax(int player, luint m[4], int depth, int hash){
-	//TODO netestovane
-	int max = -1;
-	int min = 1;
+static inline void put_into_cache(luint m[4], int hash, int winner){
+	//prevest z 1zeleny vyhral 0remiza -1cerveny na
+	//cislo hrace tedy 0nikdo 1zeleny 2cerveny
+	if (winner == -1)
+		winner = 2;
+	//prekopiruju graf
+	for (int i = 0; i < 4; i++)
+		cache[hash+i]=m[i];
+	//na konec pridam vysledek
+	cache[hash+3] |= ((luint) winner) << 62;
+}
+
+int minimax(int player, luint m[4], int depth, int hash);
+int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v);
+
+int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v){
+	//minimax ale player musí hrat na hranu (u,v) ktera je volna
+	//TODO T
+	if (u>5||v>5){
+		printf("u%d v%d\n",u,v);
+	}
 	luint m2[4];
 	int hash2;
 	if (depth == (N*(N-1))/2 )
+		//vse je obarvene remiza
+		return 0;
+	int x,y;
+	int t = threats(player,m,u,v,&x,&y);
+	if (t > 1){
+		if (player == GREEN)
+			return 1;
+		else
+			return -1;
+	}
+	copy_graph(m2,m);
+	hash2 = set_edge_color(player,m2,hash,u,v);
+
+	int winner;
+	if (t == 1){
+		winner = minimax_threat(next(player),m2,depth+1,hash2,x,y);
+	} else {
+		winner = minimax(next(player),m2,depth+1,hash2);
+	}
+
+	put_into_cache(m2,hash2,winner);	
+	return winner;
+}
+
+
+int minimax(int player, luint m[4], int depth, int hash){
+	//TODO resit vynucene tahy
+	//1 zeleny vyhraje 
+	//0 remiza obarvene bez k4 
+	//-1 cerveny vyhraje
+	int max = -1;
+	int min = 1;
+	luint m2[4];
+	int hash2 = 0;
+	if (depth == (N*(N-1))/2 )
+		//vse je obarvene remiza
 		return 0;
 	for (uint i=0; i<N; i++)
 		for (uint j=i+1; j<N; j++){
 			if (get_edge_color(m,i,j) == 0){
-//	print_adjacency_matrix(m,"");
-//	normalization(m);
-//	timer++;
-				//nepouzita hrana zkusim ji
-				for (int i = 0; i < 4; i++)
-					m2[i]=m[i];
-				//TODO mam hrozbu? kolik?
-				hash2 = set_edge_color(player,m2,hash,i,j);
-				if (win(player,m2,i,j)){
+				//pro vsechny neobarvene hrany (i,j)
+				int x,y;
+				int t = threats(player,m,i,j,&x,&y);
+				if (t > 1){
 					if (player == GREEN)
 						return 1;
 					else
 						return -1;
 				}
-				int tmp = minimax((player+1)%2,m2,depth+1,hash);
+/*
+				if (win(player,m,i,j)){
+					if (player == GREEN)
+						return 1;
+					else
+						return -1;
+				}				
+*/				copy_graph(m2,m);
+				hash2 = set_edge_color(player,m2,hash,i,j);
+				int tmp;
+				if (t == 1){
+					//TODO
+					tmp = minimax_threat(next(player),m2,depth+1,hash2,x,y);
+				} else {
+					tmp = minimax(next(player),m2,depth+1,hash2);
+				}
 				if (tmp > max)
 					max = tmp;
 				if (tmp < min)
@@ -270,14 +356,14 @@ int minimax(int player, luint m[4], int depth, int hash){
 
 				
 		}
-	switch (player) {
-		case GREEN: return min;
-			    break;
-		case RED: return max;
-			  break;
-	}
-	return 42;
-	//retur 1 zeleny vyhraje 0 remiza obarvene bez k4 -1 cerveny vyhraje
+	int winner;
+	if (player == GREEN)
+		winner = max;
+	else
+		winner = min;
+
+	put_into_cache(m2,hash2,winner);	
+	return winner;
 }
 
 int main(){
@@ -291,25 +377,29 @@ int main(){
 #endif
 	cache_init();
 
+//	int x,y;
 	luint m[4];
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
 	}
 
-//	printf("vysl %d\n",minimax(GREEN,m,0,0));
-
-	/*
+	printf("vysl %d\n",minimax(GREEN,m,0,0));
+/*	
+	for (int i=0; i<4; i++){
+		m[i]=0llu;
+	}
 	set_edge_color(GREEN,m,0,1,2);
+//	set_edge_color(GREEN,m,0,0,4);
 	set_edge_color(RED,m,0,4,2);
 	set_edge_color(RED,m,0,0,1);
 	set_edge_color(RED,m,0,0,3);
 	set_edge_color(RED,m,0,5,4);
-	set_edge_color(RED,m,0,0,6);
 	set_edge_color(RED,m,0,4,3);
-	print_adjacency_matrix(m,"pred");
-
-	normalization(m);
-	print_adjacency_matrix(m,"po");
+	set_edge_color(RED,m,0,0,2);
+	set_edge_color(RED,m,0,0,5);
+	print_adjacency_matrix(m,"");
+	printf("%d - ",threats(RED,m,2,5,&x, &y));
+	printf("%d %d\n",x,y);
 
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
@@ -320,10 +410,7 @@ int main(){
 	set_edge_color(RED,m,0,0,1);
 	set_edge_color(RED,m,0,5,3);
 	set_edge_color(RED,m,0,2,1);
-	print_adjacency_matrix(m,"pred");
-
-	normalization(m);
-	print_adjacency_matrix(m,"po");
+	print_adjacency_matrix(m,"");
 
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
@@ -331,11 +418,8 @@ int main(){
 	set_edge_color(RED,m,0,1,4);
 	set_edge_color(RED,m,0,3,5);
 	set_edge_color(RED,m,0,2,4);
-	print_adjacency_matrix(m,"pred");
+	print_adjacency_matrix(m,"");
 
-	normalization(m);
-	print_adjacency_matrix(m,"po");
 */
-
 	return 0;
 }
