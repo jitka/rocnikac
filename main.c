@@ -43,7 +43,7 @@ static inline void copy_graph(luint m1[4], luint m2[4]){
 
 static inline void binary_luint(luint n){
 	for (int i = 0; i < 64; i++){
-		if (i%2==0)
+		if (i%5==0)
 			printf(" ");
 		printf("%d", !!(n&(1llu<<i)) );
 	}
@@ -140,6 +140,7 @@ static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
 }
 
 static inline void normalization(luint m[4]){
+	//TODO nefunguje
 	//prevede m na matici sousednosti
 	uint adjacency_matrix[N][N];
 	for (int i=0; i<N; i++)
@@ -259,9 +260,28 @@ int win(int player, luint m[4], int u, int v){
 	return FALSE;
 }
 
+static inline int get_from_cache(luint m[4], int hash){
+	//vrati but jak to dopodlo nebo 42 ze to v cachy neni
+//	binary_luint(2);
+//	binary_luint(~((luint)3<<62)); pro odstraneni vysledku
+	normalization(m);
+	if ( 		cache[hash] == m[0] &&
+			cache[hash+1] == m[1] &&
+			cache[hash+2] == m[2] &&
+			( cache[hash+3] & (~((luint)3<<62)) ) == m[3]){
+		//je v cachy
+		int winner = (cache[hash+3] & ((luint)3<<62)) >> 62;
+		if (winner == 2)
+			winner = -1;
+		return winner;
+	}
+	return 42;
+}
+
 static inline void put_into_cache(luint m[4], int hash, int winner){
 	//prevest z 1zeleny vyhral 0remiza -1cerveny na
 	//cislo hrace tedy 0nikdo 1zeleny 2cerveny
+	normalization(m);
 	if (winner == -1)
 		winner = 2;
 	//prekopiruju graf
@@ -276,15 +296,21 @@ int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v);
 
 int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v){
 	//minimax ale player musí hrat na hranu (u,v) ktera je volna
-	//TODO T
-	if (u>5||v>5){
-		printf("u%d v%d\n",u,v);
-	}
+//	print_adjacency_matrix(m,"");
+
 	luint m2[4];
 	int hash2;
+
+	int winner;
+	if ( (winner = get_from_cache(m,hash) ) != 42){
+		//je v cachy
+		return winner;
+	}
+
 	if (depth == (N*(N-1))/2 )
 		//vse je obarvene remiza
 		return 0;
+
 	int x,y;
 	int t = threats(player,m,u,v,&x,&y);
 	if (t > 1){
@@ -296,7 +322,6 @@ int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v){
 	copy_graph(m2,m);
 	hash2 = set_edge_color(player,m2,hash,u,v);
 
-	int winner;
 	if (t == 1){
 		winner = minimax_threat(next(player),m2,depth+1,hash2,x,y);
 	} else {
@@ -313,13 +338,21 @@ int minimax(int player, luint m[4], int depth, int hash){
 	//1 zeleny vyhraje 
 	//0 remiza obarvene bez k4 
 	//-1 cerveny vyhraje
+//	print_adjacency_matrix(m,"");
 	int max = -1;
 	int min = 1;
 	luint m2[4];
 	int hash2 = 0;
-	if (depth == (N*(N-1))/2 )
+
+	int winner;
+	if ( (winner = get_from_cache(m,hash) ) != 42 && depth > 0){
+		//je v cachy a zaroven neni prazdny
+		return winner;
+	}
+	if ( depth == (N*(N-1))/2 )
 		//vse je obarvene remiza
 		return 0;
+
 	for (uint i=0; i<N; i++)
 		for (uint j=i+1; j<N; j++){
 			if (get_edge_color(m,i,j) == 0){
@@ -343,7 +376,6 @@ int minimax(int player, luint m[4], int depth, int hash){
 				hash2 = set_edge_color(player,m2,hash,i,j);
 				int tmp;
 				if (t == 1){
-					//TODO
 					tmp = minimax_threat(next(player),m2,depth+1,hash2,x,y);
 				} else {
 					tmp = minimax(next(player),m2,depth+1,hash2);
@@ -356,7 +388,6 @@ int minimax(int player, luint m[4], int depth, int hash){
 
 				
 		}
-	int winner;
 	if (player == GREEN)
 		winner = max;
 	else
@@ -383,7 +414,7 @@ int main(){
 		m[i]=0llu;
 	}
 
-	printf("vysl %d\n",minimax(GREEN,m,0,0));
+	printf("vysl%d: %d\n",N,minimax(GREEN,m,0,0));
 /*	
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
@@ -398,8 +429,37 @@ int main(){
 	set_edge_color(RED,m,0,0,2);
 	set_edge_color(RED,m,0,0,5);
 	print_adjacency_matrix(m,"");
-	printf("%d - ",threats(RED,m,2,5,&x, &y));
-	printf("%d %d\n",x,y);
+//	printf("%d - ",threats(RED,m,2,5,&x, &y));
+//	printf("%d %d\n",x,y);
+
+	luint m2[4];
+	for (int i=0; i<4; i++){
+		m2[i]=0llu;
+	}
+	set_edge_color(RED,m2,0,1,4);
+	set_edge_color(RED,m2,0,3,5);
+	set_edge_color(RED,m2,0,2,4);
+	set_edge_color(RED,m2,0,0,1);
+	set_edge_color(RED,m2,0,5,3);
+	set_edge_color(RED,m2,0,2,1);
+	print_adjacency_matrix(m2,"");
+
+	int x;
+	put_into_cache(m,42,0);
+	x=get_from_cache(m,42);
+	printf("vysl %d\n",x);
+	put_into_cache(m,2,1);
+	x=get_from_cache(m,2);
+	printf("vysl %d\n",x);
+	put_into_cache(m,4,-1);
+	x=get_from_cache(m,4);
+	printf("vysl %d\n",x);
+	put_into_cache(m,4,-1);
+	x=get_from_cache(m,2);
+	printf("vysl %d\n",x);
+	put_into_cache(m,4,-1);
+	x=get_from_cache(m2,4);
+	printf("vysl %d\n",x);
 
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
@@ -407,19 +467,8 @@ int main(){
 	set_edge_color(RED,m,0,1,4);
 	set_edge_color(RED,m,0,3,5);
 	set_edge_color(RED,m,0,2,4);
-	set_edge_color(RED,m,0,0,1);
-	set_edge_color(RED,m,0,5,3);
-	set_edge_color(RED,m,0,2,1);
 	print_adjacency_matrix(m,"");
-
-	for (int i=0; i<4; i++){
-		m[i]=0llu;
-	}
-	set_edge_color(RED,m,0,1,4);
-	set_edge_color(RED,m,0,3,5);
-	set_edge_color(RED,m,0,2,4);
-	print_adjacency_matrix(m,"");
-
 */
+
 	return 0;
 }
