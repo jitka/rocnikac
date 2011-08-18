@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#define N 5
-#define CACHE_SIZE 20//logaritmus stavu ktere tam budou
+#include "config.h"
 #define TRUE 1
 #define FALSE 0
 #define GREEN 1
@@ -139,8 +138,8 @@ static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
 	}
 }
 
-static inline void normalization(luint m[4]){
-	//TODO nefunguje
+static inline int normalization(luint m[4]){
+	//je potreba starat se i o cache
 	//prevede m na matici sousednosti
 	uint adjacency_matrix[N][N];
 	for (int i=0; i<N; i++)
@@ -182,10 +181,12 @@ static inline void normalization(luint m[4]){
 	//prevest zpet
 	for (int i=0; i<4; i++)
 		m[i]=0llu;
+	int hash = 0;
 	for (uint i=0; i<N; i++)
 		for (uint j=0; j<N; j++)
 			if (adjacency_matrix[i][j]>0)
-				set_edge_color(adjacency_matrix[i][j]-1,m,0,i,j);
+				hash = set_edge_color(adjacency_matrix[i][j]-1,m,hash,i,j);
+	return hash;
 	
 }
 
@@ -264,7 +265,6 @@ static inline int get_from_cache(luint m[4], int hash){
 	//vrati but jak to dopodlo nebo 42 ze to v cachy neni
 //	binary_luint(2);
 //	binary_luint(~((luint)3<<62)); pro odstraneni vysledku
-	normalization(m);
 	if ( 		cache[hash] == m[0] &&
 			cache[hash+1] == m[1] &&
 			cache[hash+2] == m[2] &&
@@ -281,7 +281,6 @@ static inline int get_from_cache(luint m[4], int hash){
 static inline void put_into_cache(luint m[4], int hash, int winner){
 	//prevest z 1zeleny vyhral 0remiza -1cerveny na
 	//cislo hrace tedy 0nikdo 1zeleny 2cerveny
-	normalization(m);
 	if (winner == -1)
 		winner = 2;
 	//prekopiruju graf
@@ -301,8 +300,12 @@ int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v){
 	luint m2[4];
 	int hash2;
 
+	if ( NORMALIZATION_FREQUENCY > 0 && depth % NORMALIZATION_FREQUENCY == 0) 
+		hash = normalization(m);
+
 	int winner;
 	if ( (winner = get_from_cache(m,hash) ) != 42){
+//	if ( depth % 3 == 1 && (winner = get_from_cache(m,hash) ) != 42 ) {
 		//je v cachy
 		return winner;
 	}
@@ -328,7 +331,8 @@ int minimax_threat(int player, luint m[4], int depth, int hash, int u, int v){
 		winner = minimax(next(player),m2,depth+1,hash2);
 	}
 
-	put_into_cache(m2,hash2,winner);	
+	if ( depth % 3 == 1 ) 
+		put_into_cache(m2,hash2,winner);	
 	return winner;
 }
 
@@ -344,8 +348,12 @@ int minimax(int player, luint m[4], int depth, int hash){
 	luint m2[4];
 	int hash2 = 0;
 
+	if ( NORMALIZATION_FREQUENCY > 0 && depth % NORMALIZATION_FREQUENCY == 0) 
+		hash = normalization(m);
+
 	int winner;
 	if ( (winner = get_from_cache(m,hash) ) != 42 && depth > 0){
+//	if ( depth % 3 == 1 && (winner = get_from_cache(m,hash) ) != 42 ) {
 		//je v cachy a zaroven neni prazdny
 		return winner;
 	}
@@ -393,7 +401,8 @@ int minimax(int player, luint m[4], int depth, int hash){
 	else
 		winner = min;
 
-	put_into_cache(m2,hash2,winner);	
+	if ( depth % 3 == 1 ) 
+		put_into_cache(m2,hash2,winner);	
 	return winner;
 }
 
@@ -414,7 +423,7 @@ int main(){
 		m[i]=0llu;
 	}
 
-	printf("vysl%d: %d\n",N,minimax(GREEN,m,0,0));
+	printf("N=%d NORMALIZATION_FREQUENCY=%d vysl: %d\n",N,NORMALIZATION_FREQUENCY,minimax(GREEN,m,0,0));
 /*	
 	for (int i=0; i<4; i++){
 		m[i]=0llu;
