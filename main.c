@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "config.h"
+#define EVALUATION 3
 #define TRUE 1
 #define FALSE 0
 #define GREEN 1
@@ -121,14 +122,17 @@ void print_adjacency_matrix(luint m[4],char *text){
 	fclose(F);
 }
 
-static inline void evaluation_1(uint m[N][N],uint evaluation[N]){
+#if EVALUATION == 1
+static inline void evaluation_fce(uint m[N][N],uint evaluation[N]){
 	//vsechny vrcholy jsou si rovny
 	m[0][0]=m[0][0];
 	for (int i=0; i<N; i++)
 		evaluation[i] = 0;
 }
+#endif 
 
-static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
+#if EVALUATION == 2
+static inline void evaluation_fce(uint m[N][N],uint evaluation[N]){
 	//vraci stupne vrcholu
 	for (int i=0; i<N; i++){
 		evaluation[i] = 0u;
@@ -138,8 +142,10 @@ static inline void evaluation_2(uint m[N][N],uint evaluation[N]){
 	}
 
 }
+#endif 
 
-static inline void evaluation_3(uint m[N][N],uint evaluation[N]){
+#if EVALUATION == 3
+static inline void evaluation_fce(uint m[N][N],uint evaluation[N]){
 	//zalozene na trojuhelinikach viz papir u pocitace
 	uint green[N],red[N]; //sousedi
 	uint g=0,r=0;
@@ -202,6 +208,7 @@ static inline void evaluation_3(uint m[N][N],uint evaluation[N]){
 
 	}
 }
+#endif 
 
 static inline int normalization(luint m[4]){
 	//je potreba starat se i o cache
@@ -213,7 +220,7 @@ static inline int normalization(luint m[4]){
 
 	//ohodnoti vrcholy
 	uint evaluation[N];
-	evaluation_3(adjacency_matrix,evaluation);
+	evaluation_fce(adjacency_matrix,evaluation);
 
 /*	for (int i=0; i<N; i++)
 		printf("%d ",evaluation[i]);
