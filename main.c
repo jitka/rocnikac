@@ -4,6 +4,7 @@
 #include "types.h"
 #include "config.h"
 #include "cache.h"
+#include "print.h"
 
 
 
@@ -36,7 +37,8 @@ int main(){
 		m[i]=0llu;
 	}
 
-	printf("N=%d NORMALIZATION_FREQUENCY=%d vysl: %d\n",N,NORMALIZATION_FREQUENCY,minimax(GREEN,m,0,0));
+	print_config();
+	printf("vyhral: %d\n",minimax(GREEN,m,0,0));
 /*	
 	for (int i=0; i<4; i++){
 		m[i]=0llu;

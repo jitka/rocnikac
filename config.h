@@ -1,7 +1,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define THREAD
+#define THREADS 3
 
 #define N 5
 #define CACHE_SIZE 20
