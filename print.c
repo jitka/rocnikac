@@ -1,51 +1,47 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include "types.h"
-#include "config.h"
-#include "reprezentation.h"
+#include "nodeStruct.h"
+#include "print.h"
 
-extern int timer;
-
-void print_config(){
-	printf("-------------------------------------\n");
-	printf("N=%d, %d vlaken\n",N,THREADS); //TODO tady bude jestli hledam vyhravajici nebo prohravajici
-	printf("velikost cache %d stavu\n",1<<CACHE_SIZE);
-	printf("normovani pomoci %d s frekvenci %d \n",EVALUATION,NORMALIZATION_FREQUENCY);
-	printf("-------------------------------------\n");
-}
-
-void binary_luint(luint n){
-	for (int i = 0; i < 64; i++){
-		if (i%5==0)
-			printf(" ");
-		printf("%d", !!(n&(1llu<<i)) );
+void printNode(node_t* node){
+//	printf("proof %d, disproof %d\n",node->proof, node->disproof);
+	printf(" | ");
+	for (int j = 0; j < N; j++){
+		printf("%d ",j);
 	}
-	printf("\n");
-}
-
-void binary_uint(uint n){
-	for (int i = 0; i < 32; i++){
-		if (i%5==0)
-			printf(" ");
-		printf("%d", !!(n&(1<<i)) );
+	printf("|\n");
+	printf("---");
+	for (int j = 0; j < N; j++){
+		printf("--");
 	}
-	printf("\n");
-}
-
-void print_adjacency_matrix(luint m[4],char *text){
-	if (timer>19)
-		return;
-	char title[100];
-	sprintf(title,"tmp/%d%s",timer++,text);
-	FILE *F = fopen(title,"w");
-	fprintf(F,"%d\n",N);
-	for (int i=0; i<N; i++){
-		for (int j=0; j<N; j++){
-			fprintf(F,"%d ",get_edge_color(&m[0],i,j));
+	printf("|\n");
+	for (int i = 0; i < N; i++){
+		printf("%d| ",i);
+		for (int j = 0; j < N; j++){
+			if (node->data[i] & (1<<j)){
+				printf("1 ");
+			} else if (node->data[i+N] & (1<<j)){
+				printf("2 ");
+			} else {
+				printf("  ");
+			}
 		}
-		fprintf(F,"\n");
+		printf("|\n");
 	}
-	fclose(F);
+	printf("\n");
+				
 }
 
-
+void printChild(node_t* node){
+	if (!node->expanded)
+		perror("nejsou deti");
+	node_t* n = node->child;
+	printf("potomci:\n");
+	printNode(n);
+	while (n->brother != NULL){
+		n = n->brother;
+		printNode(n);
+	}
+	printf("-------------------------------------------------------------------------\n");
+	int tmp;
+	scanf("%d",&tmp);
+}

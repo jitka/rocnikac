@@ -1,10 +1,7 @@
-#ifndef PRINT_H_
-#define PRINT_H_
+#ifndef PRINT_H
+#define PRINT_H
 
-void binary_luint(luint n);
-void binary_uint(uint n);
-void print_adjacency_matrix(luint m[4],char *text);
-void print_config();
+void printNode(node_t* node);
+void printChild(node_t* node);
 
 #endif
-
