@@ -23,7 +23,7 @@ struct node{
 	node_t* child;
 	node_t* brother;
 	//pocet synu, otcu-snizovat pri delete, 
-	node_t* childs;
+	node_t** childs;
 	uint childsNumber;
 };
 
@@ -51,10 +51,7 @@ static inline uint nodeHash(node_t * node){
 static inline uint nodeChildsNumber(node_t * node){
 	return node->childsNumber;
 }
-static inline uint nodePlusChildsNumber(node_t * node){
-	return node->childsNumber++;
-}
-static inline void nodeSetChildsNuber(node_t * node, uint v){
+static inline void nodeSetChildsN(node_t * node, uint v){
 	node->childsNumber = v;
 }
 

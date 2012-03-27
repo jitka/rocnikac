@@ -184,18 +184,17 @@ static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
 	//TODO otestovat vypis viteztvi+proher, zbytek hotovo
 
-//	node_t* nodeTmp[N*N];
-//	int nodeTmpUsed;
+	node_t* childs[N*N];
+	int childsN=0;
 
 	node_t * lastChild = NULL;
+
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( !(node->data[i] & (1<<j)) && !(node->data[N+i] & (1<<j)) ){
-//				printf("neco %d %d\n",i,j);
 				//ij je hrana ktera jeste nema barvu
 				node_t* child = createChild(node,i,j);
 				setProofAndDisproofNubers(child);
-//				printf("child %d %d\n",child->proof,child->disproof);
 				//umistim potomka do stromu
 				if (lastChild == NULL){
 					node->child = child;
@@ -203,12 +202,19 @@ static inline void developNode(node_t* node){
 					lastChild->brother = child;
 				}
 				lastChild = child;
+				//umistim potomka do stromu
+				childs[childsN] = child;
+				childsN++;
 			}
 	if (lastChild == NULL){
 		perror("nema syny");
 	} else {
 		lastChild->brother = NULL;
 	}
+	node->childs = malloc(sizeof(node_t*) * childsN);
+	for (int i = 0; i > childsN; i++)
+		node->childs[i] = childs[i];
+	nodeSetChildsN( node, childsN);
 	node->expanded = TRUE;
 }
 
