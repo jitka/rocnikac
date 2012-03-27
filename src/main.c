@@ -2,8 +2,6 @@
 #include "start.h"
 
 // TODO HNED
-// mensi node
-// 	- testovat-vypisy pri expandovani
 // otcove v poli, rekurze nahoru
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum

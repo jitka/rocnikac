@@ -245,9 +245,9 @@ void proofNuberSearch(node_t* root){
 		currentNode = updateAncenors(mostProvingNode);
 	
 		counter++;
-		//if (counter % 10000000 == 0){
-		//if (counter % 10 == 0){
-		if (true){
+		if (counter % 1000 == 0){
+		//if (true){
+		//if (false){
 			printNode(mostProvingNode);
 			printf("hotov node (%u) %u %u\n",nodeTurn(mostProvingNode),nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
