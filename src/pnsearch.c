@@ -5,15 +5,16 @@
 #include "pnsearch.h"
 #include "start.h"
 
-// or node... na tahu je prvni hrac
 #define true 1
 #define false 0
 #define CACHE_SIZE (1<<10)
 
+// or node... na tahu je prvni hrac
+
 node_t* currentNode;
-int numerOfNodes = 1;
-uint hashNumbers[2][N][N];
-ull cache[N*CACHE_SIZE];
+int numerOfNodes = 1; //abych vedela kolik zeru pameti
+uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
+//ull cache[N*CACHE_SIZE]; //TODO to bude jinak velike
 
 void hashInit(){
 	for (int i = 0; i < N; i++){
@@ -25,15 +26,6 @@ void hashInit(){
 		}
 	}
 }
-/*
-void cacheInsert(node_t* node){
-	//tu mozna normalizovat
-	//predelat na jiny format
-
-	node = 0;
-}
-*/
-
 
 static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)

@@ -22,6 +22,7 @@ struct node{
 //	ull data2[3]; //TODO prepsat
 	node_t* child;
 	node_t* brother;
+	//pocet synu, otcu-snizovat pri delete, 
 };
 
 void proofNuberSearch(node_t* node);
