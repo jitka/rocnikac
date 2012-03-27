@@ -33,7 +33,7 @@ void printNode(node_t* node){
 
 void printChilds(node_t* node){
 
-	if (!node->expanded)
+	if (!nodeExpanded(node))
 		perror("nejsou deti");
 	printf("potomci:\n");
 	for (uint i = 0; i < nodeChildsN(node); i++) {

@@ -5,6 +5,8 @@
 #define uint unsigned int
 #define ull unsigned long long int 
 #define MAXPROOF (INT_MAX/1000)
+#define true 1
+#define false 0
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define N 5 
 
@@ -15,15 +17,19 @@ typedef struct node node_t;
 struct node{
 	uint proof;
 	uint disproof;
-	int expanded;
-	int turn; //kolikaty je to tah = kolik je prave obarveno hran
-	uint hash;
-	node_t* parent;
+
+	int expanded2;
+	int turn2; //kolikaty je to tah = kolik je prave obarveno hran
 	enum nodeType type;
 	enum nodeValue value;
-	ull data[N*2];
-	node_t** childs;
 	uint childsNumber;
+
+	uint hash2;
+
+	node_t** childs;
+	node_t* parent;
+
+	ull data[N*2];
 };
 
 void proofNuberSearch(node_t* node);
@@ -33,17 +39,26 @@ void hashInit();
 
 //expanded
 static inline uint nodeExpanded(node_t * node){
-	return node->expanded;
+	return node->expanded2;
+}
+static inline void nodeSetExpanded(node_t * node, uint expanded){
+	node->expanded2 = expanded;
 }
 
 //turn
 static inline uint nodeTurn(node_t * node){
-	return node->turn;
+	return node->turn2;
+}
+static inline void nodeSetTurn(node_t * node, uint turn){
+	node->turn2 = turn;
 }
 
 //hash
 static inline uint nodeHash(node_t * node){
-	return node->hash;
+	return node->hash2;
+}
+static inline void nodeSetHash(node_t * node, uint hash){
+	node->hash2 = hash;
 }
 
 //childsNumber

@@ -9,9 +9,9 @@ node_t* getRoot(){
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
-	node->expanded = FALSE;
-	node->turn = 0;
-	node->hash = 0;
+	nodeSetExpanded( node, false);
+	nodeSetTurn( node, 0);
+	nodeSetHash( node, 0);
 	node->parent = NULL;
 	node->type = OR;
 	node->value = UNKNOWN;

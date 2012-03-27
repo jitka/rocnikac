@@ -5,8 +5,6 @@
 #include "pnsearch.h"
 #include "start.h"
 
-#define true 1
-#define false 0
 #define CACHE_SIZE (1<<10)
 
 // or node... na tahu je prvni hrac
@@ -51,7 +49,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 //a pak dat 1 1
 	switch (node->value) {
 	case UNKNOWN:
-		if (node->expanded){
+		if (nodeExpanded(node)){
 			if (node->type == OR){
 
 				uint min = MAXPROOF;
@@ -128,19 +126,19 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	if (child == NULL)
 		perror("malloc child");
 	numerOfNodes++;
-	child->expanded = FALSE;
-	child->turn = node->turn + 1;
+	nodeSetExpanded(child, false);
+	nodeSetTurn(child, nodeTurn(node)+1 );
 	child->parent = node;
 
 	if (node->type == OR) { //hraje prvni hrac
 		child->type = AND;
-		child->hash = node->hash ^ hashNumbers[0][i][j];
+		nodeSetHash(child, nodeHash(node) ^ hashNumbers[0][i][j]);
 		//nevyhral prvni hrac?
 		if (testK4(node->data,i,j,0)){
 			child->value = TRUE;
 			printf("prvni K4 %d %d\n",i,j);
 			printNode(node);
-		} else if ( child->turn == (N*(N-1))/2 ){
+		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			child->value = FALSE;
 		} else {
 			child->value = UNKNOWN;
@@ -152,13 +150,13 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 	} else {//hraje druhy
 		child->type = OR;
-		child->hash = node->hash ^ hashNumbers[1][i][j];
+		nodeSetHash(child, nodeHash(node) ^ hashNumbers[1][i][j]);
 		//neprohral prvni hrac?
 		if (testK4(node->data,i,j,N)){
 			child->value = FALSE;
 			printf("druhy K4 %d %d\n",i,j);
 			printNode(node);
-		} else if ( child->turn == (N*(N-1))/2 ){
+		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			child->value = FALSE;
 		} else {
 			child->value = UNKNOWN;
@@ -195,7 +193,7 @@ static inline void developNode(node_t* node){
 	}
 	nodeSetChildsN( node, childsN);
 	
-	node->expanded = TRUE;
+	nodeSetExpanded(node,true);
 }
 
 static inline node_t* updateAncenors(node_t* node){
@@ -213,28 +211,28 @@ static inline node_t* updateAncenors(node_t* node){
 }
 
 static inline node_t* selectMostProving(node_t* node){
-	while (node->expanded){
+	while (nodeExpanded(node)){
 		if (node->type == OR){
 			uint i;
-			int turn = node->turn;
+			uint turn = nodeTurn(node);
 			for (i = 0; i < nodeChildsN(node); i++){
 				if (nodeProof(node) == nodeProof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
-			if (turn == node->turn)
+			if (turn == nodeTurn(node))
 				perror("minimalni proof numer neni");
 		} else {
 			uint i;
-			int turn = node->turn;
+			uint turn = nodeTurn(node);
 			for (i = 0; i < nodeChildsN(node); i++){
 				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
-			if (turn == node->turn)
+			if (turn == nodeTurn(node))
 				perror("minimalni disproof numer neni");
 		}
 	}
@@ -257,7 +255,7 @@ void proofNuberSearch(node_t* root){
 		if (counter % 10000000 == 0){
 		//if (true){
 			printNode(mostProvingNode);
-			printf("hotov node (%d) %u %u\n",mostProvingNode->turn,nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
+			printf("hotov node (%u) %u %u\n",nodeTurn(mostProvingNode),nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChild(mostProvingNode);
 			printChilds(mostProvingNode);
