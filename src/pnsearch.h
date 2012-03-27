@@ -48,7 +48,7 @@ static inline uint nodeHash(node_t * node){
 }
 
 //childsNumber
-static inline uint nodeChildsNumber(node_t * node){
+static inline uint nodeChildsN(node_t * node){
 	return node->childsNumber;
 }
 static inline void nodeSetChildsN(node_t * node, uint v){

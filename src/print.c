@@ -31,6 +31,20 @@ void printNode(node_t* node){
 				
 }
 
+void printChilds(node_t* node){
+
+	if (!node->expanded)
+		perror("nejsou deti");
+	printf("potomci:\n");
+	for (uint i = 0; i < nodeChildsN(node); i++) {
+		if (node->childs[i] == NULL)
+			printf("null\n");
+		printNode(node->childs[i]);
+	}
+	printf("-------------------------------------------------------------------------\n");
+	int tmp; scanf("%d",&tmp);
+}
+
 void printChild(node_t* node){
 	if (!node->expanded)
 		perror("nejsou deti");

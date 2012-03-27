@@ -32,6 +32,7 @@
 // zmensit i ukazatele v node
 // proc je sys tak velike? malloc?
 // pole na syny mit globalni?
+// odstranit vypisy chyb co nikdy nenastanou
 
 int main(){
 

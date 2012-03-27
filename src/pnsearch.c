@@ -212,8 +212,11 @@ static inline void developNode(node_t* node){
 		lastChild->brother = NULL;
 	}
 	node->childs = malloc(sizeof(node_t*) * childsN);
-	for (int i = 0; i > childsN; i++)
+	for (int i = 0; i < childsN; i++){
 		node->childs[i] = childs[i];
+		if (node->childs[i] == NULL)
+			printf("null\n");
+	}
 	nodeSetChildsN( node, childsN);
 	node->expanded = TRUE;
 }
@@ -234,27 +237,29 @@ static inline node_t* updateAncenors(node_t* node){
 
 static inline node_t* selectMostProving(node_t* node){
 	while (node->expanded){
-		node_t* n = node->child;
 		if (node->type == OR){
-			while (nodeProof(n) != nodeProof(node)){
-				if (n->brother == NULL){
-					perror("minimalni proof numer neni");
-					//printf("ktere %d %d \n",node->turn,n->turn);
-//					if (n
-					exit(0);
+			uint i;
+			int turn = node->turn;
+			for (i = 0; i < nodeChildsN(node); i++){
+				if (nodeProof(node) == nodeProof(node->childs[i])){
+					node = node->childs[i];
+					break;
 				}
-				n = n->brother;
 			}
+			if (turn == node->turn)
+				perror("minimalni proof numer neni");
 		} else {
-			while (nodeDisproof(n) != nodeDisproof(node)){
-				if (n->brother == NULL){
-					perror("minimalni disproof numer neni");
+			uint i;
+			int turn = node->turn;
+			for (i = 0; i < nodeChildsN(node); i++){
+				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
+					node = node->childs[i];
+					break;
 				}
-				n = n->brother;
 			}
+			if (turn == node->turn)
+				perror("minimalni disproof numer neni");
 		}
-		node = n;
-
 	}
 	return node;
 }
@@ -266,15 +271,19 @@ void proofNuberSearch(node_t* root){
 
 	int counter = 0;
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0){
-		counter++;
+	
 		node_t* mostProvingNode = selectMostProving(currentNode);
 		developNode(mostProvingNode);
 		currentNode = updateAncenors(mostProvingNode);
+	
+		counter++;
 		if (counter % 10000000 == 0){
+		//if (true){
 			printNode(mostProvingNode);
 			printf("hotov node (%d) %u %u\n",mostProvingNode->turn,nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
-			printChild(mostProvingNode);
+			//printChild(mostProvingNode);
+			printChilds(mostProvingNode);
 		}
 	}
 
