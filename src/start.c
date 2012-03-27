@@ -17,7 +17,7 @@ node_t* getRoot(){
 	
 	node->parent = NULL;
 
-	nodeEmptyData(node);
+	nodeEmptyGraph(node);
 	
 	return node;
 }

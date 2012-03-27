@@ -4,7 +4,7 @@
 // TODO HNED
 // mensi node
 // 	- testovat-vypisy pri expandovani
-// otcove v poli-rekurze nahoru
+// otcove v poli, rekurze nahoru
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // nacitani startovnich pozic
@@ -27,6 +27,10 @@
 // proc je sys tak velike? malloc?
 // pole na syny mit globalni?
 // odstranit vypisy chyb co nikdy nenastanou
+//
+// DOTAZY
+// jsou ty velikosti jak maji byt? vyjde to?
+// jsou bitove operace ok?
 
 int main(){
 
