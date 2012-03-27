@@ -7,8 +7,8 @@ node_t* getRoot(){
 	if (node == NULL)
 		perror("malloc node");
 
-	node->proof = 1;
-        node->disproof = 1;	
+	nodeSetProof( node, 1);
+	nodeSetDisproof( node, 1);
 	node->expanded = FALSE;
 	node->turn = 0;
 	node->hash = 0;

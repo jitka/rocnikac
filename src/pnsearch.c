@@ -13,6 +13,8 @@
 
 node_t* currentNode;
 int numerOfNodes = 1; //abych vedela kolik zeru pameti
+
+//--------------------------CACHE-----------------------
 uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
 //ull cache[N*CACHE_SIZE]; //TODO to bude jinak velike
 
@@ -27,6 +29,7 @@ void hashInit(){
 	}
 }
 
+//--------------------------PN-SEARCH-----------------------
 static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)
 		return;
@@ -38,6 +41,7 @@ static inline void deleteChild(node_t* node){
 		free(child);
 		child = next;
 	} */
+	nodeProof(node); //nedela nic, neotravuje
 }
 
 
@@ -50,55 +54,62 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		if (node->expanded){
 			if (node->type == OR){
 				node_t* n = node->child;
-				node->proof = n->proof;
+
+				uint min = nodeProof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					if (n->proof < node->proof)
-						node->proof = n->proof;
+					if (nodeProof(n) < min)
+						min = nodeProof(n);
 				}
+				nodeSetProof( node, min);
 
 				n = node->child;
-				node->disproof = n->disproof;
+				uint sum = nodeDisproof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					node->disproof += n->disproof;
+					sum += nodeDisproof(n);
 				}
+				nodeSetDisproof( node, sum);
+
 			} else {
 				node_t* n = node->child;
-				node->proof = n->proof;
+
+				uint sum = nodeProof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					node->proof += n->proof;
+					sum += nodeProof(n);
 				}
+				nodeSetProof( node, sum);
 
 				n = node->child;
-				node->disproof = n->disproof;
+				uint min = nodeDisproof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					if (n->disproof < node->disproof)
-						node->disproof = n->disproof;
+					if (nodeDisproof(n) < min)
+						min = nodeDisproof(n);
 				}
+				nodeSetDisproof( node, min);
 			}
-			if (node->proof == 0){
+			if (nodeProof(node) == 0){
 				node->value = TRUE;
 			} 
-			if (node->disproof == 0){
+			if (nodeDisproof(node) == 0){
 				node->value = FALSE;
 			}
 		} else {
-			node->proof = 1;
-			node->disproof = 1;
+			nodeSetProof(node,1);
+			nodeSetDisproof(node,1);
 			deleteChild(node);
 
 		}
 		break;
 	case TRUE:
-		node->proof = 0;
-		node->disproof = INT_MAX;
+		nodeSetProof(node,0);
+		nodeSetDisproof(node,INT_MAX);
 		break;
 	case FALSE:
-		node->proof = INT_MAX;
-		node->disproof = 0;
+		nodeSetProof(node,INT_MAX);
+		nodeSetDisproof(node,0);
 		break;
 	}
 }
@@ -202,10 +213,10 @@ static inline node_t* updateAncenors(node_t* node){
 	node_t* previousNode;
 	int changed = true;
 	while (node != NULL && changed){
-		ull oldProof = node->proof;
-		ull oldDisproof = node->disproof;
+		uint oldProof = nodeProof(node);
+		uint oldDisproof = nodeDisproof(node);
 		setProofAndDisproofNubers(node);
-		changed = (oldProof != node->proof) || (oldDisproof != node->disproof);
+		changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		previousNode = node;
 		node = node->parent;
 	}
@@ -216,7 +227,7 @@ static inline node_t* selectMostProving(node_t* node){
 	while (node->expanded){
 		node_t* n = node->child;
 		if (node->type == OR){
-			while (n->proof != node->proof){
+			while (nodeProof(n) != nodeProof(node)){
 				if (n->brother == NULL){
 					perror("minimalni proof numer neni");
 					//printf("ktere %d %d \n",node->turn,n->turn);
@@ -226,7 +237,7 @@ static inline node_t* selectMostProving(node_t* node){
 				n = n->brother;
 			}
 		} else {
-			while (n->disproof != node->disproof){
+			while (nodeDisproof(n) != nodeDisproof(node)){
 				if (n->brother == NULL){
 					perror("minimalni disproof numer neni");
 				}
@@ -245,15 +256,15 @@ void proofNuberSearch(node_t* root){
 	currentNode = root;
 
 	int counter = 0;
-	while (root->proof > 0 && root->disproof > 0){
+	while (nodeProof(root) > 0 && nodeDisproof(root) > 0){
 		counter++;
 		node_t* mostProvingNode = selectMostProving(currentNode);
 		developNode(mostProvingNode);
 		currentNode = updateAncenors(mostProvingNode);
 		if (counter % 10000000 == 0){
 			printNode(mostProvingNode);
-			printf("hotov node (%d) %llu %llu\n",mostProvingNode->turn,mostProvingNode->proof,mostProvingNode->disproof);
-			printf("root %llu %llu\n",root->proof,root->disproof);
+			printf("hotov node (%d) %u %u\n",mostProvingNode->turn,nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
+			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			printChild(mostProvingNode);
 		}
 	}

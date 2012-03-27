@@ -3,8 +3,12 @@
 
 // TODO HNED
 // nacitani startovnich pozic
-// novy pristup k node
-// min intu v node
+// prepsat hledani min
+// novy pristup k node -
+//                     - ostatni
+//                     - enumy
+//                     - ukazatele
+//                     - data
 // syny v poli
 // testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru, smazt delete
