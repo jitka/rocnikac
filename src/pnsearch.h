@@ -25,5 +25,6 @@ struct node{
 };
 
 void proofNuberSearch();
+void hashInit();
 
 #endif

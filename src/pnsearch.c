@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "print.h"
+#include "pnsearch.h"
 #include "start.h"
 
 // or node... na tahu je prvni hrac

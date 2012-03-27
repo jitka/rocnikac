@@ -5,10 +5,10 @@ DBGCFLAGS=$(CFLAGS) -ggdb3
 
 all: program-dbg program-opt
 
-program-opt: main.c start.c print.c 
+program-opt: main.c start.c print.c pnsearch.c 
 	$(CC) $(OPTCFLAGS) $(LDFLAGS) -o $@ $^
 
-program-dbg: main.c start.c print.c
+program-dbg: main.c start.c print.c pnsearch.c
 	$(CC) $(DBGCFLAGS) $(LDFLAGS) -o $@ $^
 
 clean:
