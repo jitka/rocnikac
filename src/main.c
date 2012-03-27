@@ -4,12 +4,10 @@
 // TODO HNED
 // nacitani startovnich pozic
 // novy pristup k node -
-//                     - ostatni
 //                     - enumy
 //                     - ukazatele
 //                     - data
 // mensi node
-// static inline node_t* selectMostProving(node_t* node){
 // testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru
 // vhodnejsi cisla na zacatku - testovat!

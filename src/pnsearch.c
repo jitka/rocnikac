@@ -212,29 +212,24 @@ static inline node_t* updateAncenors(node_t* node){
 
 static inline node_t* selectMostProving(node_t* node){
 	while (nodeExpanded(node)){
+		uint turn = nodeTurn(node);
 		if (node->type == OR){
-			uint i;
-			uint turn = nodeTurn(node);
-			for (i = 0; i < nodeChildsN(node); i++){
+			for (uint i = 0; i < nodeChildsN(node); i++){
 				if (nodeProof(node) == nodeProof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
-			if (turn == nodeTurn(node))
-				perror("minimalni proof numer neni");
 		} else {
-			uint i;
-			uint turn = nodeTurn(node);
-			for (i = 0; i < nodeChildsN(node); i++){
+			for (uint i = 0; i < nodeChildsN(node); i++){
 				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
-			if (turn == nodeTurn(node))
-				perror("minimalni disproof numer neni");
 		}
+		if (turn == nodeTurn(node))
+			perror("minimalni (dis)proof numer neni");
 	}
 	return node;
 }
