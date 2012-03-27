@@ -54,40 +54,33 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	case UNKNOWN:
 		if (node->expanded){
 			if (node->type == OR){
-				node_t* n = node->child;
 
-				uint min = nodeProof(n);
-				while (n->brother != NULL){
-					n = n->brother;
-					min = MIN(min,nodeProof(n));
+				uint min = MAXPROOF;
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					min = MIN(min,nodeProof(node->childs[i]));
 				}
 				nodeSetProof( node, min);
 
-				n = node->child;
-				uint sum = nodeDisproof(n);
-				while (n->brother != NULL){
-					n = n->brother;
-					sum += nodeDisproof(n);
+				uint sum = 0;
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					sum += nodeDisproof(node->childs[i]);
 				}
 				nodeSetDisproof( node, sum);
 
 			} else {
-				node_t* n = node->child;
-
-				uint sum = nodeProof(n);
-				while (n->brother != NULL){
-					n = n->brother;
-					sum += nodeProof(n);
+	
+				uint sum = 0;
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					sum += nodeProof(node->childs[i]);
 				}
 				nodeSetProof( node, sum);
 
-				n = node->child;
-				uint min = nodeDisproof(n);
-				while (n->brother != NULL){
-					n = n->brother;
-					min = MIN(min,nodeDisproof(n));
+				uint min = MAXPROOF;
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					min = MIN(min,nodeDisproof(node->childs[i]));
 				}
 				nodeSetDisproof( node, min);
+			
 			}
 			if (nodeProof(node) == 0){
 				node->value = TRUE;
@@ -98,16 +91,16 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		} else {
 			nodeSetProof(node,1);
 			nodeSetDisproof(node,1);
-			deleteChild(node);
+			//TODO tady? deleteChild(node);
 
 		}
 		break;
 	case TRUE:
 		nodeSetProof(node,0);
-		nodeSetDisproof(node,INT_MAX);
+		nodeSetDisproof(node,MAXPROOF);
 		break;
 	case FALSE:
-		nodeSetProof(node,INT_MAX);
+		nodeSetProof(node,MAXPROOF);
 		nodeSetDisproof(node,0);
 		break;
 	}

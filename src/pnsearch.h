@@ -1,8 +1,10 @@
 #ifndef PNSEARCH_H
 #define PNSEARCH_H
 
+#include <limits.h>
 #define uint unsigned int
 #define ull unsigned long long int 
+#define MAXPROOF (INT_MAX/1000)
 #define N 5 
 
 enum nodeType{ AND, OR };
@@ -60,7 +62,10 @@ static inline uint nodeProof(node_t * node){
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, uint proof){
-	node->proof2 = proof;
+	if (proof < MAXPROOF)
+		node->proof2 = proof;
+	else 
+		node->proof2 = MAXPROOF;
 }
 
 //disproof
