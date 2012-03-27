@@ -1,5 +1,5 @@
-#ifndef NODESTRUCT_H
-#define NODESTRUCT_H
+#ifndef PNSEARCH_H
+#define PNSEARCH_H
 
 #define uint unsigned int
 #define ull unsigned long long int 
@@ -24,5 +24,6 @@ struct node{
 	node_t* brother;
 };
 
+void proofNuberSearch();
 
 #endif

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "nodeStruct.h"
+#include "pnsearch.h"
 #include "print.h"
 
 void printNode(node_t* node){

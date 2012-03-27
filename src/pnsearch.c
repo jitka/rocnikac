@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include "pnsearch.h"
 #include "print.h"
 #include "start.h"
 
@@ -289,21 +288,3 @@ void proofNuberSearch(){
 	}
 }
 
-int main(){
-
-	hashInit();
-	proofNuberSearch();
-
-/*	newTree();
-	root->data[1] = 50*2;
-	root->data[2] = 33*2;
-	root->data[5] = 33*2;
-	root->data[6] = 19*2;
-	printNode(root);
-	printf("%d\n",testK4(root->data,2,5,0));
-	printf("%d\n",testK4(root->data,2,5,8));
-	printf("%d\n",testK4(root->data,2,0,0));
-*/
-
-	return 0;
-}
