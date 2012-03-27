@@ -45,17 +45,3 @@ void printChilds(node_t* node){
 	int tmp; scanf("%d",&tmp);
 }
 
-void printChild(node_t* node){
-	if (!node->expanded)
-		perror("nejsou deti");
-	node_t* n = node->child;
-	printf("potomci:\n");
-	printNode(n);
-	while (n->brother != NULL){
-		n = n->brother;
-		printNode(n);
-	}
-	printf("-------------------------------------------------------------------------\n");
-	int tmp;
-	scanf("%d",&tmp);
-}

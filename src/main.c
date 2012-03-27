@@ -8,7 +8,6 @@
 //                     - enumy
 //                     - ukazatele
 //                     - data
-// syny v poli
 // testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru, smazt delete
 // vhodnejsi cisla na zacatku - testovat!
@@ -19,7 +18,7 @@
 // TODO NEKDY
 // radit listy podle heuristik
 // normalizace
-// mazat zbytecne nody
+// mazat zbytecne nody, pocet otcu-snizovat pri delete, 
 //
 // CIST
 // DB-search

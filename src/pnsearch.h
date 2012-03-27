@@ -22,9 +22,6 @@ struct node{
 	enum nodeValue value;
 	ull data[N*2];
 //	ull data2[3]; //TODO prepsat
-	node_t* child;
-	node_t* brother;
-	//pocet synu, otcu-snizovat pri delete, 
 	node_t** childs;
 	uint childsNumber;
 };

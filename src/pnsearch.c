@@ -180,37 +180,22 @@ static inline void developNode(node_t* node){
 	node_t* childs[N*N];
 	int childsN=0;
 
-	node_t * lastChild = NULL;
-
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( !(node->data[i] & (1<<j)) && !(node->data[N+i] & (1<<j)) ){
 				//ij je hrana ktera jeste nema barvu
-				node_t* child = createChild(node,i,j);
-				setProofAndDisproofNubers(child);
-				//umistim potomka do stromu
-				if (lastChild == NULL){
-					node->child = child;
-				} else {
-					lastChild->brother = child;
-				}
-				lastChild = child;
-				//umistim potomka do stromu
-				childs[childsN] = child;
+				childs[childsN] = createChild(node,i,j);
+				setProofAndDisproofNubers(childs[childsN]);
 				childsN++;
 			}
-	if (lastChild == NULL){
-		perror("nema syny");
-	} else {
-		lastChild->brother = NULL;
-	}
+
+	//umistim potomky do stromu
 	node->childs = malloc(sizeof(node_t*) * childsN);
 	for (int i = 0; i < childsN; i++){
 		node->childs[i] = childs[i];
-		if (node->childs[i] == NULL)
-			printf("null\n");
 	}
 	nodeSetChildsN( node, childsN);
+	
 	node->expanded = TRUE;
 }
 
