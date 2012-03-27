@@ -2,18 +2,17 @@
 #include "start.h"
 
 // TODO HNED
-// nacitani startovnich pozic
 // novy pristup k node -
 //                     - enumy
 //                     - ukazatele
 //                     - data
 // mensi node
-// testovat-vypisy pri expandovani
+// 	- testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru
-// vhodnejsi cisla na zacatku - testovat!
 // hasovani - pridani do cache -hned
-//          - koukani do cache pred tim
-//          - spolecne ukazatele k synum
+//          - koukani do cache pred tim = spolecne ukazatele k synum
+// nacitani startovnich pozic
+// vhodnejsi cisla na zacatku - testovat!
 //
 // TODO NEKDY
 // radit listy podle heuristik
