@@ -3,7 +3,6 @@
 
 // TODO HNED
 // nacitani startovnich pozic
-// prepsat hledani min
 // novy pristup k node -
 //                     - ostatni
 //                     - enumy

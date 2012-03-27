@@ -7,6 +7,7 @@
 
 #define true 1
 #define false 0
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define CACHE_SIZE (1<<10)
 
 // or node... na tahu je prvni hrac
@@ -58,8 +59,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				uint min = nodeProof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					if (nodeProof(n) < min)
-						min = nodeProof(n);
+					min = MIN(min,nodeProof(n));
 				}
 				nodeSetProof( node, min);
 
@@ -85,8 +85,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				uint min = nodeDisproof(n);
 				while (n->brother != NULL){
 					n = n->brother;
-					if (nodeDisproof(n) < min)
-						min = nodeDisproof(n);
+					min = MIN(min,nodeDisproof(n));
 				}
 				nodeSetDisproof( node, min);
 			}
