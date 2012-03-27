@@ -4,15 +4,7 @@
 #include "print.h"
 #include "start.h"
 
-//or node... na tahu je prvni hrac
-//pozor lisim se v tom ze kdyz dojdu na konec nestandarte nastavim false!!
-// to co pisu ma smysl pro N <= 9
-//TODO radit listy podle heuristik
-//zbytecne velka polozka cache
-//MOZNE ZRYCHLENI
-//rekurze v delete
-//test v K4
-
+// or node... na tahu je prvni hrac
 #define true 1
 #define false 0
 #define CACHE_SIZE (1<<10)

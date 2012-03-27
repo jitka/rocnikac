@@ -5,18 +5,36 @@
 #include "print.h"
 #include "start.h"
 
-//or node... na tahu je prvni hrac
-//pozor lisim se v tom ze kdyz dojdu na konec nestandarte nastavim false!!
-// to co pisu ma smysl pro N <= 9
-//TODO radit listy podle heuristik
-//zbytecne velka polozka cache
-//MOZNE ZRYCHLENI
-//rekurze v delete
-//test v K4
-
 #define true 1
 #define false 0
 #define CACHE_SIZE (1<<10)
+
+
+// TODO HNED
+// nacitani startovnich pozid
+// novy pristup k node
+// min intu v node
+// syny v poli
+// otcove v poli-rekurze nahoru, smazt delete
+// vhodnejsi cisla na zacatku - testovat!
+// hasovani - pridani do cache -hned
+//          - koukani do cache pred tim
+//          - spolecne ukazatele k synum
+//
+// TODO NEKDY
+// radit listy podle heuristik
+// normalizace
+// mazat zbytecne nody
+//
+// CIST
+// DB-search
+// weak PN-search
+//
+// MOZNE ZRYCHLENI
+// rekurze v delete
+// test v K4
+// zmensit data v node
+// zmensit i ukazatele v node
 
 node_t* root;
 node_t* currentNode;
