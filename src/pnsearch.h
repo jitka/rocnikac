@@ -20,8 +20,8 @@ struct node{
 
 	int expanded2;
 	int turn2; //kolikaty je to tah = kolik je prave obarveno hran
-	nodeType_t type;
-	nodeValue_t value;
+	nodeType_t type2;
+	nodeValue_t value2;
 	uint childsNumber;
 
 	uint hash;
@@ -38,17 +38,17 @@ void hashInit();
 //--------------------------NODE----------------------
 
 static inline nodeType_t nodeType(node_t * node){
-	return node->type;
+	return node->type2;
 }
 static inline void nodeSetType(node_t * node, nodeType_t type){
-	node->type = type;
+	node->type2 = type;
 }
 
 static inline nodeValue_t nodeValue(node_t * node){
-	return node->value;
+	return node->value2;
 }
 static inline void nodeSetValue(node_t * node, nodeValue_t value){
-	node->value = value;
+	node->value2 = value;
 }
 
 //expanded

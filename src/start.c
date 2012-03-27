@@ -12,9 +12,10 @@ node_t* getRoot(){
 	nodeSetExpanded( node, false);
 	nodeSetTurn( node, 0);
 	nodeSetHash( node, 0);
+	nodeSetType( node, OR);
+	nodeSetValue( node, UNKNOWN);
+	
 	node->parent = NULL;
-	node->type = OR;
-	node->value = UNKNOWN;
 	
 	for (int i = 0; i < N*2; i++)
 		node->data[i] = 0;

@@ -3,7 +3,6 @@
 
 // TODO HNED
 // novy pristup k node -
-//                     - enumy
 //                     - ukazatele
 //                     - data
 // mensi node

@@ -47,43 +47,42 @@ static inline void setProofAndDisproofNubers(node_t* node){
 //nejdriv overit jestli neni value true nebo false
 //pak pocitat ze synu
 //a pak dat 1 1
-	switch (node->value) {
+	switch (nodeValue(node)) {
 	case UNKNOWN:
 		if (nodeExpanded(node)){
-			if (node->type == OR){
-
-				uint min = MAXPROOF;
+			uint min = MAXPROOF;
+			uint sum = 0;
+			switch (nodeType(node)) {
+			case OR:
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					min = MIN(min,nodeProof(node->childs[i]));
 				}
 				nodeSetProof( node, min);
 
-				uint sum = 0;
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					sum += nodeDisproof(node->childs[i]);
 				}
 				nodeSetDisproof( node, sum);
+				break;
 
-			} else {
-	
-				uint sum = 0;
+			case AND:
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					sum += nodeProof(node->childs[i]);
 				}
 				nodeSetProof( node, sum);
 
-				uint min = MAXPROOF;
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					min = MIN(min,nodeDisproof(node->childs[i]));
 				}
 				nodeSetDisproof( node, min);
+				break;
 			
 			}
 			if (nodeProof(node) == 0){
-				node->value = TRUE;
+				nodeSetValue(node, TRUE);
 			} 
 			if (nodeDisproof(node) == 0){
-				node->value = FALSE;
+				nodeSetValue(node, FALSE);
 			}
 		} else {
 			nodeSetProof(node,1);
@@ -130,42 +129,45 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	child->parent = node;
 
-	if (node->type == OR) { //hraje prvni hrac
-		child->type = AND;
+	switch (nodeType(node)) {
+	case OR: //hraje prvni hrac
+		nodeSetType(child, AND);
 		nodeSetHash(child, nodeHash(node) ^ hashNumbers[0][i][j]);
 		//nevyhral prvni hrac?
 		if (testK4(node->data,i,j,0)){
-			child->value = TRUE;
+			nodeSetValue(child, TRUE);
 			printf("prvni K4 %d %d\n",i,j);
 			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			child->value = FALSE;
+			nodeSetValue(child, FALSE);
 		} else {
-			child->value = UNKNOWN;
+			nodeSetValue(child, UNKNOWN);
 			for (int x = 0; x < N*2; x++){
 				child->data[x] = node->data[x];
 			}
 			child->data[i] += 1<<j;
 			child->data[j] += 1<<i;
 		}
-	} else {//hraje druhy
-		child->type = OR;
+		break;
+	case AND: //hraje druhy
+		nodeSetType(child, OR);
 		nodeSetHash(child, nodeHash(node) ^ hashNumbers[1][i][j]);
 		//neprohral prvni hrac?
 		if (testK4(node->data,i,j,N)){
-			child->value = FALSE;
+			nodeSetValue(child, FALSE);
 			printf("druhy K4 %d %d\n",i,j);
 			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			child->value = FALSE;
+			nodeSetValue(child, FALSE);
 		} else {
-			child->value = UNKNOWN;
+			nodeSetValue(child, UNKNOWN);
 			for (int x = 0; x < N*2; x++){
 				child->data[x] = node->data[x];
 			}
 			child->data[i+N] += 1<<j;
 			child->data[j+N] += 1<<i;
 		}
+		break;
 	}
 	return child;
 }
@@ -213,20 +215,23 @@ static inline node_t* updateAncenors(node_t* node){
 static inline node_t* selectMostProving(node_t* node){
 	while (nodeExpanded(node)){
 		uint turn = nodeTurn(node);
-		if (node->type == OR){
+		switch (nodeType(node)) {
+		case OR: 
 			for (uint i = 0; i < nodeChildsN(node); i++){
 				if (nodeProof(node) == nodeProof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
-		} else {
+			break;
+		case AND: 
 			for (uint i = 0; i < nodeChildsN(node); i++){
 				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
 					node = node->childs[i];
 					break;
 				}
 			}
+			break;
 		}
 		if (turn == nodeTurn(node))
 			perror("minimalni (dis)proof numer neni");
@@ -257,7 +262,7 @@ void proofNuberSearch(node_t* root){
 		}
 	}
 
-	switch (root->value) {
+	switch (nodeValue(root)) {
 	case UNKNOWN:
 		printf("divne\n");
 		break;
