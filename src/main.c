@@ -1,11 +1,12 @@
 #include "pnsearch.h"
+#include "start.h"
 
 // TODO HNED
-// pn-search poustet na node
-// nacitani startovnich pozid
+// nacitani startovnich pozic
 // novy pristup k node
 // min intu v node
 // syny v poli
+// testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru, smazt delete
 // vhodnejsi cisla na zacatku - testovat!
 // hasovani - pridani do cache -hned
@@ -31,7 +32,8 @@
 int main(){
 
 	hashInit();
-	proofNuberSearch();
+	node_t* root = getRoot();
+	proofNuberSearch(root);
 
 	return 0;
 }

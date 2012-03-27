@@ -24,7 +24,7 @@ struct node{
 	node_t* brother;
 };
 
-void proofNuberSearch();
+void proofNuberSearch(node_t* node);
 void hashInit();
 
 #endif

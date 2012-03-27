@@ -10,7 +10,6 @@
 #define false 0
 #define CACHE_SIZE (1<<10)
 
-node_t* root;
 node_t* currentNode;
 int numerOfNodes = 1;
 uint hashNumbers[2][N][N];
@@ -36,7 +35,7 @@ void cacheInsert(node_t* node){
 */
 
 
-void deleteChild(node_t* node){
+static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)
 		return;
 	node_t* child = node->child;
@@ -248,8 +247,7 @@ static inline node_t* selectMostProving(node_t* node){
 	return node;
 }
 
-void proofNuberSearch(){
-	newTree();
+void proofNuberSearch(node_t* root){
 	//printf("root %d %d\n",root->proof,root->disproof);
 
 	currentNode = root;

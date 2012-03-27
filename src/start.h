@@ -1,6 +1,9 @@
 #ifndef START_H
 #define START_H
 
+#include "pnsearch.h"
+
 //void generateStartPosition(int depth);
-void newTree();
+node_t* getRoot();
+
 #endif

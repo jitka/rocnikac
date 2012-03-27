@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include "pnsearch.h"
 
-extern node_t* root;
-
-node_t* newNode(){
+node_t* getRoot(){
 	node_t* node = malloc(sizeof(node_t));
 	if (node == NULL)
 		perror("malloc node");
@@ -23,8 +21,3 @@ node_t* newNode(){
 	return node;
 }
 
-void newTree(){
-	root = newNode();
-}
-
-//TODO nacitani ze souboru
