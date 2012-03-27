@@ -17,8 +17,8 @@ void hashInit(){
 	for (int i = 0; i < N; i++){
 		for (int j = 0; j < i; j++){
 			hashNumbers[0][i][j] = random() % CACHE_SIZE;
-			hashNumbers[1][i][j] = random() % CACHE_SIZE;
 			hashNumbers[0][j][i] = hashNumbers[0][i][j];
+			hashNumbers[1][i][j] = random() % CACHE_SIZE;
 			hashNumbers[1][j][i] = hashNumbers[1][i][j];
 		}
 	}
@@ -102,17 +102,17 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	}
 }
 
-static inline int testK4(ull *data, int i, int j, int color){
+static inline int testK4(node_t * node, int i, int j, color color){
 	//otestuje jestli po pridani hrany ij nevznikla K4
 	uint tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
-	tr =  data[i+color] & data[j+color]; 
+	tr = nodeNeighbour(node,i,color) & nodeNeighbour(node,j,color);
 	for (int s = 0; s < N; s++)
 		if (tr & (1<<s))
 			for (int t = 0; t < N; t++)
 				if (tr & (1<<t)){
 					//staci overit jestli mezi s a t vede hrana
-					if ( data[s+color] & (1<<t) )
+					if ( nodeNeighbour(node,s,color) & (1<<t) )
 						return true;
 
 				}
@@ -134,7 +134,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		nodeSetType(child, AND);
 		nodeSetHash(child, nodeHash(node) ^ hashNumbers[0][i][j]);
 		//nevyhral prvni hrac?
-		if (testK4(node->data,i,j,0)){
+		if (testK4(node,i,j,0)){
 			nodeSetValue(child, TRUE);
 			printf("prvni K4 %d %d\n",i,j);
 			printNode(node);
@@ -142,18 +142,15 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			nodeSetValue(child, FALSE);
 		} else {
 			nodeSetValue(child, UNKNOWN);
-			for (int x = 0; x < N*2; x++){
-				child->data[x] = node->data[x];
-			}
-			child->data[i] += 1<<j;
-			child->data[j] += 1<<i;
+			nodeCopyData(child,node);
+			nodeSetEdge(child,i,j,RED);
 		}
 		break;
 	case AND: //hraje druhy
 		nodeSetType(child, OR);
 		nodeSetHash(child, nodeHash(node) ^ hashNumbers[1][i][j]);
 		//neprohral prvni hrac?
-		if (testK4(node->data,i,j,N)){
+		if (testK4(node,i,j,1)){
 			nodeSetValue(child, FALSE);
 			printf("druhy K4 %d %d\n",i,j);
 			printNode(node);
@@ -161,11 +158,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			nodeSetValue(child, FALSE);
 		} else {
 			nodeSetValue(child, UNKNOWN);
-			for (int x = 0; x < N*2; x++){
-				child->data[x] = node->data[x];
-			}
-			child->data[i+N] += 1<<j;
-			child->data[j+N] += 1<<i;
+			nodeCopyData(child,node);
+			nodeSetEdge(child,i,j,BLUE);
 		}
 		break;
 	}
@@ -181,8 +175,7 @@ static inline void developNode(node_t* node){
 
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
-			if ( !(node->data[i] & (1<<j)) && !(node->data[N+i] & (1<<j)) ){
-				//ij je hrana ktera jeste nema barvu
+			if ( !nodeEdge(node, i, j) ){ //ij je hrana ktera jeste nema barvu
 				childs[childsN] = createChild(node,i,j);
 				setProofAndDisproofNubers(childs[childsN]);
 				childsN++;

@@ -12,6 +12,7 @@
 
 typedef enum { AND, OR } nodeType_t;
 typedef enum { TRUE=1, FALSE=0, UNKNOWN=2 } nodeValue_t;
+typedef enum { RED=0, BLUE=1 } color;
 
 typedef struct node node_t;
 struct node{
@@ -29,7 +30,7 @@ struct node{
 	node_t** childs;
 	node_t* parent;
 
-	ull data[N*2];
+	ull data2[N*2];
 };
 
 void proofNuberSearch(node_t* node);
@@ -38,12 +39,24 @@ void hashInit();
 //--------------------------NODE----------------------
 
 //data
-static inline void nodeSetEdge(node_t * node, int i, int j, int color){
-	node->data[i+N*color] += 1<<j;
-	node->data[j+N*color] += 1<<i;
+static inline void nodeSetEdge(node_t * node, int i, int j, color color){
+	node->data2[i+N*color] += 1<<j;
+	node->data2[j+N*color] += 1<<i;
 }
-static inline uint nodeNeighbour(node_t * node, int i, int color){
-	return data[i+N*color]; 
+static inline uint nodeNeighbour(node_t * node, int i, color color){
+	return node->data2[i+N*color]; 
+}
+static inline void nodeCopyData(node_t * to, node_t * from){
+	for (int x = 0; x < N*2; x++){
+		to->data2[x] = from->data2[x];
+	}
+}
+static inline void nodeEmptyData(node_t * node){
+	for (int i = 0; i < N*2; i++)
+		node->data2[i] = 0;
+}
+static inline int nodeEdge(node_t * node, int i, int j){
+	return (node->data2[i] & (1<<j)) || (node->data2[N+i] & (1<<j));
 }
 
 //type

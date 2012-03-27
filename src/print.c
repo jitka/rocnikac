@@ -16,11 +16,13 @@ void printNode(node_t* node){
 	printf("|\n");
 	for (int i = 0; i < N; i++){
 		printf("%d| ",i);
+		uint data0 = nodeNeighbour(node,i,0);
+		uint data1 = nodeNeighbour(node,i,1);
 		for (int j = 0; j < N; j++){
-			if (node->data[i] & (1<<j)){
+			if (data0 & (1<<j)){
+				printf("0 ");
+			} else if (data1 & (1<<j)){
 				printf("1 ");
-			} else if (node->data[i+N] & (1<<j)){
-				printf("2 ");
 			} else {
 				printf("  ");
 			}

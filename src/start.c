@@ -16,9 +16,9 @@ node_t* getRoot(){
 	nodeSetValue( node, UNKNOWN);
 	
 	node->parent = NULL;
+
+	nodeEmptyData(node);
 	
-	for (int i = 0; i < N*2; i++)
-		node->data[i] = 0;
 	return node;
 }
 
