@@ -2,10 +2,6 @@
 #include "start.h"
 
 // TODO HNED
-// novy pristup k node -
-//                     - ukazatele
-//                     - data
-//                     - testuj print
 // mensi node
 // 	- testovat-vypisy pri expandovani
 // otcove v poli-rekurze nahoru
