@@ -31,6 +31,7 @@
 // zmensit data v node
 // zmensit i ukazatele v node
 // proc je sys tak velike? malloc?
+// pole na syny mit globalni?
 
 int main(){
 

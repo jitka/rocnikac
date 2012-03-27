@@ -12,9 +12,6 @@
 
 // or node... na tahu je prvni hrac
 
-node_t* currentNode;
-int numerOfNodes = 1; //abych vedela kolik zeru pameti
-
 //--------------------------CACHE-----------------------
 uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
 //ull cache[N*CACHE_SIZE]; //TODO to bude jinak velike
@@ -31,6 +28,9 @@ void hashInit(){
 }
 
 //--------------------------PN-SEARCH-----------------------
+node_t* currentNode;
+int numerOfNodes = 1; //abych vedela kolik zeru pameti
+
 static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)
 		return;
@@ -183,6 +183,10 @@ static inline node_t* createChild(node_t* node, int i, int j){
 static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
 	//TODO otestovat vypis viteztvi+proher, zbytek hotovo
+
+//	node_t* nodeTmp[N*N];
+//	int nodeTmpUsed;
+
 	node_t * lastChild = NULL;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)

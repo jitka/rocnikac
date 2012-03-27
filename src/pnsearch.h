@@ -23,6 +23,8 @@ struct node{
 	node_t* child;
 	node_t* brother;
 	//pocet synu, otcu-snizovat pri delete, 
+	node_t* childs;
+	uint childsNumber;
 };
 
 void proofNuberSearch(node_t* node);
@@ -30,34 +32,46 @@ void hashInit();
 
 //--------------------------NODE----------------------
 
+//expanded
 static inline uint nodeExpanded(node_t * node){
 	return node->expanded;
 }
+
+//turn
 static inline uint nodeTurn(node_t * node){
 	return node->turn;
 }
+
+//hash
 static inline uint nodeHash(node_t * node){
 	return node->hash;
 }
+
+//childsNumber
+static inline uint nodeChildsNumber(node_t * node){
+	return node->childsNumber;
+}
+static inline uint nodePlusChildsNumber(node_t * node){
+	return node->childsNumber++;
+}
+static inline void nodeSetChildsNuber(node_t * node, uint v){
+	node->childsNumber = v;
+}
+
+//proof
 static inline uint nodeProof(node_t * node){
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, uint proof){
 	node->proof2 = proof;
 }
+
+//disproof
 static inline uint nodeDisproof(node_t * node){
 	return node->disproof2;
 }
 static inline void nodeSetDisproof(node_t * node, uint disproof){
 	node->disproof2 = disproof;
 }
-/*	
-	enum nodeType type;
-	enum nodeValue value;
-	ull data[N*2];
-	node_t* parent;
-	node_t* child;
-	node_t* brother;
-*/	
 
 #endif
