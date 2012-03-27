@@ -2,8 +2,8 @@
 #define PNSEARCH_H
 
 #include <limits.h>
-#define uint unsigned int
-#define ull unsigned long long int 
+#define uint unsigned int //32-bit
+#define ull unsigned long long int //64-bit 
 #define MAXPROOF (INT_MAX/1000)
 #define true 1
 #define false 0
@@ -37,6 +37,16 @@ void hashInit();
 
 //--------------------------NODE----------------------
 
+//data
+static inline void nodeSetEdge(node_t * node, int i, int j, int color){
+	node->data[i+N*color] += 1<<j;
+	node->data[j+N*color] += 1<<i;
+}
+static inline uint nodeNeighbour(node_t * node, int i, int color){
+	return data[i+N*color]; 
+}
+
+//type
 static inline nodeType_t nodeType(node_t * node){
 	return node->type2;
 }
@@ -44,6 +54,7 @@ static inline void nodeSetType(node_t * node, nodeType_t type){
 	node->type2 = type;
 }
 
+//value
 static inline nodeValue_t nodeValue(node_t * node){
 	return node->value2;
 }
