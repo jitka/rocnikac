@@ -8,8 +8,9 @@
 //                     - enumy
 //                     - ukazatele
 //                     - data
+// mensi node
 // testovat-vypisy pri expandovani
-// otcove v poli-rekurze nahoru, smazt delete
+// otcove v poli-rekurze nahoru
 // vhodnejsi cisla na zacatku - testovat!
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim

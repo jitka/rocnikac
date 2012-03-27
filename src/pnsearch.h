@@ -5,6 +5,7 @@
 #define uint unsigned int
 #define ull unsigned long long int 
 #define MAXPROOF (INT_MAX/1000)
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define N 5 
 
 enum nodeType{ AND, OR };
@@ -12,8 +13,8 @@ enum nodeValue{ TRUE=1, FALSE=0, UNKNOWN=2 };
 
 typedef struct node node_t;
 struct node{
-	ull proof2;
-	ull disproof2;
+	uint proof;
+	uint disproof;
 	int expanded;
 	int turn; //kolikaty je to tah = kolik je prave obarveno hran
 	uint hash;
@@ -21,7 +22,6 @@ struct node{
 	enum nodeType type;
 	enum nodeValue value;
 	ull data[N*2];
-//	ull data2[3]; //TODO prepsat
 	node_t** childs;
 	uint childsNumber;
 };
@@ -56,21 +56,18 @@ static inline void nodeSetChildsN(node_t * node, uint v){
 
 //proof
 static inline uint nodeProof(node_t * node){
-	return node->proof2;
+	return node->proof;
 }
 static inline void nodeSetProof(node_t * node, uint proof){
-	if (proof < MAXPROOF)
-		node->proof2 = proof;
-	else 
-		node->proof2 = MAXPROOF;
+	node->proof = MIN( proof, MAXPROOF);
 }
 
 //disproof
 static inline uint nodeDisproof(node_t * node){
-	return node->disproof2;
+	return node->disproof;
 }
 static inline void nodeSetDisproof(node_t * node, uint disproof){
-	node->disproof2 = disproof;
+	node->disproof = MIN( disproof, MAXPROOF);
 }
 
 #endif

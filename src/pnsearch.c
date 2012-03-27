@@ -7,7 +7,6 @@
 
 #define true 1
 #define false 0
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define CACHE_SIZE (1<<10)
 
 // or node... na tahu je prvni hrac
