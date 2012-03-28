@@ -28,11 +28,13 @@ struct node{
 	uchar turn; //kolikaty je to tah = kolik je prave obarveno hran
 	uchar childsNumber;
 	uchar parentsNumber;
+	uchar maxParentsNumber;
 
 	uint hash;
 
-	node_t** childs;
 	node_t* parent;
+	node_t** childs;
+	node_t** parents;
 
 	ull graph[2];
 };
@@ -129,6 +131,18 @@ static inline void nodeSetChildsN(node_t * node, uchar v){
 }
 
 //-------------NODE---------------PARENTS------------------
+static inline uchar nodeParentsN(node_t * node){
+	return node->parentsNumber;
+}
+static inline void nodeSetParentsN(node_t * node, uchar v){
+	node->parentsNumber = v;
+}
+static inline uchar nodeMaxParentsN(node_t * node){
+	return node->maxParentsNumber;
+}
+static inline void nodeSetMaxParentsN(node_t * node, uchar v){
+	node->maxParentsNumber = v;
+}
 
 //-------------NODE---------------OTHER------------------
 //turn

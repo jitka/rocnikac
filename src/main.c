@@ -25,6 +25,7 @@
 // proc je sys tak velike? malloc?
 // pole na syny mit globalni?
 // odstranit vypisy chyb co nikdy nenastanou
+// mazat true deti v and a mazat false deti v or
 //
 // DOTAZY
 // jsou ty velikosti jak maji byt? vyjde to?
