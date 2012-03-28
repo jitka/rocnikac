@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "pnsearch.h"
+#include "print.h"
 
 node_t* getRoot(){
 	node_t* node = malloc(sizeof(node_t));
@@ -32,6 +33,8 @@ node_t* readNode(){
 	nodeSetHash( node, 0);
 	
 	int u,v,turn=0;
+//	if (!scanf("(["))
+//		return NULL;
 	scanf("([");
 	while (scanf("(%d,%d),",&u,&v)){
 		nodeSetEdge(node,u,v,0);
@@ -57,4 +60,18 @@ node_t* readNode(){
 
 
 	return node;
+}
+
+void readNodes(){
+	scanf("[");
+	printf("neco\n");
+	while (true){
+		node_t* node = readNode();
+		if (node == NULL)
+			break;
+		printNode(node);
+		scanf(",");
+	}
+	scanf("]");
+
 }

@@ -8,6 +8,7 @@
 // 	       - spojak - jednosmerny
 // 	                - zacatek = NULL
 // 	                - pridani / odebrani z konce 
+// 	       - read nodes vracet spojak
 //             - otcove ve spojaku 
 //             - spojak misto currend node
 //             - update ancesor dalsi predci do spojaku
@@ -15,13 +16,14 @@
 //             - rekurze nahoru
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
-// nacitani startovnich pozic
+// nacitani startovnich pozic - necist moc
 // vhodnejsi cisla na zacatku - testovat!
 //
 // TODO NEKDY
 // radit listy podle heuristik
 // normalizace
 // mazat zbytecne nody, pocet otcu-snizovat pri delete, 
+// davat dohromady vysledky z ruznych pozic
 //
 // CIST
 // DB-search
@@ -49,8 +51,10 @@ int main(){
 //	nodeValue_t value = proofNuberSearch(root);
 //	printValue(value);
 
-	node_t* root = readNode();
-	printNode(root);
+//	node_t* root = readNode();
+//	printNode(root);
+
+	readNodes();
 
 	return 0;
 }
