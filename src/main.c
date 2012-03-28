@@ -3,6 +3,7 @@
 #include "print.h"
 
 // TODO HNED
+// hash - pri pridani hrany
 // vice predku -
 // 	       - spojak - jednosmerny
 // 	                - zacatek = NULL
@@ -44,12 +45,12 @@
 int main(){
 
 //	hashInit();
-	node_t* root = getRoot();
-	nodeValue_t value = proofNuberSearch(root);
-	printValue(value);
+//	node_t* root = getRoot();
+//	nodeValue_t value = proofNuberSearch(root);
+//	printValue(value);
 
-//	node_t* root = readNode();
-//	printNode(root);
+	node_t* root = readNode();
+	printNode(root);
 
 	return 0;
 }
