@@ -3,7 +3,25 @@
 #include "print.h"
 
 void printNode(node_t* node){
-//	printf("proof %d, disproof %d\n",node->proof, node->disproof);
+
+	printf("node turn %d, hash %d, proof %d, disproof %d, epanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
+	if (nodeExpanded(node))
+		printf("yes, value ");
+	else 
+		printf("no, value ");
+	if (nodeValue(node)==TRUE) {
+		printf("TRUE, type ");
+	} else if (nodeValue(node)==FALSE) {
+		printf("FALSE, type ");
+	} else {
+		printf("UNKNOWN, type ");
+	}
+	if (nodeType(node)==OR)
+		printf("OR\n");
+	else 
+		printf("AND\n");
+
+
 	printf(" | ");
 	for (int j = 0; j < N; j++){
 		printf("%d ",j);
