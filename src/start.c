@@ -22,3 +22,12 @@ node_t* getRoot(){
 	return node;
 }
 
+node_t* readNode(){
+	node_t* node = malloc(sizeof(node_t));
+	if (node == NULL)
+		perror("malloc node");
+
+	perror("todo");
+
+	return node;
+}

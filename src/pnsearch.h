@@ -39,7 +39,7 @@ struct node{
 	ull graph[2];
 };
 
-void proofNuberSearch(node_t* node);
+nodeValue_t proofNuberSearch(node_t* node);
 void hashInit();
 
 //-------------NODE---------------GRAPH------------------

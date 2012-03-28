@@ -1,5 +1,6 @@
 #include "pnsearch.h"
 #include "start.h"
+#include "print.h"
 
 // TODO HNED
 // vice predku -
@@ -42,9 +43,13 @@
 
 int main(){
 
-	hashInit();
+//	hashInit();
 	node_t* root = getRoot();
-	proofNuberSearch(root);
+	nodeValue_t value = proofNuberSearch(root);
+	printValue(value);
+
+//	node_t* root = readNode();
+//	printNode(root);
 
 	return 0;
 }

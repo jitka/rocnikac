@@ -232,7 +232,7 @@ static inline node_t* selectMostProving(node_t* node){
 	return node;
 }
 
-void proofNuberSearch(node_t* root){
+nodeValue_t proofNuberSearch(node_t* root){
 	//printf("root %d %d\n",root->proof,root->disproof);
 
 	currentNode = root;
@@ -256,16 +256,6 @@ void proofNuberSearch(node_t* root){
 		}
 	}
 
-	switch (nodeValue(root)) {
-	case UNKNOWN:
-		printf("divne\n");
-		break;
-	case TRUE:
-		printf("prvni vyhraje\n");
-		break;
-	case FALSE:
-		printf("druhy neprohraje\n");
-		break;
-	}
+	return nodeValue(root);
 }
 

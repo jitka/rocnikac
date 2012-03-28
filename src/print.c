@@ -33,6 +33,21 @@ void printNode(node_t* node){
 				
 }
 
+void printValue(nodeValue_t value){
+	switch (value) {
+	case UNKNOWN:
+		printf("divne\n");
+		break;
+	case TRUE:
+		printf("prvni vyhraje\n");
+		break;
+	case FALSE:
+		printf("druhy neprohraje\n");
+		break;
+	}
+}
+
+
 void printChilds(node_t* node){
 
 	if (!nodeExpanded(node))
