@@ -2,7 +2,15 @@
 #include "start.h"
 
 // TODO HNED
-// otcove v poli, rekurze nahoru
+// vice predku -
+// 	       - spojak - jednosmerny
+// 	                - zacatek = NULL
+// 	                - pridani / odebrani z konce 
+//             - otcove ve spojaku 
+//             - spojak misto currend node
+//             - update ancesor dalsi predci do spojaku
+//             - update dalsich predku
+//             - rekurze nahoru
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // nacitani startovnich pozic
@@ -26,6 +34,7 @@
 // pole na syny mit globalni?
 // odstranit vypisy chyb co nikdy nenastanou
 // mazat true deti v and a mazat false deti v or
+// jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
 // jsou ty velikosti jak maji byt? vyjde to?
