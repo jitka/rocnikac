@@ -28,8 +28,6 @@ node_t* readNode(){
 	if (node == NULL)
 		perror("malloc node");
 
-	perror("todo");
-
 	nodeEmptyGraph(node);
 	nodeSetHash( node, 0);
 	
@@ -45,7 +43,6 @@ node_t* readNode(){
 		turn++;
 	}
 	scanf("])");
-	printf("%d\n",turn);
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
