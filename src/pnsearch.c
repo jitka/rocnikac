@@ -25,7 +25,7 @@ void hashInit(){
 }
 
 //--------------------------PN-SEARCH-----------------------
-node_t* currentNode;
+//node_t* currentNode;
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
 
@@ -218,7 +218,8 @@ static inline node_t* updateAncenors(node_t* node){
 	return previousNode;
 }
 
-static inline node_t* selectMostProving(node_t* node){
+static inline node_t* selectMostProving(){//node_t* node){
+	node_t * node = llLastNode(&currentPath);
 	while (nodeExpanded(node)){
 		uint turn = nodeTurn(node);
 		switch (nodeType(node)) {
@@ -250,26 +251,28 @@ static inline node_t* selectMostProving(node_t* node){
 nodeValue_t proofNuberSearch(node_t* root){
 	//printf("root %d %d\n",root->proof,root->disproof);
 
-	currentNode = root;
+//	currentNode = root;
 	currentPath = llNew();
 	llAddNode(&currentPath,root);
 
 	int counter = 0;
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0){
 	
-		node_t* mostProvingNode = selectMostProving(currentNode);
+		//node_t* mostProvingNode = selectMostProving(currentNode);
+		node_t* mostProvingNode = selectMostProving();
 		if (mostProvingNode != llLastNode(&currentPath)){
 			printf("au nesedi\n");
 		}
 		developNode(mostProvingNode);
-		currentNode = updateAncenors(mostProvingNode);
-		if ((uint) llGetLength(currentPath) != 1+nodeTurn(currentNode))
-			printf ("hloubka %d %d\n",llGetLength(currentPath),nodeTurn(currentNode));
-		if (currentNode != llLastNode(&currentPath)){
-			printf("au nesedi\n");
-		} else {
+		//currentNode = updateAncenors(mostProvingNode);
+		updateAncenors(mostProvingNode);
+//		if ((uint) llGetLength(currentPath) != 1+nodeTurn(currentNode))
+//			printf ("hloubka %d %d\n",llGetLength(currentPath),nodeTurn(currentNode));
+	//	if (currentNode != llLastNode(&currentPath)){
+	//		printf("au nesedi\n");
+	//	} else {
 //			printf("jo sedi\n");
-		}
+	//	}
 	
 		counter++;
 		//if (counter % 1000 == 0){

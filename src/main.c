@@ -5,7 +5,6 @@
 
 // TODO HNED
 // vice predku -
-//             - smazat currentNode
 //             - update ancesor dalsi predci do spojaku
 //             - update dalsich predku
 //             - uklidit
