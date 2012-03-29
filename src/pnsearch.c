@@ -48,13 +48,18 @@ void cacheInsert(node_t* node){
 //	printf("hash %d\n",nodeHash(node));
 //	perror("plna cache");
 }
-/*
+
 node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
+		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (cache[where] == NULL)
+			return NULL;
+		if ( compareGraph( cache[where], node) )
+			return cache[where];
 	}
-
+	return NULL;
 }
-*/
+
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
@@ -174,11 +179,16 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 		break;
 	}
-	//je v cachy?
-	     //pridat parent, smazat tuto
-	//else 
+
+	node_t* n = cacheFind(child);
+	if ( n != NULL ) { //je v cachy?
+		llAddNode(&(n->parents),node);
+		free(child);
+		return n;
+	} else {
 		cacheInsert(child);
-	return child;
+		return child;
+	}
 }
 
 static inline void developNode(node_t* node){

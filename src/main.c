@@ -4,19 +4,18 @@
 #include "print.h"
 
 // TODO HNED
-// hasovani - pridani do cache -hned
-//          - koukani do cache pred tim = spolecne ukazatele k synum
-// vhodnejsi cisla na zacatku - testovat!
-//
-// TODO NEKDY
-// radit listy podle heuristik
 // normalizace
 // mazat zbytecne nody, pocet otcu-snizovat pri delete, zmensit pocet nodu
 // smazat vsechno po pnsearch 
+// kdyz nucene tahy DB-search
+//
+// TODO NEKDY
+// radit listy podle heuristik
+// vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
-// kdyz nucene tahy DB-search
 // prepsat spojak
+// vhodne CACHE_PATIENCE  
 //
 // CIST
 // DB-search
@@ -27,7 +26,7 @@
 // test v K4
 // zmensit data v node - brum prvocisla
 // zmensit i ukazatele v node
-// proc je sys tak velike? malloc?
+// proc je sys tak velike? malloc? ptat se jineho time
 // pole na syny mit globalni?
 // odstranit vypisy chyb co nikdy nenastanou
 // mazat true deti v and a mazat false deti v or
@@ -38,6 +37,7 @@
 // DOTAZY
 // na priste poustet vic za sebou
 // v globalnim poli pointru jsou na zacatku vzdy NULL?
+// Gavento - hasovani
 
 int main(){
 
