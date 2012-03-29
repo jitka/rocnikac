@@ -3,6 +3,7 @@
 #include <limits.h>
 #include "pnsearch.h"
 #include "print.h"
+#include "linkedlist.h"
 
 #define CACHE_SIZE (1<<10)
 
@@ -25,7 +26,7 @@ void hashInit(){
 
 //--------------------------PN-SEARCH-----------------------
 node_t* currentNode;
-int numerOfNodes = 1; //abych vedela kolik zeru pameti
+int numberOfNodes = 1; //abych vedela kolik zeru pameti
 
 static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)
@@ -123,10 +124,12 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* child = malloc(sizeof(node_t));
 	if (child == NULL)
 		perror("malloc child");
-	numerOfNodes++;
+	numberOfNodes++;
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	child->parent = node;
+	child->parents = llNew();
+	llAddNode(&child->parents, node);
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
@@ -136,8 +139,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		//nevyhral prvni hrac?
 		if (testK4(node,i,j,0)){
 			nodeSetValue(child, TRUE);
-//			printf("prvni K4 %d %d\n",i,j);
-//			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
 		} else {
@@ -151,8 +152,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		//neprohral prvni hrac?
 		if (testK4(node,i,j,1)){
 			nodeSetValue(child, FALSE);
-//			printf("druhy K4 %d %d\n",i,j);
-//			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
 		} else {
@@ -190,6 +189,7 @@ static inline void developNode(node_t* node){
 
 static inline node_t* updateAncenors(node_t* node){
 	node_t* previousNode;
+	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
 	int changed = true;
 	while (node != NULL && changed){
 		uint oldProof = nodeProof(node);
@@ -197,8 +197,11 @@ static inline node_t* updateAncenors(node_t* node){
 		setProofAndDisproofNubers(node);
 		changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		previousNode = node;
+		//pridat vsechny predky udatate
+		//jit vzhuru po linii
 		node = node->parent;
 	}
+	//pak zbytek
 	return previousNode;
 }
 

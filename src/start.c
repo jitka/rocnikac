@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "start.h"
-#include "print.h"
+#include "linkedlist.h"
 
 node_t* getRoot(){
 	node_t* node = malloc(sizeof(node_t));
@@ -18,6 +18,7 @@ node_t* getRoot(){
 	nodeSetValue( node, UNKNOWN);
 	
 	node->parent = NULL;
+	node->parents = llNew();
 
 	
 	return node;
@@ -48,6 +49,7 @@ node_t* readNode(){
 	nodeSetExpanded( node, false);
 	nodeSetTurn( node, turn);
 	nodeSetValue( node, UNKNOWN);
+	node->parents = llNew();
 	if (turn%2==0){
 		nodeSetType( node, OR);
 	} else {

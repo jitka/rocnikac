@@ -10,7 +10,6 @@
 //             - update ancesor dalsi predci do spojaku
 //             - update dalsich predku
 //             - rekurze nahoru
-// testovat vyhry, prohry
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // vhodnejsi cisla na zacatku - testovat!
@@ -18,10 +17,11 @@
 // TODO NEKDY
 // radit listy podle heuristik
 // normalizace
-// mazat zbytecne nody, pocet otcu-snizovat pri delete,
+// mazat zbytecne nody, pocet otcu-snizovat pri delete, zmensit pocet nodu
 // smazat vsechno po pnsearch 
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
+// kdyz nucene tahy DB-search
 //
 // CIST
 // DB-search
@@ -44,10 +44,10 @@
 
 int main(){
 
-//	hashInit();
-//	node_t* root = getRoot();
-//	nodeValue_t value = proofNuberSearch(root);
-//	printValue(value);
+	hashInit();
+	node_t* root = getRoot();
+	nodeValue_t value = proofNuberSearch(root);
+	printValue(value);
 
 //	node_t* root = readNode();
 //	printNode(root);
@@ -55,9 +55,11 @@ int main(){
 	/*
 	ll_t* nodes = readNodes();
 	node_t* node;
+//	node = llGetNode(&nodes); printNode(node);
+//	printValue(proofNuberSearch(node));
 	while ((node = llGetNode(&nodes)) != NULL){
 		printNode(node);
-//		printValue(proofNuberSearch(node));
+		printValue(proofNuberSearch(node));
 	}
 */
 	return 0;

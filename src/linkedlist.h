@@ -3,11 +3,6 @@
 
 #include "node.h"
 
-typedef struct linkedListNode ll_t;
-struct linkedListNode{
-	node_t* data;
-	ll_t* next;
-};
 
 ll_t* llNew();
 void llAddNode(ll_t** where, node_t* node);

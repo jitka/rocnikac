@@ -9,13 +9,20 @@
 #define true 1
 #define false 0
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define N 6 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define N 5 //funguje pro N 5..8 aby sla matice sousedu ulozit 
 
 typedef enum { AND, OR } nodeType_t;
 typedef enum { TRUE=1, FALSE=0, UNKNOWN=2 } nodeValue_t;
 typedef enum { RED=0, BLUE=1 } color;
 
 typedef struct node node_t;
+
+typedef struct linkedListNode ll_t;
+struct linkedListNode{
+	node_t* data;
+	ll_t* next;
+};
+
 struct node{
 	uint proof;
 	uint disproof;
@@ -27,14 +34,12 @@ struct node{
 
 	uchar turn; //kolikaty je to tah = kolik je prave obarveno hran
 	uchar childsNumber;
-	uchar parentsNumber;
-	uchar maxParentsNumber;
 
 	uint hash;
 
 	node_t* parent;
 	node_t** childs;
-	node_t** parents;
+	ll_t* parents;
 
 	ull graph[2];
 };
@@ -130,20 +135,6 @@ static inline uchar nodeChildsN(node_t * node){
 }
 static inline void nodeSetChildsN(node_t * node, uchar v){
 	node->childsNumber = v;
-}
-
-//-------------NODE---------------PARENTS------------------
-static inline uchar nodeParentsN(node_t * node){
-	return node->parentsNumber;
-}
-static inline void nodeSetParentsN(node_t * node, uchar v){
-	node->parentsNumber = v;
-}
-static inline uchar nodeMaxParentsN(node_t * node){
-	return node->maxParentsNumber;
-}
-static inline void nodeSetMaxParentsN(node_t * node, uchar v){
-	node->maxParentsNumber = v;
 }
 
 //-------------NODE---------------OTHER------------------
