@@ -1,18 +1,16 @@
+#include <stdio.h>
 #include "pnsearch.h"
 #include "start.h"
 #include "print.h"
 
 // TODO HNED
 // vice predku -
-// 	       - spojak - jednosmerny
-// 	                - zacatek = NULL
-// 	                - pridani / odebrani z konce
-// 	       - read nodes vracet spojak
 //             - otcove ve spojaku 
 //             - spojak misto currend node
 //             - update ancesor dalsi predci do spojaku
 //             - update dalsich predku
 //             - rekurze nahoru
+// testovat vyhry, prohry
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // vhodnejsi cisla na zacatku - testovat!
@@ -20,7 +18,8 @@
 // TODO NEKDY
 // radit listy podle heuristik
 // normalizace
-// mazat zbytecne nody, pocet otcu-snizovat pri delete, 
+// mazat zbytecne nody, pocet otcu-snizovat pri delete,
+// smazat vsechno po pnsearch 
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
 //
@@ -45,15 +44,21 @@
 
 int main(){
 
-	hashInit();
-	node_t* root = getRoot();
-	nodeValue_t value = proofNuberSearch(root);
-	printValue(value);
+//	hashInit();
+//	node_t* root = getRoot();
+//	nodeValue_t value = proofNuberSearch(root);
+//	printValue(value);
 
 //	node_t* root = readNode();
 //	printNode(root);
 
-//	readNodes();
-
+	/*
+	ll_t* nodes = readNodes();
+	node_t* node;
+	while ((node = llGetNode(&nodes)) != NULL){
+		printNode(node);
+//		printValue(proofNuberSearch(node));
+	}
+*/
 	return 0;
 }

@@ -136,8 +136,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		//nevyhral prvni hrac?
 		if (testK4(node,i,j,0)){
 			nodeSetValue(child, TRUE);
-			printf("prvni K4 %d %d\n",i,j);
-			printNode(node);
+//			printf("prvni K4 %d %d\n",i,j);
+//			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
 		} else {
@@ -151,8 +151,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		//neprohral prvni hrac?
 		if (testK4(node,i,j,1)){
 			nodeSetValue(child, FALSE);
-			printf("druhy K4 %d %d\n",i,j);
-			printNode(node);
+//			printf("druhy K4 %d %d\n",i,j);
+//			printNode(node);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
 		} else {

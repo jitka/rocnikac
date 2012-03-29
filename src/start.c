@@ -58,16 +58,17 @@ node_t* readNode(){
 	return node;
 }
 
-void readNodes(){
+ll_t* readNodes(){
+	ll_t* nodes = llNew();
 	scanf("[");
-	printf("neco\n");
 	while (true){
 		node_t* node = readNode();
 		if (nodeTurn(node) == 0)
 			break;
-		printNode(node);
+		llAddNode(&nodes,node);
+//		printNode(node);
 		scanf(",");
 	}
 	scanf("]");
-
+	return nodes;
 }
