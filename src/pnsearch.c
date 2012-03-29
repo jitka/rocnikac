@@ -9,7 +9,7 @@
 
 //--------------------------CACHE-----------------------
 #define CACHE_SIZE (1<<20)
-#define CACHE_PATIENCE 10 //kolik pozic za mistem kam patri se jeste muze nalezat 
+#define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
 
 uint hashNumbers[2][N][N]; //pro kazdou barvu a hranu
 node_t* cache[CACHE_SIZE];
@@ -32,15 +32,22 @@ void hashInit(){
 
 void cacheInsert(node_t* node){
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
-		if (cache[nodeHash(node)+i] != NULL)
+		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (cache[where] != NULL)
 			continue;
-		cache[nodeHash(node)+i] = node;
+		cache[where] = node;
 //		printf("hash %d\n",nodeHash(node));
 		return;
 	}
 	cacheMiss++;
 //	printf("hash %d\n",nodeHash(node));
 //	perror("plna cache");
+}
+
+node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
+	for (uint i = 0; i < CACHE_PATIENCE; i++){
+	}
+
 }
 
 //--------------------------PN-SEARCH-----------------------

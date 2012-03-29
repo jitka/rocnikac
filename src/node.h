@@ -67,6 +67,9 @@ static inline void nodeEmptyGraph(node_t * node){
 static inline int nodeEdge(node_t * node, int i, int j){
 	return (node->graph[0] & (1ULL<<(i*N+j)) || (node->graph[1] & (1ULL<<(i*N+j))));
 }
+static inline int compareGraph(node_t * a, node_t * b){
+	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+}
 
 //-------------NODE---------------DATA------------------
 static inline uchar setBit(uchar data, uchar bit, uchar value){
