@@ -31,6 +31,11 @@ void hashInit(){
 }
 
 void cacheInsert(node_t* node){
+/*	if (cache[nodeHash(node)] != NULL){
+		printNode(node);
+		printNode(cache[nodeHash(node)]);
+	}
+*/		
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] != NULL)
@@ -43,13 +48,13 @@ void cacheInsert(node_t* node){
 //	printf("hash %d\n",nodeHash(node));
 //	perror("plna cache");
 }
-
+/*
 node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 	}
 
 }
-
+*/
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
