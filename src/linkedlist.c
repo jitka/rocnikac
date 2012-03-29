@@ -41,9 +41,13 @@ int llGetLength(ll_t* item){
 }
 
 void llAddll(ll_t** where, ll_t* nodes){
-	ll_t* item = nodes;
-	while (item!=NULL){
-		item=item->next;
-		llAddNode(where,item->data);
+	while (nodes != NULL){
+		ll_t* item = malloc(sizeof(ll_t));
+		if (item == NULL)
+			perror("malloc item");
+		item->data = nodes->data;
+		item->next = *where;
+		*where = item;
+		nodes=nodes->next;
 	}
 }

@@ -5,9 +5,9 @@
 
 // TODO HNED
 // vice predku -
-//             - update ancesor dalsi predci do spojaku
 //             - update dalsich predku
 //             - uklidit
+// prejmenovat predky
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // vhodnejsi cisla na zacatku - testovat!
@@ -20,6 +20,7 @@
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
 // kdyz nucene tahy DB-search
+// prepsat spojak
 //
 // CIST
 // DB-search

@@ -195,6 +195,7 @@ static inline node_t* updateAncenors(node_t* node){
 	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
 		if (node != llLastNode(&currentPath))
 			printf("au nesedi\n");
+	ll_t* ancestors = llNew();
 	int changed = true;
 	while (node != NULL && changed){
 		uint oldProof = nodeProof(node);
@@ -203,7 +204,7 @@ static inline node_t* updateAncenors(node_t* node){
 		changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		previousNode = node;
 		//pridat vsechny predky udatate
-
+		llAddll(&ancestors, node->parents);
 		//jit vzhuru po linii
 		//printf ("po %d\n",llGetLength(currentPath));
 		if (node != llLastNode(&currentPath))
