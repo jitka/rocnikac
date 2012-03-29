@@ -39,6 +39,8 @@ struct node{
 	ull graph[2];
 };
 
+extern uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
+
 nodeValue_t proofNuberSearch(node_t* node);
 void hashInit();
 
@@ -46,6 +48,7 @@ void hashInit();
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->graph[color] += 1ULL<<(i*N+j);
 	node->graph[color] += 1ULL<<(j*N+i);
+	node->hash ^= hashNumbers[color][i][j];
 }
 static inline uint nodeNeighbour(node_t * node, int i, color color){
 	return (node->graph[color] >> (i*N)) & ((1ULL<<N)-1ULL); 
@@ -53,10 +56,12 @@ static inline uint nodeNeighbour(node_t * node, int i, color color){
 static inline void nodeCopyData(node_t * to, node_t * from){
 	to->graph[0] = from->graph[0];
 	to->graph[1] = from->graph[1];
+	to->hash = from->hash;
 }
 static inline void nodeEmptyGraph(node_t * node){
 	node->graph[0] = 0ULL;
 	node->graph[1] = 0ULL;
+	node->hash = 0;
 }
 static inline int nodeEdge(node_t * node, int i, int j){
 	return (node->graph[0] & (1ULL<<(i*N+j)) || (node->graph[1] & (1ULL<<(i*N+j))));
@@ -156,9 +161,6 @@ static inline void nodeSetTurn(node_t * node, uint turn){
 //hash
 static inline uint nodeHash(node_t * node){
 	return node->hash;
-}
-static inline void nodeSetHash(node_t * node, uint hash){
-	node->hash = hash;
 }
 
 //proof

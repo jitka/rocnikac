@@ -9,7 +9,6 @@ node_t* getRoot(){
 		perror("malloc node");
 
 	nodeEmptyGraph(node);
-	nodeSetHash( node, 0);
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
@@ -30,11 +29,8 @@ node_t* readNode(){
 		perror("malloc node");
 
 	nodeEmptyGraph(node);
-	nodeSetHash( node, 0);
 	
 	int u,v,turn=0;
-//	if (!scanf("(["))
-//		return NULL;
 	scanf("([");
 	while (scanf("(%d,%d),",&u,&v)){
 		nodeSetEdge(node,u,v,0);

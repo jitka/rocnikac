@@ -132,7 +132,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
 		nodeSetType(child, AND);
-		nodeSetHash(child, nodeHash(node) ^ hashNumbers[0][i][j]);
+		nodeCopyData(child,node);
+		nodeSetEdge(child,i,j,RED);
 		//nevyhral prvni hrac?
 		if (testK4(node,i,j,0)){
 			nodeSetValue(child, TRUE);
@@ -146,7 +147,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		break;
 	case AND: //hraje druhy
 		nodeSetType(child, OR);
-		nodeSetHash(child, nodeHash(node) ^ hashNumbers[1][i][j]);
+		nodeCopyData(child,node);
+		nodeSetEdge(child,i,j,BLUE);
 		//neprohral prvni hrac?
 		if (testK4(node,i,j,1)){
 			nodeSetValue(child, FALSE);
@@ -156,8 +158,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			nodeSetValue(child, FALSE);
 		} else {
 			nodeSetValue(child, UNKNOWN);
-			nodeCopyData(child,node);
-			nodeSetEdge(child,i,j,BLUE);
 		}
 		break;
 	}

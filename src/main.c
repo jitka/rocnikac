@@ -3,7 +3,6 @@
 #include "print.h"
 
 // TODO HNED
-// hash - pri pridani hrany
 // vice predku -
 // 	       - spojak - jednosmerny
 // 	                - zacatek = NULL
