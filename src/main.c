@@ -35,6 +35,8 @@
 // odstranit vypisy chyb co nikdy nenastanou
 // mazat true deti v and a mazat false deti v or
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
+// spojaky v poli
+// cely strom v poli
 //
 // DOTAZY
 // jsou ty velikosti jak maji byt? vyjde to?

@@ -203,6 +203,7 @@ static inline node_t* updateAncenors(node_t* node){
 		changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		previousNode = node;
 		//pridat vsechny predky udatate
+
 		//jit vzhuru po linii
 		//printf ("po %d\n",llGetLength(currentPath));
 		if (node != llLastNode(&currentPath))

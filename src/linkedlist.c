@@ -39,3 +39,11 @@ int llGetLength(ll_t* item){
 	}
 	return n;
 }
+
+void llAddll(ll_t** where, ll_t* nodes){
+	ll_t* item = nodes;
+	while (item!=NULL){
+		item=item->next;
+		llAddNode(where,item->data);
+	}
+}

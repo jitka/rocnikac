@@ -9,6 +9,7 @@ void llAddNode(ll_t** where, node_t* node);
 node_t* llGetNode(ll_t** where); //kdyz neni vraci NULL
 node_t* llLastNode(ll_t** where); //kdyz neni vraci NULL
 int llGetLength(ll_t* where); //pomale! jen pro testovani!
+void llAddll(ll_t** where, ll_t* nodes);
 
 #endif
 
