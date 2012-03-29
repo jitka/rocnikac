@@ -67,7 +67,7 @@ void readNodes(){
 	printf("neco\n");
 	while (true){
 		node_t* node = readNode();
-		if (node == NULL)
+		if (nodeTurn(node) == 0)
 			break;
 		printNode(node);
 		scanf(",");

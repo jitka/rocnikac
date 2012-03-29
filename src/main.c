@@ -16,7 +16,6 @@
 //             - rekurze nahoru
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
-// nacitani startovnich pozic - necist moc
 // vhodnejsi cisla na zacatku - testovat!
 //
 // TODO NEKDY
@@ -24,6 +23,7 @@
 // normalizace
 // mazat zbytecne nody, pocet otcu-snizovat pri delete, 
 // davat dohromady vysledky z ruznych pozic
+// cistejsi predavani stavu mezi haskelem a timhle
 //
 // CIST
 // DB-search
