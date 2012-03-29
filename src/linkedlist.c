@@ -24,3 +24,18 @@ node_t* llGetNode(ll_t** where){
 	free(item);
 	return data;
 }
+
+node_t* llLastNode(ll_t** where){
+	if (*where == NULL)
+		return NULL;
+	return (*where)->data;
+}
+
+int llGetLength(ll_t* item){
+	int n = 0;
+	while (item!=NULL){
+		n++;
+		item=item->next;
+	}
+	return n;
+}

@@ -5,11 +5,10 @@
 
 // TODO HNED
 // vice predku -
-//             - otcove ve spojaku 
-//             - spojak misto currend node
+//             - smazat currentNode
 //             - update ancesor dalsi predci do spojaku
 //             - update dalsich predku
-//             - rekurze nahoru
+//             - uklidit
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // vhodnejsi cisla na zacatku - testovat!

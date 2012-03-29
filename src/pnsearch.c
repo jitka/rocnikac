@@ -27,6 +27,7 @@ void hashInit(){
 //--------------------------PN-SEARCH-----------------------
 node_t* currentNode;
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
+ll_t* currentPath;
 
 static inline void deleteChild(node_t* node){
 /*	if (!node->expanded)
@@ -188,8 +189,12 @@ static inline void developNode(node_t* node){
 }
 
 static inline node_t* updateAncenors(node_t* node){
-	node_t* previousNode;
+	if (node==NULL)
+		perror("nesmysl");
+	node_t* previousNode = NULL; //proti warrings
 	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
+		if (node != llLastNode(&currentPath))
+			printf("au nesedi\n");
 	int changed = true;
 	while (node != NULL && changed){
 		uint oldProof = nodeProof(node);
@@ -199,8 +204,16 @@ static inline node_t* updateAncenors(node_t* node){
 		previousNode = node;
 		//pridat vsechny predky udatate
 		//jit vzhuru po linii
-		node = node->parent;
+		//printf ("po %d\n",llGetLength(currentPath));
+		if (node != llLastNode(&currentPath))
+			printf("au nesedi\n");
+		llGetNode(&currentPath);
+		node = llLastNode(&currentPath);
+//		node = node->parent;
+		if (node != llLastNode(&currentPath))
+			printf("au nesedi\n");
 	}
+	llAddNode(&currentPath,previousNode);
 	//pak zbytek
 	return previousNode;
 }
@@ -226,8 +239,10 @@ static inline node_t* selectMostProving(node_t* node){
 			}
 			break;
 		}
-		if (turn == nodeTurn(node))
-			perror("minimalni (dis)proof numer neni");
+		if (turn == nodeTurn(node)){
+			printf("minimalni (dis)proof numer neni\n");
+		}
+		llAddNode(&currentPath,node);
 	}
 	return node;
 }
@@ -236,13 +251,25 @@ nodeValue_t proofNuberSearch(node_t* root){
 	//printf("root %d %d\n",root->proof,root->disproof);
 
 	currentNode = root;
+	currentPath = llNew();
+	llAddNode(&currentPath,root);
 
 	int counter = 0;
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0){
 	
 		node_t* mostProvingNode = selectMostProving(currentNode);
+		if (mostProvingNode != llLastNode(&currentPath)){
+			printf("au nesedi\n");
+		}
 		developNode(mostProvingNode);
 		currentNode = updateAncenors(mostProvingNode);
+		if ((uint) llGetLength(currentPath) != 1+nodeTurn(currentNode))
+			printf ("hloubka %d %d\n",llGetLength(currentPath),nodeTurn(currentNode));
+		if (currentNode != llLastNode(&currentPath)){
+			printf("au nesedi\n");
+		} else {
+//			printf("jo sedi\n");
+		}
 	
 		counter++;
 		//if (counter % 1000 == 0){
