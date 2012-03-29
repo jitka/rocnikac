@@ -37,7 +37,6 @@ struct node{
 
 	uint hash;
 
-	node_t* parent;
 	node_t** childs;
 	ll_t* parents;
 

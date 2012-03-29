@@ -17,7 +17,6 @@ node_t* getRoot(){
 	nodeSetType( node, OR);
 	nodeSetValue( node, UNKNOWN);
 	
-	node->parent = NULL;
 	node->parents = llNew();
 
 	

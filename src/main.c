@@ -25,7 +25,7 @@
 // MOZNE ZRYCHLENI
 // rekurze v delete
 // test v K4
-// zmensit data v node
+// zmensit data v node - brum prvocisla
 // zmensit i ukazatele v node
 // proc je sys tak velike? malloc?
 // pole na syny mit globalni?
@@ -36,9 +36,8 @@
 // cely strom v poli
 //
 // DOTAZY
-// jsou ty velikosti jak maji byt? vyjde to?
-// jsou bitove operace ok?
 // na priste poustet vic za sebou
+// v globalnim poli pointru jsou na zacatku vzdy NULL?
 
 int main(){
 

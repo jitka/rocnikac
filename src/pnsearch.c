@@ -5,14 +5,15 @@
 #include "print.h"
 #include "linkedlist.h"
 
-#define CACHE_SIZE (1<<10)
-
 // or node... na tahu je prvni hrac
 
 //--------------------------CACHE-----------------------
-uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
-//ull cache[N*CACHE_SIZE]; //TODO to bude jinak velike
+#define CACHE_SIZE (1<<20)
+#define CACHE_PATIENCE 10 //kolik pozic za mistem kam patri se jeste muze nalezat 
 
+uint hashNumbers[2][N][N]; //pro kazdou barvu a hranu
+node_t* cache[CACHE_SIZE];
+int cacheMiss = 0;
 void hashInit(){
 	for (int i = 0; i < N; i++){
 		for (int j = 0; j < i; j++){
@@ -20,8 +21,26 @@ void hashInit(){
 			hashNumbers[0][j][i] = hashNumbers[0][i][j];
 			hashNumbers[1][i][j] = random() % CACHE_SIZE;
 			hashNumbers[1][j][i] = hashNumbers[1][i][j];
+			printf("(%d,%d) %d %d\n",i,j,hashNumbers[0][i][j],hashNumbers[1][j][i]);
 		}
 	}
+	for (int i = 0; i < CACHE_PATIENCE; i++){
+		if (cache[(1<<10)+i] != NULL)
+			printf("cokoliv\n");
+	}
+}
+
+void cacheInsert(node_t* node){
+	for (uint i = 0; i < CACHE_PATIENCE; i++){
+		if (cache[nodeHash(node)+i] != NULL)
+			continue;
+		cache[nodeHash(node)+i] = node;
+//		printf("hash %d\n",nodeHash(node));
+		return;
+	}
+	cacheMiss++;
+//	printf("hash %d\n",nodeHash(node));
+//	perror("plna cache");
 }
 
 //--------------------------PN-SEARCH-----------------------
@@ -112,7 +131,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	numberOfNodes++;
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
-	child->parent = node;
 	child->parents = llNew();
 	llAddNode(&child->parents, node);
 
@@ -144,6 +162,10 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 		break;
 	}
+	//je v cachy?
+	     //pridat parent, smazat tuto
+	//else 
+		cacheInsert(child);
 	return child;
 }
 
@@ -275,6 +297,8 @@ nodeValue_t proofNuberSearch(node_t* root){
 		}
 	}
 
+	printf("nodes %d\n",numberOfNodes);
+	printf("cache miss %d\n",cacheMiss);
 	return nodeValue(root);
 }
 
