@@ -217,6 +217,22 @@ static inline node_t* updateAncenors(node_t* node){
 	}
 	llAddNode(&currentPath,previousNode);
 	//pak zbytek
+	node_t* ancestor;
+	while ((ancestor = llGetNode(&ancestors)) != NULL){
+		changed = true;
+		if (ancestor == NULL)
+			continue;
+		uint oldProof = nodeProof(ancestor);
+		uint oldDisproof = nodeDisproof(ancestor);
+
+		setProofAndDisproofNubers(ancestor);
+
+		changed = (oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor));
+
+		if ((oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor)))
+			llAddll(&ancestors, ancestor->parents);
+
+	}
 	return previousNode;
 }
 

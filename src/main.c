@@ -5,7 +5,6 @@
 
 // TODO HNED
 // vice predku -
-//             - update dalsich predku
 //             - uklidit
 // prejmenovat predky
 // hasovani - pridani do cache -hned
