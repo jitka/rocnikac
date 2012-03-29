@@ -172,7 +172,7 @@ static inline void developNode(node_t* node){
 	nodeSetExpanded(node,true);
 }
 
-static inline void updateAncenors(){
+static inline void updateAncestors(){
 	node_t* node = llLastNode(&currentPath);
 	if (node==NULL) perror("nesmysl");
 
@@ -260,7 +260,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 		
 		developNode(mostProovingNode);
 
-		updateAncenors(); 
+		updateAncestors(); 
 	
 		//TESTOVACI CAST	
 		counter++;

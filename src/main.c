@@ -4,7 +4,6 @@
 #include "print.h"
 
 // TODO HNED
-// prejmenovat predky
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
 // vhodnejsi cisla na zacatku - testovat!
