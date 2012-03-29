@@ -142,8 +142,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			nodeSetValue(child, FALSE);
 		} else {
 			nodeSetValue(child, UNKNOWN);
-			nodeCopyData(child,node);
-			nodeSetEdge(child,i,j,RED);
 		}
 		break;
 	case AND: //hraje druhy

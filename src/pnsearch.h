@@ -9,7 +9,7 @@
 #define true 1
 #define false 0
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define N 6 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define N 5 //funguje pro N 5..8 aby sla matice sousedu ulozit 
 
 typedef enum { AND, OR } nodeType_t;
 typedef enum { TRUE=1, FALSE=0, UNKNOWN=2 } nodeValue_t;

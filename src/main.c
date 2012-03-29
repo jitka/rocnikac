@@ -46,15 +46,15 @@
 
 int main(){
 
-//	hashInit();
-//	node_t* root = getRoot();
-//	nodeValue_t value = proofNuberSearch(root);
-//	printValue(value);
+	hashInit();
+	node_t* root = getRoot();
+	nodeValue_t value = proofNuberSearch(root);
+	printValue(value);
 
 //	node_t* root = readNode();
 //	printNode(root);
 
-	readNodes();
+//	readNodes();
 
 	return 0;
 }
