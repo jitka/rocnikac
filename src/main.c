@@ -4,8 +4,6 @@
 #include "print.h"
 
 // TODO HNED
-// vice predku -
-//             - uklidit
 // prejmenovat predky
 // hasovani - pridani do cache -hned
 //          - koukani do cache pred tim = spolecne ukazatele k synum
@@ -41,6 +39,7 @@
 // DOTAZY
 // jsou ty velikosti jak maji byt? vyjde to?
 // jsou bitove operace ok?
+// na priste poustet vic za sebou
 
 int main(){
 

@@ -25,24 +25,8 @@ void hashInit(){
 }
 
 //--------------------------PN-SEARCH-----------------------
-//node_t* currentNode;
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
-
-static inline void deleteChild(node_t* node){
-/*	if (!node->expanded)
-		return;
-	node_t* child = node->child;
-	while (child->brother != NULL){
-		node_t* next;
-		next = child->brother;
-		deleteChild(child);
-		free(child);
-		child = next;
-	} */
-	nodeProof(node); //nedela nic, neotravuje
-}
-
 
 static inline void setProofAndDisproofNubers(node_t* node){
 //nejdriv overit jestli neni value true nebo false
@@ -188,38 +172,39 @@ static inline void developNode(node_t* node){
 	nodeSetExpanded(node,true);
 }
 
-static inline node_t* updateAncenors(node_t* node){
-	if (node==NULL)
-		perror("nesmysl");
-	node_t* previousNode = NULL; //proti warrings
-	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
-		if (node != llLastNode(&currentPath))
-			printf("au nesedi\n");
+static inline void updateAncenors(){
+	node_t* node = llLastNode(&currentPath);
+	if (node==NULL) perror("nesmysl");
+
 	ll_t* ancestors = llNew();
-	int changed = true;
-	while (node != NULL && changed){
+
+	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
+	while (true){
 		uint oldProof = nodeProof(node);
 		uint oldDisproof = nodeDisproof(node);
+
 		setProofAndDisproofNubers(node);
-		changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
-		previousNode = node;
+
+		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
+		if (!changed)
+			break;
+		
 		//pridat vsechny predky udatate
 		llAddll(&ancestors, node->parents);
+
 		//jit vzhuru po linii
-		//printf ("po %d\n",llGetLength(currentPath));
-		if (node != llLastNode(&currentPath))
-			printf("au nesedi\n");
+		node_t* previousNode = node;
 		llGetNode(&currentPath);
 		node = llLastNode(&currentPath);
-//		node = node->parent;
-		if (node != llLastNode(&currentPath))
-			printf("au nesedi\n");
+		if (node == NULL){ //pokud to jde
+			llAddNode(&currentPath,previousNode);
+			break;
+		}
 	}
-	llAddNode(&currentPath,previousNode);
-	//pak zbytek
+
+	//update zbytku
 	node_t* ancestor;
 	while ((ancestor = llGetNode(&ancestors)) != NULL){
-		changed = true;
 		if (ancestor == NULL)
 			continue;
 		uint oldProof = nodeProof(ancestor);
@@ -227,16 +212,13 @@ static inline node_t* updateAncenors(node_t* node){
 
 		setProofAndDisproofNubers(ancestor);
 
-		changed = (oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor));
-
 		if ((oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor)))
 			llAddll(&ancestors, ancestor->parents);
 
 	}
-	return previousNode;
 }
 
-static inline node_t* selectMostProving(){//node_t* node){
+static inline void selectMostProving(){
 	node_t * node = llLastNode(&currentPath);
 	while (nodeExpanded(node)){
 		uint turn = nodeTurn(node);
@@ -263,44 +245,33 @@ static inline node_t* selectMostProving(){//node_t* node){
 		}
 		llAddNode(&currentPath,node);
 	}
-	return node;
 }
 
 nodeValue_t proofNuberSearch(node_t* root){
-	//printf("root %d %d\n",root->proof,root->disproof);
 
-//	currentNode = root;
 	currentPath = llNew();
 	llAddNode(&currentPath,root);
 
 	int counter = 0;
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0){
 	
-		//node_t* mostProvingNode = selectMostProving(currentNode);
-		node_t* mostProvingNode = selectMostProving();
-		if (mostProvingNode != llLastNode(&currentPath)){
-			printf("au nesedi\n");
-		}
-		developNode(mostProvingNode);
-		//currentNode = updateAncenors(mostProvingNode);
-		updateAncenors(mostProvingNode);
-//		if ((uint) llGetLength(currentPath) != 1+nodeTurn(currentNode))
-//			printf ("hloubka %d %d\n",llGetLength(currentPath),nodeTurn(currentNode));
-	//	if (currentNode != llLastNode(&currentPath)){
-	//		printf("au nesedi\n");
-	//	} else {
-//			printf("jo sedi\n");
-	//	}
+		selectMostProving();
+		node_t* mostProovingNode = llLastNode(&currentPath);
+		
+		developNode(mostProovingNode);
+
+		updateAncenors(); 
 	
+		//TESTOVACI CAST	
 		counter++;
 		//if (counter % 1000 == 0){
 		//if (true){
 		if (false){
-			printNode(mostProvingNode);
-			printf("hotov node (%u) %u %u\n",nodeTurn(mostProvingNode),nodeProof(mostProvingNode),nodeDisproof(mostProvingNode));
+			printNode(mostProovingNode);
+			printf("hotov node (%u) %u %u\n",nodeTurn(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChild(mostProvingNode);
-			printChilds(mostProvingNode);
+			printChilds(mostProovingNode);
 		}
 	}
 
