@@ -6,7 +6,7 @@
 // vice predku -
 // 	       - spojak - jednosmerny
 // 	                - zacatek = NULL
-// 	                - pridani / odebrani z konce 
+// 	                - pridani / odebrani z konce
 // 	       - read nodes vracet spojak
 //             - otcove ve spojaku 
 //             - spojak misto currend node

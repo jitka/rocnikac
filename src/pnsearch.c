@@ -1,9 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include "print.h"
 #include "pnsearch.h"
-#include "start.h"
+#include "print.h"
 
 #define CACHE_SIZE (1<<10)
 
