@@ -52,29 +52,129 @@ node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
-
+int SMAZAT = 0;
 
 static inline void deleteChild(node_t* node){
-	//printf("hui\n");
+/*	if (nodeHash(node) == 969720 ){
+
+		printf("delete \n");
+		printNode(node);
+	}
+	*/	
+
+	SMAZAT++;
+//	int hui = SMAZAT;
+//	printf("delete zac %d\n",hui);
 	if (nodeExpanded(node)){
-	//	printf("hui\n");
 		for (uint i = 0; i < nodeChildsN(node); i++){
 			node_t* child = node->childs[i];
-			llDelete(&child->parents,node);
+			if (child == NULL)
+				perror("au");
+			if (child->parents == NULL){
+				perror("tohle bych smazala");
+//				printNode(child);
+				printNode(node);
+				printChilds(node);
+				perror("===========");
+				printf("%d \n",MAXPROOF);
+				exit(1);
+			}
+//		printf("delete pr2 %d\n",hui);
+			int a = llGetLength(child->parents);
+//		printf("delete pr3 %d\n",hui);
+			llDelete(&(child->parents),node);
+			int b = llGetLength(child->parents);
+			if ( a != b+1)
+				perror("llDelete");
 			if (child->parents == NULL){
 				deleteChild(child);
-				nodeDelete(node);
+				nodeDelete(child);
 				numberOfNodes--;
 			}
+//	if (nodeHash(node) == 969720 ){
+//		printf("proof mezi po %d\n",nodeProof(node));
+//	}
 		}
 	}
+	nodeSetExpanded(node,false);
+//	printf("delete kon %d\n",hui);
 }
 
 static inline void setProofAndDisproofNubers(node_t* node){
 //nejdriv overit jestli neni value true nebo false
 //pak pocitat ze synu
 //a pak dat 1 1
-	switch (nodeValue(node)) {
+/*
+	if (nodeHash(node) == 969720 ){
+		switch (nodeValue(node)) {
+		case UNKNOWN:
+			if (nodeExpanded(node)){
+				uint min = MAXPROOF;
+				uint sum = 0;
+				switch (nodeType(node)) {
+				case OR:
+					for (uint i = 0; i < nodeChildsN(node); i++){
+						min = MIN(min,nodeProof(node->childs[i]));
+					}
+					nodeSetProof( node, min);
+
+					for (uint i = 0; i < nodeChildsN(node); i++){
+						sum += nodeDisproof(node->childs[i]);
+					}
+					nodeSetDisproof( node, sum);
+					break;
+
+				case AND:
+					for (uint i = 0; i < nodeChildsN(node); i++){
+						sum += nodeProof(node->childs[i]);
+					}
+					nodeSetProof( node, sum);
+
+					for (uint i = 0; i < nodeChildsN(node); i++){
+						min = MIN(min,nodeDisproof(node->childs[i]));
+					}
+					nodeSetDisproof( node, min);
+					break;
+
+				}
+				if (nodeProof(node) == 0){
+					nodeSetValue(node, TRUE);
+					nodeSetDisproof(node,MAXPROOF);
+					deleteChild(node);
+					printf("hui\n");
+				} 
+				if (nodeDisproof(node) == 0){
+					nodeSetValue(node, FALSE);
+					nodeSetProof(node,MAXPROOF);
+//					printf("proof1 %d\n",nodeProof(node));
+					deleteChild(node);
+//					printf("proof2 %d\n",nodeProof(node));
+				}
+			} else {
+				nodeSetProof(node,1);
+				nodeSetDisproof(node,1);
+			}
+			break;
+		case TRUE:
+			nodeSetProof(node,0);
+			nodeSetDisproof(node,MAXPROOF);
+			break;
+		case FALSE:
+			nodeSetProof(node,MAXPROOF);
+			nodeSetDisproof(node,0);
+			break;
+		}
+
+
+		printf("(((((((((((((((((\n");
+		printf("tenhle setPDN\n");
+		printNode(node);
+		printChilds(node);
+		printf(")))))))))))))))))\n");
+
+		return;	
+	}
+*/	switch (nodeValue(node)) {
 	case UNKNOWN:
 		if (nodeExpanded(node)){
 			uint min = MAXPROOF;
@@ -107,11 +207,14 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			}
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
-				//deleteChild(node);
+				nodeSetDisproof(node,MAXPROOF);
+				deleteChild(node);
+				printf("hui\n");
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
-				//deleteChild(node);
+				nodeSetProof(node,MAXPROOF);
+				deleteChild(node);
 			}
 		} else {
 			nodeSetProof(node,1);
@@ -127,6 +230,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		nodeSetDisproof(node,0);
 		break;
 	}
+
 }
 
 static inline int testK4(node_t * node, int i, int j, color color){
@@ -151,11 +255,9 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* child = malloc(sizeof(node_t));
 	if (child == NULL)
 		perror("malloc child");
-	numberOfNodes++;
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	child->parents = llNew();
-	llAddNode(&child->parents, node);
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
@@ -189,10 +291,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
 		llAddNode(&(n->parents),node);
-		free(child);
-		numberOfNodes--;
+		nodeDelete(child);
 		return n;
 	} else {
+		llAddNode(&child->parents, node);
+		numberOfNodes++;
 		cacheInsert(child);
 		return child;
 	}
@@ -209,8 +312,17 @@ static inline void developNode(node_t* node){
 		for (int j = 0; j < i; j++)
 			if ( !nodeEdge(node, i, j) ){ //ij je hrana ktera jeste nema barvu
 				childs[childsN] = createChild(node,i,j);
+
+				if ( !nodeSimetric( childs[childsN] ) ){
+				
+					perror("nesimetricke");
+					printNode(childs[childsN]);
+					printNode(node);
+					exit(1);
+				}
 				setProofAndDisproofNubers(childs[childsN]);
 				childsN++;
+
 			}
 
 	//umistim potomky do stromu
@@ -234,8 +346,12 @@ static inline void updateAncestors(){
 		uint oldProof = nodeProof(node);
 		uint oldDisproof = nodeDisproof(node);
 
+				if (nodeDisproof(node)  > MAXPROOF || nodeProof(node) > MAXPROOF)
+					perror("uot.hn");
 		setProofAndDisproofNubers(node);
 
+				if (nodeDisproof(node)  > MAXPROOF || nodeProof(node) > MAXPROOF)
+					perror("uot.hn");
 		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		if (!changed)
 			break;
@@ -258,11 +374,15 @@ static inline void updateAncestors(){
 	while ((ancestor = llGetNode(&ancestors)) != NULL){
 		if (ancestor == NULL)
 			continue;
+				if (nodeDisproof(ancestor)  > MAXPROOF || nodeProof(ancestor) > MAXPROOF)
+					perror("ueuo");
 		uint oldProof = nodeProof(ancestor);
 		uint oldDisproof = nodeDisproof(ancestor);
 
 		setProofAndDisproofNubers(ancestor);
 
+				if (nodeDisproof(ancestor)  > MAXPROOF || nodeProof(ancestor) > MAXPROOF)
+					perror("ujkqe");
 		if ((oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor)))
 			llAddll(&ancestors, ancestor->parents);
 
@@ -272,6 +392,12 @@ static inline void updateAncestors(){
 static inline void selectMostProving(){
 	node_t * node = llLastNode(&currentPath);
 	while (nodeExpanded(node)){
+		if (nodeValue(node)!=UNKNOWN){
+			printf("tady ne\n");
+		}
+		if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
+			printf("tady ne\n");
+		}
 		uint turn = nodeTurn(node);
 		switch (nodeType(node)) {
 		case OR: 
@@ -321,7 +447,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 			printNode(mostProovingNode);
 			printf("hotov node (%u) %u %u\n",nodeTurn(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
-			printChilds(mostProovingNode);
+			//printChilds(mostProovingNode);
 		}
 	}
 

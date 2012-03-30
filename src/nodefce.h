@@ -6,16 +6,10 @@
 #include "linkedlist.h"
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
-	free(node->childs);
-	lldeletell(node->parents);
-	free(node);
-}
-
 //-------------NODE---------------GRAPH------------------
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
-	node->graph[color] += 1ULL<<(i*N+j);
-	node->graph[color] += 1ULL<<(j*N+i);
+	node->graph[color] |= 1ULL<<(i*N+j);
+	node->graph[color] |= 1ULL<<(j*N+i);
 	node->hash ^= hashNumbers[color][i][j];
 }
 static inline uint nodeNeighbour(node_t * node, int i, color color){
@@ -36,6 +30,19 @@ static inline int nodeEdge(node_t * node, int i, int j){
 }
 static inline int compareGraph(node_t * a, node_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+}
+static inline int nodeSimetric(node_t * a){
+	for (int u = 0; u < N; u++){
+		for (int v = 0; v < N; v++){
+			for (int c = 0; c < 2; c++){
+				if ( (!!(a->graph[c] & (1ULL<<(u*N+v)))) != (!!(a->graph[c] & (1ULL<<(v*N+u)))) ){
+					printf("%d %d %d %llu %llu \n",u,v,c,a->graph[c] & (1ULL<<(u*N+v)), a->graph[c] & (1ULL<<(v*N+u)) );
+					return false;
+				}
+			}
+		}
+	}
+	return true;
 }
 
 //-------------NODE---------------DATA------------------
@@ -110,6 +117,9 @@ static inline void nodeSetChildsN(node_t * node, uchar v){
 //turn
 static inline uchar nodeTurn(node_t * node){
 	return node->turn;
+	if (node->turn > 10){
+		perror("nejde turn");
+	}
 }
 static inline void nodeSetTurn(node_t * node, uint turn){
 	node->turn = turn;
@@ -122,10 +132,16 @@ static inline uint nodeHash(node_t * node){
 
 //proof
 static inline uint nodeProof(node_t * node){
-	return node->proof;
+	if (node->proof2 > MAXPROOF){
+		perror("nejde proof");
+	}
+	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, uint proof){
-	node->proof = MIN( proof, MAXPROOF);
+	node->proof2 = MIN( proof, MAXPROOF);
+	if (node->proof2 > MAXPROOF){
+		perror("nejde");
+	}
 }
 
 //disproof
@@ -135,4 +151,14 @@ static inline uint nodeDisproof(node_t * node){
 static inline void nodeSetDisproof(node_t * node, uint disproof){
 	node->disproof = MIN( disproof, MAXPROOF);
 }
+
+//-------------NODE---------------DELETE------------------
+static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
+	if (nodeExpanded(node))
+		free(node->childs);
+	lldeletell(node->parents); //zbytecne tohle se vola jen kdyz rodice nejsou
+	free(node);
+}
+
+
 #endif

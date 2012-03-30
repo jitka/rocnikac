@@ -4,14 +4,15 @@
 #include "print.h"
 
 // TODO HNED
+// uklidit
 // mazat zbytecne nody, pocet otcu-snizovat pri delete, zmensit pocet nodu
 // smazat vsechno po pnsearch 
 // testovat cteni vice node
-// prepsat spojak - poradek v .h
 // normalizace
 // kdyz nucene tahy DB-search
 //
 // TODO NEKDY
+// prepsat spojak - do pole? a cely strom do pole?
 // radit listy podle heuristik
 // vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
@@ -25,6 +26,7 @@
 // MOZNE ZRYCHLENI
 // rekurze v delete
 // test v K4
+// nejdriv se koukat do cache a pak teprve testovat
 // zmensit data v node - brum prvocisla
 // zmensit i ukazatele v node
 // proc je sys tak velike? malloc? ptat se jineho time
@@ -34,6 +36,7 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 // spojaky v poli
 // cely strom v poli
+// posladni stavy (uz dohrano) zabiraji moc mista v cachy
 //
 // DOTAZY
 // Gavento - hasovani

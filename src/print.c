@@ -4,7 +4,7 @@
 
 void printNode(node_t* node){
 
-	printf("node turn %d, hash %d, proof %d, disproof %d, epanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
+	printf("turn %d, hash %d, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
 	if (nodeExpanded(node))
 		printf("yes, value ");
 	else 
@@ -68,8 +68,10 @@ void printValue(nodeValue_t value){
 
 void printChilds(node_t* node){
 
-	if (!nodeExpanded(node))
-		perror("nejsou deti");
+	if (!nodeExpanded(node)){
+		printf("nejsou deti\n");
+		return;
+	}
 	printf("potomci:\n");
 	for (uint i = 0; i < nodeChildsN(node); i++) {
 		if (node->childs[i] == NULL)
@@ -77,6 +79,6 @@ void printChilds(node_t* node){
 		printNode(node->childs[i]);
 	}
 	printf("-------------------------------------------------------------------------\n");
-	int tmp; scanf("%d",&tmp);
+//	int tmp; scanf("%d",&tmp);
 }
 

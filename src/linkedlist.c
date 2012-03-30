@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "linkedlist.h"
+#include "print.h"
 
 ll_t* llNew(){
 	return NULL;
@@ -43,15 +44,20 @@ void llDelete(ll_t** where, node_t* node){
 	ll_t* item = (*where)->next;
 	if (previous->data == node){
 		free(previous);
-		*where = item;	
+		*where = item;
+		return;	
 	}
 	while ( item != NULL){
 		if (item->data == node){
 			previous->next = item->next;
 			free(item);
-		}	
+			return;
+		}
+		previous = item;
+		item = item->next;	
 	}
 	perror("neni co");
+	printNode(node);
 }
 
 int llGetLength(ll_t* item){
