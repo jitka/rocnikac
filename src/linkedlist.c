@@ -31,6 +31,29 @@ node_t* llLastNode(ll_t** where){
 	return (*where)->data;
 }
 
+void lldeletell(ll_t* ll){
+	while (ll != NULL)
+		llGetNode(&ll);
+}
+
+void llDelete(ll_t** where, node_t* node){
+	if (*where == NULL)
+		perror("mazu z niceho");
+	ll_t* previous = *where;
+	ll_t* item = (*where)->next;
+	if (previous->data == node){
+		free(previous);
+		*where = item;	
+	}
+	while ( item != NULL){
+		if (item->data == node){
+			previous->next = item->next;
+			free(item);
+		}	
+	}
+	perror("neni co");
+}
+
 int llGetLength(ll_t* item){
 	int n = 0;
 	while (item!=NULL){

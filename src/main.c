@@ -4,10 +4,11 @@
 #include "print.h"
 
 // TODO HNED
-// normalizace
 // mazat zbytecne nody, pocet otcu-snizovat pri delete, zmensit pocet nodu
 // smazat vsechno po pnsearch 
 // testovat cteni vice node
+// prepsat spojak - poradek v .h
+// normalizace
 // kdyz nucene tahy DB-search
 //
 // TODO NEKDY
@@ -15,7 +16,6 @@
 // vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
-// prepsat spojak
 // vhodne CACHE_PATIENCE  
 //
 // CIST
@@ -36,8 +36,6 @@
 // cely strom v poli
 //
 // DOTAZY
-// na priste poustet vic za sebou
-// v globalnim poli pointru jsou na zacatku vzdy NULL?
 // Gavento - hasovani
 
 int main(){

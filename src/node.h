@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <limits.h>
+#include <stdlib.h>
 #define uchar unsigned int //8-bit
 #define uint unsigned int //32-bit
 #define ull unsigned long long int //64-bit 
@@ -44,6 +45,23 @@ struct node{
 };
 
 extern uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
+
+
+ll_t* llNew();
+void llAddNode(ll_t** where, node_t* node);
+node_t* llGetNode(ll_t** where); //kdyz neni vraci NULL
+node_t* llLastNode(ll_t** where); //kdyz neni vraci NULL
+int llGetLength(ll_t* where); //pomale! jen pro testovani!
+void llAddll(ll_t** where, ll_t* nodes);
+void llDelete(ll_t** where, node_t* node);
+void lldeletell(ll_t* ll);
+
+
+static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
+	free(node->childs);
+	lldeletell(node->parents);
+	free(node);
+}
 
 //-------------NODE---------------GRAPH------------------
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){

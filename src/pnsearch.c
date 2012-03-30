@@ -21,12 +21,7 @@ void hashInit(){
 			hashNumbers[0][j][i] = hashNumbers[0][i][j];
 			hashNumbers[1][i][j] = random() % CACHE_SIZE;
 			hashNumbers[1][j][i] = hashNumbers[1][i][j];
-			printf("(%d,%d) %d %d\n",i,j,hashNumbers[0][i][j],hashNumbers[1][j][i]);
 		}
-	}
-	for (int i = 0; i < CACHE_PATIENCE; i++){
-		if (cache[(1<<10)+i] != NULL)
-			printf("cokoliv\n");
 	}
 }
 
@@ -56,6 +51,23 @@ node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
+
+
+static inline void deleteChild(node_t* node){
+	//printf("hui\n");
+	if (nodeExpanded(node)){
+	//	printf("hui\n");
+		for (uint i = 0; i < nodeChildsN(node); i++){
+			node_t* child = node->childs[i];
+			llDelete(&child->parents,node);
+			if (child->parents == NULL){
+				deleteChild(child);
+				nodeDelete(node);
+				numberOfNodes--;
+			}
+		}
+	}
+}
 
 static inline void setProofAndDisproofNubers(node_t* node){
 //nejdriv overit jestli neni value true nebo false
@@ -94,15 +106,15 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			}
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
+				//deleteChild(node);
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
+				//deleteChild(node);
 			}
 		} else {
 			nodeSetProof(node,1);
 			nodeSetDisproof(node,1);
-			//TODO tady? deleteChild(node);
-
 		}
 		break;
 	case TRUE:
@@ -177,6 +189,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	if ( n != NULL ) { //je v cachy?
 		llAddNode(&(n->parents),node);
 		free(child);
+		numberOfNodes--;
 		return n;
 	} else {
 		cacheInsert(child);
