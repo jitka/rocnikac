@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "nodefce.h"
 #include "print.h"
 
 void printNode(node_t* node){

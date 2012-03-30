@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "start.h"
+#include "nodefce.h"
 #include "linkedlist.h"
 
 node_t* getRoot(){

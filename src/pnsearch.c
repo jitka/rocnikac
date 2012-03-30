@@ -4,6 +4,7 @@
 #include "pnsearch.h"
 #include "print.h"
 #include "linkedlist.h"
+#include "nodefce.h"
 
 // or node... na tahu je prvni hrac
 
@@ -320,7 +321,6 @@ nodeValue_t proofNuberSearch(node_t* root){
 			printNode(mostProovingNode);
 			printf("hotov node (%u) %u %u\n",nodeTurn(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
-			//printChild(mostProvingNode);
 			printChilds(mostProovingNode);
 		}
 	}
