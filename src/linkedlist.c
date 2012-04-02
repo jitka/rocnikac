@@ -32,7 +32,7 @@ node_t* llLastNode(ll_t** where){
 	return (*where)->data;
 }
 
-void lldeletell(ll_t* ll){
+void llDeletell(ll_t* ll){
 	while (ll != NULL)
 		llGetNode(&ll);
 }

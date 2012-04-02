@@ -24,6 +24,7 @@
 // weak PN-search
 //
 // MOZNE ZRYCHLENI
+// rychlejsi predani tupu blue/or spojit dohromady
 // rekurze v delete
 // test v K4
 // nejdriv se koukat do cache a pak teprve testovat

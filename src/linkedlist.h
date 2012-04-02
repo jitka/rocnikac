@@ -10,7 +10,7 @@ node_t* llLastNode(ll_t** where); //kdyz neni vraci NULL
 int llGetLength(ll_t* where); //pomale! jen pro testovani!
 void llAddll(ll_t** where, ll_t* nodes);
 void llDelete(ll_t** where, node_t* node);
-void lldeletell(ll_t* ll);
+void llDeletell(ll_t* ll);
 
 
 

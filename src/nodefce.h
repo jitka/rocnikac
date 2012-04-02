@@ -154,9 +154,13 @@ static inline void nodeSetDisproof(node_t * node, uint disproof){
 
 //-------------NODE---------------DELETE------------------
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
+	if (node == NULL)
+		perror("mazam nic");
 	if (nodeExpanded(node))
 		free(node->childs);
-	lldeletell(node->parents); //zbytecne tohle se vola jen kdyz rodice nejsou
+	llDeletell(node->parents); //zbytecne tohle se vola jen kdyz rodice nejsou
+	if (node == NULL)
+		perror("mazam nic");
 	free(node);
 }
 

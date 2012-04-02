@@ -291,7 +291,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
 		llAddNode(&(n->parents),node);
-		nodeDelete(child);
+//		nodeDelete(child);
 		return n;
 	} else {
 		llAddNode(&child->parents, node);
@@ -336,56 +336,38 @@ static inline void developNode(node_t* node){
 }
 
 static inline void updateAncestors(){
-	node_t* node = llLastNode(&currentPath);
-	if (node==NULL) perror("nesmysl");
 
 	ll_t* ancestors = llNew();
+	llAddNode( &ancestors, llLastNode(&currentPath));
+	ll_t* ancestors2;
 
 	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
-	while (true){
-		uint oldProof = nodeProof(node);
-		uint oldDisproof = nodeDisproof(node);
+	while (ancestors != NULL){
+		ancestors2 = llNew();
+	
+		for (node_t* node = llGetNode(&ancestors); node != NULL; node = llGetNode(&ancestors) ) {
+			uint oldProof = nodeProof(node);
+			uint oldDisproof = nodeDisproof(node);
 
-				if (nodeDisproof(node)  > MAXPROOF || nodeProof(node) > MAXPROOF)
-					perror("uot.hn");
-		setProofAndDisproofNubers(node);
+			setProofAndDisproofNubers(node);
 
-				if (nodeDisproof(node)  > MAXPROOF || nodeProof(node) > MAXPROOF)
-					perror("uot.hn");
-		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
-		if (!changed)
-			break;
-		
-		//pridat vsechny predky udatate
-		llAddll(&ancestors, node->parents);
+			int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
+			if (!changed)
+				continue;
 
-		//jit vzhuru po linii
-		node_t* previousNode = node;
-		llGetNode(&currentPath);
-		node = llLastNode(&currentPath);
-		if (node == NULL){ //pokud to jde
-			llAddNode(&currentPath,previousNode);
-			break;
+			//pridat vsechny predky co je potreba updatetovat
+			llAddll(&ancestors2, node->parents);
+
 		}
-	}
 
-	//update zbytku
-	node_t* ancestor;
-	while ((ancestor = llGetNode(&ancestors)) != NULL){
-		if (ancestor == NULL)
-			continue;
-				if (nodeDisproof(ancestor)  > MAXPROOF || nodeProof(ancestor) > MAXPROOF)
-					perror("ueuo");
-		uint oldProof = nodeProof(ancestor);
-		uint oldDisproof = nodeDisproof(ancestor);
+		//jit vzhuru po linii pokud nejsem na konci
+		node_t* previousNode = llLastNode(&currentPath);
+		llGetNode(&currentPath);
+		if ( llLastNode(&currentPath) == NULL){
+			llAddNode(&currentPath,previousNode);
+		}
 
-		setProofAndDisproofNubers(ancestor);
-
-				if (nodeDisproof(ancestor)  > MAXPROOF || nodeProof(ancestor) > MAXPROOF)
-					perror("ujkqe");
-		if ((oldProof != nodeProof(ancestor)) || (oldDisproof != nodeDisproof(ancestor)))
-			llAddll(&ancestors, ancestor->parents);
-
+		ancestors = ancestors2;
 	}
 }
 
