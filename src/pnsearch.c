@@ -100,6 +100,7 @@ static inline void deleteChild(node_t* node){
 				perror("llDelete");
 			if (child->parents == NULL){
 				deleteChild(child);
+				cacheDelete(child);
 				nodeDelete(child);
 				numberOfNodes--;
 			}
@@ -220,13 +221,13 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
-//				deleteChild(node);
+				deleteChild(node);
 				printf("hui\n");
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
-//				deleteChild(node);
+				deleteChild(node);
 			}
 		} else {
 			nodeSetProof(node,1);
