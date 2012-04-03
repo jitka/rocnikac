@@ -32,10 +32,10 @@ void cacheInsert(node_t* node){
 		if (cache[where] != NULL)
 			continue;
 		cache[where] = node;
-//		printf("hash %d\n",nodeHash(node));
 		return;
 	}
 	cacheMiss++;
+	perror("neni cache");
 }
 
 node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
@@ -208,13 +208,13 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
-				deleteChild(node);
+//				deleteChild(node);
 				printf("hui\n");
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
-				deleteChild(node);
+//				deleteChild(node);
 			}
 		} else {
 			nodeSetProof(node,1);
@@ -296,6 +296,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	} else {
 		llAddNode(&child->parents, node);
 		numberOfNodes++;
+		cacheInsert(child);
 		cacheInsert(child);
 		return child;
 	}
