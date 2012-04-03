@@ -26,7 +26,7 @@ void hashInit(){
 	}
 }
 
-void cacheInsert(node_t* node){
+static inline void cacheInsert(node_t* node){
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] != NULL)
@@ -38,7 +38,7 @@ void cacheInsert(node_t* node){
 	perror("neni kam dat");
 }
 
-node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
+static inline node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
@@ -49,7 +49,7 @@ node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud
 	return NULL;
 }
 
-void cacheDelete(node_t* node){
+static inline void cacheDelete(node_t* node){
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
@@ -64,130 +64,25 @@ void cacheDelete(node_t* node){
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
-int SMAZAT = 0;
 
 static inline void deleteChild(node_t* node){
-/*	if (nodeHash(node) == 969720 ){
-
-		printf("delete \n");
-		printNode(node);
-	}
-	*/	
-
-	SMAZAT++;
-//	int hui = SMAZAT;
-//	printf("delete zac %d\n",hui);
 	if (nodeExpanded(node)){
 		for (uint i = 0; i < nodeChildsN(node); i++){
 			node_t* child = node->childs[i];
-			if (child == NULL)
-				perror("au");
-			if (child->parents == NULL){
-				perror("tohle bych smazala");
-//				printNode(child);
-				printNode(node);
-				printChilds(node);
-				perror("===========");
-				printf("%d \n",MAXPROOF);
-				exit(1);
-			}
-//		printf("delete pr2 %d\n",hui);
-			int a = llGetLength(child->parents);
-//		printf("delete pr3 %d\n",hui);
 			llDelete(&(child->parents),node);
-			int b = llGetLength(child->parents);
-			if ( a != b+1)
-				perror("llDelete");
 			if (child->parents == NULL){
 				deleteChild(child);
 				cacheDelete(child);
 				nodeDelete(child);
 				numberOfNodes--;
 			}
-//	if (nodeHash(node) == 969720 ){
-//		printf("proof mezi po %d\n",nodeProof(node));
-//	}
 		}
 	}
 	nodeSetExpanded(node,false);
-//	printf("delete kon %d\n",hui);
 }
 
 static inline void setProofAndDisproofNubers(node_t* node){
-//nejdriv overit jestli neni value true nebo false
-//pak pocitat ze synu
-//a pak dat 1 1
-/*
-	if (nodeHash(node) == 969720 ){
-		switch (nodeValue(node)) {
-		case UNKNOWN:
-			if (nodeExpanded(node)){
-				uint min = MAXPROOF;
-				uint sum = 0;
-				switch (nodeType(node)) {
-				case OR:
-					for (uint i = 0; i < nodeChildsN(node); i++){
-						min = MIN(min,nodeProof(node->childs[i]));
-					}
-					nodeSetProof( node, min);
-
-					for (uint i = 0; i < nodeChildsN(node); i++){
-						sum += nodeDisproof(node->childs[i]);
-					}
-					nodeSetDisproof( node, sum);
-					break;
-
-				case AND:
-					for (uint i = 0; i < nodeChildsN(node); i++){
-						sum += nodeProof(node->childs[i]);
-					}
-					nodeSetProof( node, sum);
-
-					for (uint i = 0; i < nodeChildsN(node); i++){
-						min = MIN(min,nodeDisproof(node->childs[i]));
-					}
-					nodeSetDisproof( node, min);
-					break;
-
-				}
-				if (nodeProof(node) == 0){
-					nodeSetValue(node, TRUE);
-					nodeSetDisproof(node,MAXPROOF);
-					deleteChild(node);
-					printf("hui\n");
-				} 
-				if (nodeDisproof(node) == 0){
-					nodeSetValue(node, FALSE);
-					nodeSetProof(node,MAXPROOF);
-//					printf("proof1 %d\n",nodeProof(node));
-					deleteChild(node);
-//					printf("proof2 %d\n",nodeProof(node));
-				}
-			} else {
-				nodeSetProof(node,1);
-				nodeSetDisproof(node,1);
-			}
-			break;
-		case TRUE:
-			nodeSetProof(node,0);
-			nodeSetDisproof(node,MAXPROOF);
-			break;
-		case FALSE:
-			nodeSetProof(node,MAXPROOF);
-			nodeSetDisproof(node,0);
-			break;
-		}
-
-
-		printf("(((((((((((((((((\n");
-		printf("tenhle setPDN\n");
-		printNode(node);
-		printChilds(node);
-		printf(")))))))))))))))))\n");
-
-		return;	
-	}
-*/	switch (nodeValue(node)) {
+	switch (nodeValue(node)) {
 	case UNKNOWN:
 		if (nodeExpanded(node)){
 			uint min = MAXPROOF;
@@ -222,7 +117,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
 				deleteChild(node);
-				printf("hui\n");
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
@@ -304,16 +198,12 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
 		llAddNode(&(n->parents),node);
-//		nodeDelete(child);
+		nodeDelete(child);
 		return n;
 	} else {
 		llAddNode(&child->parents, node);
 		numberOfNodes++;
 		cacheInsert(child);
-		cacheInsert(child);
-		cacheInsert(child);
-		cacheDelete(child);
-		cacheDelete(child);
 		return child;
 	}
 }
@@ -452,6 +342,8 @@ nodeValue_t proofNuberSearch(node_t* root){
 
 	printf("nodes %d\n",numberOfNodes);
 	printf("cache miss %d\n",cacheMiss);
+
+
 	return nodeValue(root);
 }
 

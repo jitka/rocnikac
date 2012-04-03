@@ -132,16 +132,10 @@ static inline uint nodeHash(node_t * node){
 
 //proof
 static inline uint nodeProof(node_t * node){
-	if (node->proof2 > MAXPROOF){
-		perror("nejde proof");
-	}
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, uint proof){
 	node->proof2 = MIN( proof, MAXPROOF);
-	if (node->proof2 > MAXPROOF){
-		perror("nejde");
-	}
 }
 
 //disproof

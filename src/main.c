@@ -4,8 +4,6 @@
 #include "print.h"
 
 // TODO HNED
-// uklidit
-// mazat zbytecne nody, pocet otcu-snizovat pri delete, zmensit pocet nodu
 // smazat vsechno po pnsearch 
 // testovat cteni vice node
 // normalizace
