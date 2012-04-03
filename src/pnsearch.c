@@ -35,20 +35,32 @@ void cacheInsert(node_t* node){
 		return;
 	}
 	cacheMiss++;
-	perror("neni cache");
+	perror("neni kam dat");
 }
 
 node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
 	for (uint i = 0; i < CACHE_PATIENCE; i++){
 		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
-			return NULL;
+			continue;
 		if ( compareGraph( cache[where], node) )
 			return cache[where];
 	}
 	return NULL;
 }
 
+void cacheDelete(node_t* node){
+	for (uint i = 0; i < CACHE_PATIENCE; i++){
+		uint where = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (cache[where] == NULL)
+			continue;
+		if ( compareGraph( cache[where], node) ){
+			cache[where] = NULL;
+			return;
+		}
+	}
+	perror("neni v cachy");
+}
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll_t* currentPath;
@@ -298,6 +310,9 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		numberOfNodes++;
 		cacheInsert(child);
 		cacheInsert(child);
+		cacheInsert(child);
+		cacheDelete(child);
+		cacheDelete(child);
 		return child;
 	}
 }
