@@ -3,6 +3,7 @@
 
 #include "struct.h"
 
+void normInit();
 void norm(node_t** node);
 
 #endif

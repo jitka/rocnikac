@@ -3,6 +3,7 @@
 #include "linkedlist.h"
 #include "start.h"
 #include "print.h"
+#include "norm.h"
 
 // TODO HNED
 // normalizace
@@ -43,6 +44,8 @@
 int main(){
 
 	hashInit();
+	normInit();
+
 //	node_t* root = getRoot();
 //	nodeValue_t value = proofNuberSearch(root);
 //	printValue(value);
