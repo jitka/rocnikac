@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include "pnsearch.h"
+#include "linkedlist.h"
 #include "start.h"
 #include "print.h"
 
 // TODO HNED
-// smazat vsechno po pnsearch 
-// testovat cteni vice node
 // normalizace
 // kdyz nucene tahy DB-search
 //
 // TODO NEKDY
+// spojit vysledek
 // prepsat spojak - do pole? a cely strom do pole?
 // radit listy podle heuristik
 // vhodnejsi cisla na zacatku - testovat!
@@ -43,22 +43,25 @@
 int main(){
 
 	hashInit();
-	node_t* root = getRoot();
-	nodeValue_t value = proofNuberSearch(root);
-	printValue(value);
+//	node_t* root = getRoot();
+//	nodeValue_t value = proofNuberSearch(root);
+//	printValue(value);
 
 //	node_t* root = readNode();
 //	printNode(root);
 
-	/*
+
 	ll_t* nodes = readNodes();
 	node_t* node;
 //	node = llGetNode(&nodes); printNode(node);
 //	printValue(proofNuberSearch(node));
 	while ((node = llGetNode(&nodes)) != NULL){
-		printNode(node);
-		printValue(proofNuberSearch(node));
+//		printNode(node);
+		nodeValue_t v = proofNuberSearch(node);
+		if (v != FALSE)
+			printValue(proofNuberSearch(node));
 	}
-*/
+	printf("\nhotovo\n");
+
 	return 0;
 }

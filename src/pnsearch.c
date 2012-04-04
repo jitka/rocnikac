@@ -5,6 +5,7 @@
 #include "print.h"
 #include "linkedlist.h"
 #include "nodefce.h"
+#include "norm.h"
 
 // or node... na tahu je prvni hrac
 
@@ -195,6 +196,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		break;
 	}
 
+	norm(&child);
+
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
 		llAddNode(&(n->parents),node);
@@ -340,8 +343,8 @@ nodeValue_t proofNuberSearch(node_t* root){
 		}
 	}
 
-	printf("nodes %d\n",numberOfNodes);
-	printf("cache miss %d\n",cacheMiss);
+//	printf("nodes %d\n",numberOfNodes);
+//	printf("cache miss %d\n",cacheMiss);
 
 
 	return nodeValue(root);
