@@ -196,7 +196,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		break;
 	}
 
-	norm(&child);
+//	if (nodeTurn(child)%4 == 0)
+//		norm(child);
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?

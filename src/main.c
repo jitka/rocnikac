@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// normalizace
 // kdyz nucene tahy DB-search
 //
 // TODO NEKDY
@@ -23,6 +22,8 @@
 // weak PN-search
 //
 // MOZNE ZRYCHLENI
+// rychlejsi normalizace -malloc, trizeni
+// normalizace i podle vedlejsich stupnu
 // rychlejsi predani tupu blue/or spojit dohromady
 // rekurze v delete
 // test v K4
@@ -59,9 +60,9 @@ int main(){
 //	node = llGetNode(&nodes); printNode(node);
 //	printValue(proofNuberSearch(node));
 	while ((node = llGetNode(&nodes)) != NULL){
-//		printNode(node);
-		nodeValue_t v = proofNuberSearch(node);
-		if (v != FALSE)
+		printNode(node);
+//		nodeValue_t v = proofNuberSearch(node);
+//		if (v != FALSE)
 			printValue(proofNuberSearch(node));
 	}
 	printf("\nhotovo\n");

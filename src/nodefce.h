@@ -28,6 +28,9 @@ static inline void nodeEmptyGraph(node_t * node){
 static inline int nodeEdge(node_t * node, int i, int j){
 	return (node->graph[0] & (1ULL<<(i*N+j)) || (node->graph[1] & (1ULL<<(i*N+j))));
 }
+static inline int nodeEdgeColor(node_t * node, int i, int j, color c){
+	return node->graph[c] & (1ULL<<(i*N+j));
+}
 static inline int compareGraph(node_t * a, node_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
@@ -36,7 +39,7 @@ static inline int nodeSimetric(node_t * a){
 		for (int v = 0; v < N; v++){
 			for (int c = 0; c < 2; c++){
 				if ( (!!(a->graph[c] & (1ULL<<(u*N+v)))) != (!!(a->graph[c] & (1ULL<<(v*N+u)))) ){
-					printf("%d %d %d %llu %llu \n",u,v,c,a->graph[c] & (1ULL<<(u*N+v)), a->graph[c] & (1ULL<<(v*N+u)) );
+//					printf("%d %d %d %llu %llu \n",u,v,c,a->graph[c] & (1ULL<<(u*N+v)), a->graph[c] & (1ULL<<(v*N+u)) );
 					return false;
 				}
 			}
@@ -117,9 +120,6 @@ static inline void nodeSetChildsN(node_t * node, uchar v){
 //turn
 static inline uchar nodeTurn(node_t * node){
 	return node->turn;
-	if (node->turn > 10){
-		perror("nejde turn");
-	}
 }
 static inline void nodeSetTurn(node_t * node, uint turn){
 	node->turn = turn;
@@ -148,13 +148,9 @@ static inline void nodeSetDisproof(node_t * node, uint disproof){
 
 //-------------NODE---------------DELETE------------------
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
-	if (node == NULL)
-		perror("mazam nic");
 	if (nodeExpanded(node))
 		free(node->childs);
 	llDeletell(node->parents); //zbytecne tohle se vola jen kdyz rodice nejsou
-	if (node == NULL)
-		perror("mazam nic");
 	free(node);
 }
 
