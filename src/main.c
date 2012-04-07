@@ -6,22 +6,31 @@
 #include "norm.h"
 
 // TODO HNED
-// kdyz nucene tahy DB-search
+// rychlejsi norm select sort + prehozovani radku matice
+// permutacni tabulka
+// u8 u32 u64
+// git
+// vhodne CACHE_PATIENCE, velikost cache 
+// paralelizace 
+// radit listy podle heuristik
+//
 //
 // TODO NEKDY
+// kdyz nucene tahy DB-search
+// permutacni tabulka
+// oprofile
 // spojit vysledek
 // prepsat spojak - do pole? a cely strom do pole?
-// radit listy podle heuristik
 // vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
-// vhodne CACHE_PATIENCE  
 //
 // CIST
-// DB-search
 // weak PN-search
 //
 // MOZNE ZRYCHLENI
+// do cache data + ukazatel/true/false
+// nepristupovat pres ukazatel ale zkusit cele node_t zkopirovat
 // rychlejsi normalizace -malloc, trizeni
 // normalizace i podle vedlejsich stupnu
 // rychlejsi predani tupu blue/or spojit dohromady

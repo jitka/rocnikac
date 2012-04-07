@@ -196,7 +196,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		break;
 	}
 
-//	if (nodeTurn(child)%4 == 0)
+//	if (nodeTurn(child) == 10)
 //		norm(child);
 
 	node_t* n = cacheFind(child);
