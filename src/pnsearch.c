@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include "setting.h"
 #include "pnsearch.h"
 #include "print.h"
 #include "linkedlist.h"
@@ -87,25 +88,42 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	case UNKNOWN:
 		if (nodeExpanded(node)){
 			uint min = MAXPROOF;
+#ifdef WEAK
+			uint max = 0;
+#else //WEAK
 			uint sum = 0;
+#endif //WEAK
 			switch (nodeType(node)) {
 			case OR:
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					min = MIN(min,nodeProof(node->childs[i]));
 				}
 				nodeSetProof( node, min);
+#ifdef WEAK
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					max = MAX(max,nodeDisproof(node->childs[i]));
+				}
+				nodeSetDisproof( node, max);
 
+#else //WEAK
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					sum += nodeDisproof(node->childs[i]);
 				}
 				nodeSetDisproof( node, sum);
+#endif //WEAK
 				break;
-
 			case AND:
+#ifdef WEAK
+				for (uint i = 0; i < nodeChildsN(node); i++){
+					max = MAX(max,nodeProof(node->childs[i]));
+				}
+				nodeSetProof( node, max);
+#else //WEAK
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					sum += nodeProof(node->childs[i]);
 				}
 				nodeSetProof( node, sum);
+#endif //WEAK
 
 				for (uint i = 0; i < nodeChildsN(node); i++){
 					min = MIN(min,nodeDisproof(node->childs[i]));

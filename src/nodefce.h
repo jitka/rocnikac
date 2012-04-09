@@ -5,6 +5,7 @@
 #include "struct.h"
 #include "linkedlist.h"
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 //-------------NODE---------------GRAPH------------------
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){

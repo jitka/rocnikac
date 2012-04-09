@@ -26,7 +26,6 @@
 // cistejsi predavani stavu mezi haskelem a timhle
 //
 // CIST
-// weak PN-search
 //
 // MOZNE ZRYCHLENI
 // do cache data + ukazatel/true/false
@@ -69,10 +68,10 @@ int main(){
 //	node = llGetNode(&nodes); printNode(node);
 //	printValue(proofNuberSearch(node));
 	while ((node = llGetNode(&nodes)) != NULL){
-		printNode(node);
-//		nodeValue_t v = proofNuberSearch(node);
+//		printNode(node);
+		nodeValue_t v = proofNuberSearch(node);
 //		if (v != FALSE)
-			printValue(proofNuberSearch(node));
+//			printValue(proofNuberSearch(node));
 	}
 	printf("\nhotovo\n");
 
