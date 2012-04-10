@@ -7,7 +7,6 @@
 
 // TODO HNED
 // spojak rodice
-// spojak start
 // spojak update
 // spojak current path
 // ll for 
@@ -67,15 +66,9 @@ int main(){
 //	nodeValue_t value = proofNuberSearch(root);
 //	printValue(value);
 
-//	node_t* root = readNode();
-//	printNode(root);
-
-
-	ll_t* nodes = readNodes();
-	node_t* node;
-//	node = llGetNode(&nodes); printNode(node);
-//	printValue(proofNuberSearch(node));
-	while ((node = llGetNode(&nodes)) != NULL){
+	ll2_t nodes = readNodes();
+	ll2FStart(&nodes); 
+	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){
 //		printNode(node);
 		nodeValue_t v = proofNuberSearch(node);
 //		if (v != FALSE)

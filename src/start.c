@@ -61,14 +61,15 @@ node_t* readNode(){
 	return node;
 }
 
-ll_t* readNodes(){
-	ll_t* nodes = llNew();
+ll2_t readNodes(){
+	ll2_t nodes;
+	ll2New(&nodes);
 	scanf("[");
 	while (true){
 		node_t* node = readNode();
 		if (nodeTurn(node) == 0)
 			break;
-		llAddNode(&nodes,node);
+		ll2AddNodeEnd(&nodes,node);
 //		printNode(node);
 		scanf(",");
 	}

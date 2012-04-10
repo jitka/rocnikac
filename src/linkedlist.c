@@ -31,6 +31,7 @@ void ll2AddNodeEnd( ll2_t* ll, node_t* node){
 		ll->last = item;
 	} else {
 		ll->last->next = item;
+		ll->last = item;
 	}
 
 }

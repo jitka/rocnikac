@@ -5,7 +5,6 @@
 
 //void generateStartPosition(int depth);
 node_t* getRoot();
-node_t* readNode();
-ll_t* readNodes();
+ll2_t readNodes();
 
 #endif
