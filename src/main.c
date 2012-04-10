@@ -6,9 +6,10 @@
 #include "norm.h"
 
 // TODO HNED
-// smazat nodeDelete
 // prepsat spojak 
 // deti do spojaku
+// prepsat nodeDelete
+// nodeNew
 // testovat weak
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka

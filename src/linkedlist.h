@@ -11,6 +11,7 @@ int llGetLength(ll_t* where); //pomale! jen pro testovani!
 void llAddll(ll_t** where, ll_t* nodes);
 void llDelete(ll_t** where, node_t* node);
 void llDeletell(ll_t* ll);
+int llEmpty(ll_t* ll);
 
 
 
