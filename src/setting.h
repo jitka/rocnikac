@@ -10,4 +10,8 @@
 #define DEBUG
 #define MAXNODES 1000000 //kolik node se vleze do pameti
 
+#define u8 char
+#define u32 unsigned int
+#define u64 unsigned long long int
+
 #endif

@@ -35,8 +35,8 @@ void printNode(node_t* node){
 	printf("|\n");
 	for (int i = 0; i < N; i++){
 		printf("%d| ",i);
-		uint data0 = nodeNeighbour(node,i,0);
-		uint data1 = nodeNeighbour(node,i,1);
+		u32 data0 = nodeNeighbour(node,i,0);
+		u32 data1 = nodeNeighbour(node,i,1);
 		for (int j = 0; j < N; j++){
 			if (data0 & (1<<j)){
 				printf("0 ");
@@ -74,7 +74,7 @@ void printChilds(node_t* node){
 		return;
 	}
 	printf("potomci:\n");
-	for (uint i = 0; i < nodeChildsN(node); i++) {
+	for (u32 i = 0; i < nodeChildsN(node); i++) {
 		if (node->childs[i] == NULL)
 			printf("null\n");
 		printNode(node->childs[i]);

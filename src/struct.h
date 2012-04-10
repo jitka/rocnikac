@@ -3,9 +3,6 @@
 
 #include <limits.h>
 #include "setting.h"
-#define uchar unsigned int //8-bit
-#define uint unsigned int //32-bit
-#define ull unsigned long long int //64-bit 
 #define true 1
 #define false 0
 
@@ -28,32 +25,26 @@ typedef struct {
 	ll_t * current;
 } ll2_t;
 
-typedef struct {
-	ull g[2];
-} graph_t;
-
 struct node{
-	uint proof2;
-	uint disproof;
+	u32 proof2;
+	u32 disproof;
 
-	uchar data;// bity:
+	u8 data;// bity:
 	           // 0 expanded
 		   // 1 type
 		   // 2,3 value
 
-	uchar turn; //kolikaty je to tah = kolik je prave obarveno hran
-	uchar childsNumber;
+	u8 turn; //kolikaty je to tah = kolik je prave obarveno hran
+	u8 childsNumber;
 
-	uint hash;
+	u32 hash;
 
 	node_t** childs;
-	ll2_t parents;
+	ll_t* parents;
 
-	ull graph[2];
-	
-	graph_t graph2;
+	u64 graph[2];
 };
 
-extern uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
+extern u32 hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
 
 #endif

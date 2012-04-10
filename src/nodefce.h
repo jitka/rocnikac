@@ -10,8 +10,8 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 //-------------NODE---------------GRAPH------------------
-extern ull N1s; //0000..00000000000000011111
-extern ull R1s; //0000..00100001000100010001
+extern u64 N1s; //0000..00000000000000011111
+extern u64 R1s; //0000..00100001000100010001
 
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->graph[color] |= 1ULL<<(i*N+j);
@@ -19,7 +19,7 @@ static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->hash ^= hashNumbers[color][i][j];
 }
 
-static inline uint nodeNeighbour(node_t * node, int i, color color){
+static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
 	return (node->graph[color] >> (i*N)) & N1s; 
 }
@@ -46,8 +46,8 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 
 		//vezmu radky a b
-		ull sa = ( node->graph[c] & (N1s<<(a*N)) ); 
-		ull sb = ( node->graph[c] & (N1s<<(b*N)) ); 
+		u64 sa = ( node->graph[c] & (N1s<<(a*N)) ); 
+		u64 sb = ( node->graph[c] & (N1s<<(b*N)) ); 
 		//odstranim radky a b
 		node->graph[c] =  node->graph[c] ^ sa; 
 		node->graph[c] =  node->graph[c] ^ sb; 
@@ -55,8 +55,8 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->graph[c] =  node->graph[c] ^ ((sa>>(a*N))<<(b*N)); 
 		node->graph[c] =  node->graph[c] ^ ((sb>>(b*N))<<(a*N));
 		//vezmu sloupce a b
-		ull ra = ( node->graph[c] & (R1s<<a) ); 
-		ull rb = ( node->graph[c] & (R1s<<b) ); 
+		u64 ra = ( node->graph[c] & (R1s<<a) ); 
+		u64 rb = ( node->graph[c] & (R1s<<b) ); 
 		//odstranim sloupce a b
 		node->graph[c] =  node->graph[c] ^ ra; 
 		node->graph[c] =  node->graph[c] ^ rb; 
@@ -87,18 +87,18 @@ static inline int nodeSimetric(node_t * a){
 #endif
 
 //-------------NODE---------------DATA------------------
-static inline uchar setBit(uchar data, uchar bit, uchar value){
+static inline u8 setBit(u8 data, u8 bit, u8 value){
 	return (data ^ (data & (1<<bit))) | (value<<bit);
 }
-static inline uchar getBit(uchar data, uchar bit){
+static inline u8 getBit(u8 data, u8 bit){
 	return !!(data & (1<<bit));
 }
 
 //expanded
-static inline uint nodeExpanded(node_t * node){
+static inline u32 nodeExpanded(node_t * node){
 	return getBit(node->data,0);
 }
-static inline void nodeSetExpanded(node_t * node, uint expanded){
+static inline void nodeSetExpanded(node_t * node, u32 expanded){
 	node->data = setBit(node->data,0,expanded);
 }
 
@@ -147,32 +147,32 @@ static inline void nodeSetValue(node_t * node, nodeValue_t value){
 }
 
 //-------------NODE---------------CHILDS------------------
-static inline uchar nodeChildsN(node_t * node){
+static inline u32 nodeChildsN(node_t * node){
 	return node->childsNumber;
 }
-static inline void nodeSetChildsN(node_t * node, uchar v){
+static inline void nodeSetChildsN(node_t * node, u8 v){
 	node->childsNumber = v;
 }
 
 //-------------NODE---------------OTHER------------------
 //turn
-static inline uchar nodeTurn(node_t * node){
+static inline u32 nodeTurn(node_t * node){
 	return node->turn;
 }
-static inline void nodeSetTurn(node_t * node, uint turn){
+static inline void nodeSetTurn(node_t * node, u32 turn){
 	node->turn = turn;
 }
 
 //hash
-static inline uint nodeHash(node_t * node){
+static inline u32 nodeHash(node_t * node){
 	return node->hash;
 }
 
 //proof
-static inline uint nodeProof(node_t * node){
+static inline u32 nodeProof(node_t * node){
 	return node->proof2;
 }
-static inline void nodeSetProof(node_t * node, uint proof){
+static inline void nodeSetProof(node_t * node, u32 proof){
 /*#ifdef DEBUG
 	if (proof > MAXPROOF){
 		printf("moc %d %d \n",proof, MAXPROOF);
@@ -186,10 +186,10 @@ static inline void nodeSetProof(node_t * node, uint proof){
 }
 
 //disproof
-static inline uint nodeDisproof(node_t * node){
+static inline u32 nodeDisproof(node_t * node){
 	return node->disproof;
 }
-static inline void nodeSetDisproof(node_t * node, uint disproof){
+static inline void nodeSetDisproof(node_t * node, u32 disproof){
 	node->disproof = MIN( disproof, MAXPROOF);
 }
 
@@ -198,7 +198,7 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 	if (nodeExpanded(node))
 		free(node->childs);
 #ifdef DEBUG
-	if (!ll2Empty(&node->parents))
+	if (!llEmpty(node->parents))
 		perror("tohle by se nemelo mazat");
 #endif //DEBUG
 	free(node);
