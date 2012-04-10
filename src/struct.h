@@ -21,6 +21,10 @@ struct linkedListNode{
 	ll_t* next;
 };
 
+typedef struct {
+	ull g[2];
+} graph_t;
+
 struct node{
 	uint proof2;
 	uint disproof;
@@ -39,6 +43,8 @@ struct node{
 	ll_t* parents;
 
 	ull graph[2];
+	
+	graph_t graph2;
 };
 
 extern uint hashNumbers[2][N][N]; //pro kazdou parvu a hranuo

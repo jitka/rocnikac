@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "nodefce.h"
+#include "graphfce.h"
 #include "print.h"
 
 void printNode(node_t* node){
@@ -54,7 +55,7 @@ void printNode(node_t* node){
 void printValue(nodeValue_t value){
 	switch (value) {
 	case UNKNOWN:
-		printf("divne\n");
+		printf("nevim\n");
 		break;
 	case TRUE:
 		printf("prvni vyhraje\n");

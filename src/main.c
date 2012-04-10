@@ -6,10 +6,15 @@
 #include "norm.h"
 
 // TODO HNED
-// rychlejsi norm select sort + prehozovani radku matice
+// smazat nodeDelete
+// prepsat spojak 
+// deti do spojaku
+// testovat weak
+// rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // u8 u32 u64
 // git
+// vetsi testy, N 7
 // vhodne CACHE_PATIENCE, velikost cache 
 // paralelizace 
 // radit listy podle heuristik
@@ -17,10 +22,7 @@
 //
 // TODO NEKDY
 // kdyz nucene tahy DB-search
-// permutacni tabulka
 // oprofile
-// spojit vysledek
-// prepsat spojak - do pole? a cely strom do pole?
 // vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
@@ -28,6 +30,7 @@
 // CIST
 //
 // MOZNE ZRYCHLENI
+// spojak do pole? a cely strom do pole?
 // do cache data + ukazatel/true/false
 // nepristupovat pres ukazatel ale zkusit cele node_t zkopirovat
 // rychlejsi normalizace -malloc, trizeni
@@ -71,7 +74,7 @@ int main(){
 //		printNode(node);
 		nodeValue_t v = proofNuberSearch(node);
 //		if (v != FALSE)
-//			printValue(proofNuberSearch(node));
+			printValue(v);
 	}
 	printf("\nhotovo\n");
 

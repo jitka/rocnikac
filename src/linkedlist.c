@@ -37,6 +37,10 @@ void llDeletell(ll_t* ll){
 		llGetNode(&ll);
 }
 
+int llEmpty(ll_t* ll){
+	return ll == NULL;
+}
+
 void llDelete(ll_t** where, node_t* node){
 	if (*where == NULL)
 		perror("mazu z niceho");
