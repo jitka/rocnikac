@@ -19,7 +19,14 @@ typedef struct linkedListNode ll_t;
 struct linkedListNode{
 	node_t* data;
 	ll_t* next;
+	ll_t* prev;
 };
+
+typedef struct {
+	ll_t * first;
+	ll_t * last;
+	ll_t * current;
+} ll2_t;
 
 typedef struct {
 	ull g[2];

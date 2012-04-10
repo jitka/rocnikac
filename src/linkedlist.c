@@ -3,6 +3,102 @@
 #include "linkedlist.h"
 #include "print.h"
 
+void ll2New( ll2_t* ll){
+	ll->first = NULL;
+	ll->last = NULL;
+}
+
+int ll2Empty( ll2_t* ll){
+	return (ll->first == NULL);
+}
+
+ll_t* newItem( node_t* data, ll_t* prev, ll_t* next){
+	ll_t* item = malloc(sizeof(ll_t));
+	if (item == NULL)
+		perror("malloc item");
+	item->data = data;
+	item->next = next;
+	item->prev = prev;
+	return item;
+}
+
+void ll2AddNodeEnd( ll2_t* ll, node_t* node){
+	ll_t* item = newItem(node,ll->last,NULL);
+	if (ll->last == NULL){
+		if (ll->first != NULL)
+			perror("blbost");
+		ll->first = item;
+		ll->last = item;
+	} else {
+		ll->last->next = item;
+	}
+
+}
+
+node_t* ll2FirstNode( ll2_t* ll){
+	if (ll->first == NULL)
+		return NULL;
+	else
+		return ll->first->data;
+}
+
+void ll2DelFirst( ll2_t* ll){
+	if (ll->first == NULL)
+		perror("neni tu nic");
+	else {
+		ll_t* f = ll->first;
+		ll->first = ll->first->next;
+		free(f);
+	}
+}
+
+void ll2FStart( ll2_t* ll){
+	ll->current = ll->first;
+}
+
+void ll2FNext( ll2_t* ll){
+	if (ll->current != NULL)
+		ll->current = ll->current->next;
+}
+
+node_t* ll2FGet( ll2_t* ll){
+	if (ll->current == NULL)
+		return NULL;
+	else {
+		return ll->current->data;
+	}
+}
+
+void ll2FDel( ll2_t* ll){
+	ll_t* f = ll->current;
+	if (f == NULL)
+		return;
+	if (f->prev == NULL){
+		ll->first = f->next;
+	} else {
+		(f->prev)->next = f->next;
+	}
+	if (f->next == NULL){
+		ll->last = f->prev;
+		ll->current = NULL;
+	} else {
+		(f->next)->prev =  f->prev;
+		ll->current = f->next;
+	}
+	free(f);
+}
+
+void ll2AddNodesEnd( ll2_t* ll, ll2_t* nodes){
+	ll2FStart(nodes);
+	node_t* node;
+	while ((node = ll2FGet(nodes)) != NULL){
+		ll2AddNodeEnd(ll,node);
+		ll2FNext(nodes);
+	}
+}
+
+
+
 ll_t* llNew(){
 	return NULL;
 }
@@ -30,11 +126,6 @@ node_t* llLastNode(ll_t** where){
 	if (*where == NULL)
 		return NULL;
 	return (*where)->data;
-}
-
-void llDeletell(ll_t* ll){
-	while (ll != NULL)
-		llGetNode(&ll);
 }
 
 int llEmpty(ll_t* ll){

@@ -11,6 +11,7 @@
 // prepsat nodeDelete
 // nodeNew
 // testovat weak
+// prepsat update ancesor (pridava se na konec)
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // u8 u32 u64
