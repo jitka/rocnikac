@@ -36,6 +36,20 @@ void ll2AddNodeEnd( ll2_t* ll, node_t* node){
 
 }
 
+void ll2AddNodeBegin( ll2_t* ll, node_t* node){
+	ll_t* item = newItem(node,NULL,ll->first);
+	if (ll->first == NULL){
+		if (ll->last != NULL)
+			perror("blbost");
+		ll->first = item;
+		ll->last = item;
+	} else {
+		(ll->first)->prev = item;
+		ll->first = item;
+	}
+
+}
+
 node_t* ll2FirstNode( ll2_t* ll){
 	if (ll->first == NULL)
 		return NULL;
