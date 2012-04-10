@@ -6,7 +6,11 @@
 #include "norm.h"
 
 // TODO HNED
-// prepsat spojak 
+// spojak rodice
+// spojak start
+// spojak update
+// spojak current path
+// ll for 
 // deti do spojaku
 // prepsat nodeDelete
 // nodeNew

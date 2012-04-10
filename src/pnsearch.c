@@ -93,11 +93,11 @@ static inline void deleteChild(node_t* node){
 	if (nodeExpanded(node)){
 		for (uint i = 0; i < nodeChildsN(node); i++){
 			node_t* child = node->childs[i];
-			llDelete(&(child->parents),node);
-			if (child->parents == NULL){
-				deleteChild(child);
-				cacheDelete(child);
-				nodeDelete(child);
+			ll2Delete( &child->parents, node);
+			if ( ll2Empty( &child->parents ) ){
+				deleteChild( child );
+				cacheDelete( child );
+				nodeDelete( child );
 				numberOfNodes--;
 			}
 		}
@@ -220,7 +220,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		perror("malloc child");
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
-	child->parents = llNew();
+	ll2New(&child->parents);
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
@@ -256,11 +256,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
-		llAddNode(&(n->parents),node);
+		ll2AddNodeEnd( &n->parents, node);
 		nodeDelete(child);
 		return n;
 	} else {
-		llAddNode(&child->parents, node);
+		ll2AddNodeEnd( &child->parents, node);
 		numberOfNodes++;
 		cacheInsert(child);
 		return child;
@@ -310,15 +310,19 @@ static inline void developNode(node_t* node){
 
 static inline void updateAncestors(){
 
-	ll_t* ancestors = llNew();
-	llAddNode( &ancestors, llLastNode(&currentPath));
-	ll_t* ancestors2;
+	ll2_t ancestors; ll2New(&ancestors);
+	ll2AddNodeEnd( &ancestors, llLastNode(&currentPath));
+	ll2_t ancestors2;
 
 	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
-	while (ancestors != NULL){
-		ancestors2 = llNew();
-	
-		for (node_t* node = llGetNode(&ancestors); node != NULL; node = llGetNode(&ancestors) ) {
+	while (! ll2Empty(&ancestors)){
+		ll2New(&ancestors2);
+		ll2FStart(&ancestors);
+		for ( 		node_t* node = ll2FGet(&ancestors);
+				( node = ll2FGet(&ancestors) ) != NULL;
+				ll2FNext(&ancestors) ){
+
+//		for (node_t* node = llGetNode(&ancestors); node != NULL; node = llGetNode(&ancestors) ) {
 			uint oldProof = nodeProof(node);
 			uint oldDisproof = nodeDisproof(node);
 
@@ -329,7 +333,8 @@ static inline void updateAncestors(){
 				continue;
 
 			//pridat vsechny predky co je potreba updatetovat
-			llAddll(&ancestors2, node->parents);
+			//llAddll(&ancestors2, node->parents);
+			ll2AddNodesEnd( &ancestors2, &node->parents);
 
 		}
 
@@ -384,7 +389,9 @@ static inline void selectMostProving(){
 			break;
 		}
 		if (turn == nodeTurn(node)){
-			printf("minimalni (dis)proof numer neni\n");
+			printf("minimalni (dis)proof number neni\n");
+			printNode(node);
+			printChilds(node);
 		}
 		llAddNode(&currentPath,node);
 	}

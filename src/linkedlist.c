@@ -97,6 +97,17 @@ void ll2AddNodesEnd( ll2_t* ll, ll2_t* nodes){
 	}
 }
 
+void ll2Delete( ll2_t* ll, node_t* node){
+	ll2FStart(ll);
+	node_t* n;
+	while ((n = ll2FGet(ll)) != NULL){
+		if ( n == node ){
+			ll2FDel(ll);
+			return;
+		}
+	}
+	perror("neni co mazat");
+}
 
 
 ll_t* llNew(){

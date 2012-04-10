@@ -47,7 +47,7 @@ struct node{
 	uint hash;
 
 	node_t** childs;
-	ll_t* parents;
+	ll2_t parents;
 
 	ull graph[2];
 	
