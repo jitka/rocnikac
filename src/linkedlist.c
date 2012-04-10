@@ -26,7 +26,7 @@ void ll2AddNodeEnd( ll2_t* ll, node_t* node){
 	ll_t* item = newItem(node,ll->last,NULL);
 	if (ll->last == NULL){
 		if (ll->first != NULL)
-			perror("blbost");
+			printf("blbost e\n");
 		ll->first = item;
 		ll->last = item;
 	} else {
@@ -40,7 +40,7 @@ void ll2AddNodeBegin( ll2_t* ll, node_t* node){
 	ll_t* item = newItem(node,NULL,ll->first);
 	if (ll->first == NULL){
 		if (ll->last != NULL)
-			perror("blbost");
+			printf("blbost b\n");
 		ll->first = item;
 		ll->last = item;
 	} else {
@@ -61,6 +61,9 @@ void ll2DelFirst( ll2_t* ll){
 	if (ll->first == NULL)
 		perror("neni tu nic");
 	else {
+		if (ll->last == ll->first){
+			ll->last = NULL;
+		}
 		ll_t* f = ll->first;
 		ll->first = ll->first->next;
 		free(f);

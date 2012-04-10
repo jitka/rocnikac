@@ -88,7 +88,7 @@ static inline void cacheDelete(node_t* node){
 }
 //--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
-ll_t* currentPath;
+ll2_t currentPath;
 
 static inline void deleteChild(node_t* node){
 	if (nodeExpanded(node)){
@@ -312,7 +312,7 @@ static inline void developNode(node_t* node){
 static inline void updateAncestors(){
 
 	ll_t* ancestors = llNew();
-	llAddNode( &ancestors, llLastNode(&currentPath));
+	llAddNode( &ancestors, ll2FirstNode(&currentPath));
 	ll_t* ancestors2;
 
 	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
@@ -335,10 +335,10 @@ static inline void updateAncestors(){
 		}
 
 		//jit vzhuru po linii pokud nejsem na konci
-		node_t* previousNode = llLastNode(&currentPath);
-		llGetNode(&currentPath);
-		if ( llLastNode(&currentPath) == NULL){
-			llAddNode(&currentPath,previousNode);
+		node_t* previousNode = ll2FirstNode(&currentPath);
+		ll2DelFirst(&currentPath);
+		if ( ll2FirstNode(&currentPath) == NULL){
+			ll2AddNodeBegin(&currentPath,previousNode);
 		}
 
 		ancestors = ancestors2;
@@ -346,7 +346,7 @@ static inline void updateAncestors(){
 }
 
 static inline void selectMostProving(){
-	node_t * node = llLastNode(&currentPath);
+	node_t * node = ll2FirstNode(&currentPath);
 	int tmp=0;
 	while (nodeExpanded(node)){
 		tmp++;
@@ -387,20 +387,20 @@ static inline void selectMostProving(){
 		if (turn == nodeTurn(node)){
 			printf("minimalni (dis)proof numer neni\n");
 		}
-		llAddNode(&currentPath,node);
+		ll2AddNodeBegin(&currentPath,node);
 	}
 }
 
 nodeValue_t proofNuberSearch(node_t* root){
 
-	currentPath = llNew();
-	llAddNode(&currentPath,root);
+	ll2New(&currentPath);
+	ll2AddNodeBegin(&currentPath,root);
 
 	int counter = 0;
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
 	
 		selectMostProving();
-		node_t* mostProovingNode = llLastNode(&currentPath);
+		node_t* mostProovingNode = ll2FirstNode(&currentPath);
 		
 		developNode(mostProovingNode);
 

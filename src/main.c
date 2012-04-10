@@ -8,7 +8,6 @@
 // TODO HNED
 // spojak rodice
 // spojak update
-// spojak current path
 // ll for 
 // deti do spojaku
 // prepsat nodeDelete
