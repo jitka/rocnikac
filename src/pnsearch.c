@@ -113,6 +113,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	case UNKNOWN:
 		if (nodeExpanded(node)){
 			u32 min = MAXPROOF;
+			u32 childsN = 0;
 #ifdef WEAK
 			u32 max = 0;
 #else //WEAK
@@ -121,29 +122,24 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			switch (nodeType(node)) {
 			case OR:
 				ll2FStart(&node->childs); 
-				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
-					min = MIN(min,nodeProof(child));
-				}
-				nodeSetProof( node, min);
-
-				ll2FStart(&node->childs); 
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
+					childsN++;
+					if ( nodeDisproof(child) == 0 ){
+						ll2FDel(&node->childs);
+						childsN--;
+						continue;
+					}
+					min = MIN(min,nodeProof(child));
 #ifdef WEAK 			
-					max = MAX(max,nodeDisproof(childs));
+					max = MAX( max, nodeDisproof(child) );
 #else //WEAK
 					sum += nodeDisproof(child);
 #endif //WEAK
-#ifdef DELETE_FALSE_OR
-					if ( nodeDisproof(child) == 0 )
-						ll2FDel(&node->childs);
-					else
-						ll2FNext(&node->childs);
-#else //DELETE_FALSE_OR
 					ll2FNext(&node->childs);
-#endif //DELETE_FALSE_OR
 				}
+				nodeSetProof( node, min);
 #ifdef WEAK
-				nodeSetDisproof( node, max+nodeChildsN(node)-1);
+				nodeSetDisproof( node, max + childsN - 1);
 #else //WEAK
 				nodeSetDisproof( node, sum);
 #endif //WEAK
@@ -151,31 +147,26 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			case AND:
 				ll2FStart(&node->childs); 
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
+					childsN++;
+					if ( nodeProof(child) == 0 ){
+						ll2FDel(&node->childs);
+						childsN--;
+						continue;
+					}
 #ifdef WEAK
 					max = MAX(max,nodeProof(child));
 #else //WEAK
 					sum += nodeProof(child);
 #endif //WEAK
-#ifdef DELETE_FALSE_OR
-					if ( nodeProof(child) == 0 )
-						ll2FDel(&node->childs);
-					else
-						ll2FNext(&node->childs);
-#else //DELETE_FALSE_OR
+					min = MIN( min, nodeDisproof(child) );
+
 					ll2FNext(&node->childs);
-#endif //DELETE_FALSE_OR
 				}
 #ifdef WEAK
-				nodeSetProof( node, max+nodeChildsN(node)-1);
+				nodeSetProof( node, max + childsN - 1 );
 #else //WEAK
 				nodeSetProof( node, sum);
 #endif //WEAK
-
-
-				ll2FStart(&node->childs); 
-				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
-					min = MIN( min, nodeDisproof(child) );
-				}
 				nodeSetDisproof( node, min);
 			
 				break;
@@ -373,6 +364,8 @@ static inline void selectMostProving(){
 #ifdef DEBUG
 		if (turn == nodeTurn(node)){
 			printf("minimalni (dis)proof numer neni\n");
+			printNode(node);
+			printChilds(node);
 		}
 #endif //DEBUG
 		ll2AddNodeBegin(&currentPath,node);

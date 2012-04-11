@@ -66,7 +66,7 @@ void printValue(nodeValue_t value){
 	}
 }
 
-/*
+
 void printChilds(node_t* node){
 
 	if (!nodeExpanded(node)){
@@ -74,12 +74,11 @@ void printChilds(node_t* node){
 		return;
 	}
 	printf("potomci:\n");
-	for (u32 i = 0; i < nodeChildsN(node); i++) {
-		if (node->childs[i] == NULL)
-			printf("null\n");
-		printNode(node->childs[i]);
+	ll2FStart(&node->childs); 
+	for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+		printNode(child);
 	}
-	printf("-------------------------------------------------------------------------\n");
+	printf("potomci konec------------------------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);
 }
-*/
+

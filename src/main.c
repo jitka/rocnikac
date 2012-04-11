@@ -49,6 +49,8 @@
 // posladni stavy (uz dohrano) zabiraji moc mista v cachy
 //
 // DOTAZY
+// proc je norm pomaly, pro to nezbehne pro 6 bez predvypocitani hran
+// proc je pomale prohazovani hran?
 // Gavento - hasovani
 
 int main(){
