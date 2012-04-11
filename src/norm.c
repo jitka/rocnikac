@@ -22,7 +22,8 @@ void norm(node_t* node){
 		fce[v] = 10*degree[0][v] + 1000*degree[1][v];
 		nodes[v] = v;
 	}
-/* //TOHLE BY MELO BYT RYCHLEJSI
+#ifdef NOVECHANGE
+ //TOHLE BY MELO BYT RYCHLEJSI
 //	printNode(node);
 	for (int i = 0; i < N; i++){
 		int min = i;
@@ -34,8 +35,7 @@ void norm(node_t* node){
 			nodeChangeNodes(node, i, min);
 	}
 //	printNode(node);	printf("--------------------------------------\n");
-*/
-
+#else
 	//A TOHLE POMALEJSI
 //	printNode(node);
 	for (int i = 0; i < N; i++){
@@ -68,6 +68,6 @@ void norm(node_t* node){
 	nodeCopyGraph(node,newNode);
 //	printNode(newNode);
 	free(newNode);
-
+#endif
 		
 }

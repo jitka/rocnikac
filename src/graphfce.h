@@ -28,7 +28,51 @@ static inline bool compareGraph(node_t * a, node_t * b){
 }
 
 #ifdef PERM 
+
+static inline u32 nodeNeighbour(node_t * node, int i, color color){
+	//vrati masku kde je 1 tam kde vede hrana
+	return (node->graph[color] >> ((node->perm[i])*N)) & N1s; 
+}
+
+static inline bool nodeEdgeExist(node_t * node, int i, int j, color c){
+	return (!!(node->graph[c] & (1ULL<<((node->perm[i])*N+(node->perm[j])))));
+}
+
+static inline void nodeSetEdge(node_t * node, int i, int j, color color){
+	node->graph[color] |= 1ULL<<((node->perm[i])*N+(node->perm[j]));
+	node->graph[color] |= 1ULL<<((node->perm[j])*N+(node->perm[i]));
+	node->hash ^= hashNumbers[color][node->perm[i]][node->perm[j]];
+}
+
+static inline int nodeDegree(node_t * node, int i, color c){
+	return count[ nodeNeighbour(node,(node->perm[i]),c) ];
+}
+
+static inline void nodeChangeNodes(node_t * node, int a, int b){
+	u8 tmp = node->perm[a];
+	node->perm[a] = node->perm[b];
+	node->perm[b] = tmp;
+}
+
+static inline bool testK4(node_t * node, int i, int j, color color){
+	//otestuje jestli po pridani hrany ij nevznikla K4
+	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
+	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
+	tr = nodeNeighbour(node,(node->perm[i]),color) & nodeNeighbour(node,node->perm[j],color);
+	for (int s = 0; s < N; s++)
+		if (tr & (1<<s))
+			for (int t = 0; t < N; t++)
+				if (tr & (1<<t)){
+					//staci overit jestli mezi s a t vede hrana
+					if ( nodeEdgeExist( node, s, t, color) )
+						return true;
+
+				}
+	return false;
+}
+
 #else //PERM
+
 static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
 	return (node->graph[color] >> (i*N)) & N1s; 
@@ -95,7 +139,7 @@ static inline bool testK4(node_t * node, int i, int j, color color){
 				}
 	return false;
 }
-
+/*
 #ifdef DEBUG
 static inline bool nodeSimetric(node_t * a){
 	for (int u = 0; u < N; u++){
@@ -111,6 +155,7 @@ static inline bool nodeSimetric(node_t * a){
 	return true;
 }
 #endif
+*/
 #endif //PERM
 
 #endif //GRAPHFECE_H

@@ -27,9 +27,7 @@ static inline int nodeDegree(node_t * node, int i, color c);
 
 static inline void nodeChangeNodes(node_t * node, int a, int b);
 static inline bool testK4(node_t * node, int i, int j, color color);
-#ifdef DEBUG
-static inline bool nodeSimetric(node_t * a);
-#endif
+//static inline bool nodeSimetric(node_t * a);
 
 //-------------NODE---------------DATA------------------
 static inline bool nodeExpanded(node_t * node);
@@ -155,20 +153,20 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 
 //new
 static inline node_t* nodeNew(){
-	node_t* child = malloc(sizeof(node_t));
+	node_t* node = malloc(sizeof(node_t));
 #ifdef DEBUG
-	if (child == NULL)
-		perror("malloc child");
+	if (node == NULL)
+		perror("malloc node");
 #endif //DEBUG
-	ll2New( &child->parents );
-	ll2New( &child->childs );
+	ll2New( &node->parents );
+	ll2New( &node->childs );
 #ifdef PERM 
 	for (int i = 0; i < N; i++){
-		perm[i]=i;
+		node->perm[i]=i;
 	}
 #endif //PERM
-	nodeSetExpanded( child, false);
-	return child;
+	nodeSetExpanded( node, false);
+	return node;
 }
 
 #endif
