@@ -94,8 +94,8 @@ static inline void deleteChild(node_t* node){
 	if (nodeExpanded(node)){
 		for (u32 i = 0; i < nodeChildsN(node); i++){
 			node_t* child = node->childs[i];
-			llDelete(&(child->parents),node);
-			if (child->parents == NULL){
+			ll2Delete(&(child->parents),node);
+			if ( ll2Empty( &child->parents ) ){
 				deleteChild(child);
 				cacheDelete(child);
 				nodeDelete(child);
@@ -107,11 +107,6 @@ static inline void deleteChild(node_t* node){
 }
 
 static inline void setProofAndDisproofNubers(node_t* node){
-	if (nodeHash(node) == 6845366){
-//		printf("pred\n");
-	//	printf("pred\n");
-	//	printNode(node);
-	}
 
 	switch (nodeValue(node)) {
 	case UNKNOWN:
@@ -158,8 +153,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 					min = MIN(min,nodeDisproof(node->childs[i]));
 				}
 				nodeSetDisproof( node, min);
-				break;
 			
+				break;
 			}
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
@@ -189,12 +184,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		nodeSetDisproof(node,0);
 		break;
 	}
-/*	if (nodeHash(node) == 6845366){
-		printf("chyceno\n");
-		printNode(node);
-		printChilds(node);
-	}
-*/
 }
 
 static inline int testK4(node_t * node, int i, int j, color color){
@@ -221,7 +210,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		perror("malloc child");
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
-	child->parents = llNew();
+	ll2New( &child->parents );
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
@@ -257,11 +246,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
-		llAddNode(&(n->parents),node);
+		ll2AddNodeEnd( &n->parents, node);
 		nodeDelete(child);
 		return n;
 	} else {
-		llAddNode(&child->parents, node);
+		ll2AddNodeEnd( &child->parents, node);
 		numberOfNodes++;
 		cacheInsert(child);
 		return child;
@@ -309,30 +298,33 @@ static inline void developNode(node_t* node){
 		printf("neni treba\n");
 }
 
-static inline void updateAncestors(){
+static inline void updateAncestors(){ //po hladinach
 
-	ll_t* ancestors = llNew();
-	llAddNode( &ancestors, ll2FirstNode(&currentPath));
-	ll_t* ancestors2;
+	if (nodeHash(ll2FirstNode(&currentPath)) == 2865125){
+		//printf("!!!!!!!!!!pred\n");
+		//printNode(ll2FirstNode(&currentPath));
+		//printChilds(ll2FirstNode(&currentPath));
+	}
+	ll2_t ancestors;
+       	ll2New(&ancestors);
+	ll2AddNodeEnd( &ancestors, ll2FirstNode(&currentPath));
 
-	//nejdrive predky po te linii kudy se dostalo k mostProvingNode
-	while (ancestors != NULL){
-		ancestors2 = llNew();
+	while ( ! ll2Empty(&ancestors) ){
 	
-		for (node_t* node = llGetNode(&ancestors); node != NULL; node = llGetNode(&ancestors) ) {
-			u32 oldProof = nodeProof(node);
-			u32 oldDisproof = nodeDisproof(node);
+		node_t* node = ll2FirstNode(&ancestors);
+		ll2DelFirst(&ancestors);
 
-			setProofAndDisproofNubers(node);
+		u32 oldProof = nodeProof(node);
+		u32 oldDisproof = nodeDisproof(node);
 
-			int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
-			if (!changed)
-				continue;
+		setProofAndDisproofNubers(node);
 
-			//pridat vsechny predky co je potreba updatetovat
-			llAddll(&ancestors2, node->parents);
+		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
+		if (!changed)
+			continue;
 
-		}
+		//pridat vsechny predky co je potreba updatetovat
+		ll2AddNodesEnd( &ancestors, &node->parents);
 
 		//jit vzhuru po linii pokud nejsem na konci
 		node_t* previousNode = ll2FirstNode(&currentPath);
@@ -341,8 +333,9 @@ static inline void updateAncestors(){
 			ll2AddNodeBegin(&currentPath,previousNode);
 		}
 
-		ancestors = ancestors2;
 	}
+	if (nodeHash(ll2FirstNode(&currentPath)) == 2865125)
+		printf("po\n");
 }
 
 static inline void selectMostProving(){
@@ -412,9 +405,9 @@ nodeValue_t proofNuberSearch(node_t* root){
 		//if (true){
 		if (false){
 			//printNode(mostProovingNode);
-			printf("nodes %d\n",numberOfNodes);
-			printf("max %d\n",MAXPROOF);
-			printf("hotov node (%u) %u %u\n",nodeTurn(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
+			printf("hotov node (%u) %u %u\n",nodeHash(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
+			printNode(mostProovingNode);
+			printf("nodes %d ",numberOfNodes);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChilds(mostProovingNode);
 		}

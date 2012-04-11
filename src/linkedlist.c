@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "linkedlist.h"
+#include "nodefce.h" //na ladeni
 #include "print.h"
 
 void ll2New( ll2_t* ll){
@@ -123,6 +124,7 @@ void ll2Delete( ll2_t* ll, node_t* node){
 			ll2FDel(ll);
 			return;
 		}
+		ll2FNext(ll);
 	}
 	perror("neni co mazat");
 }

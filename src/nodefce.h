@@ -198,7 +198,7 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 	if (nodeExpanded(node))
 		free(node->childs);
 #ifdef DEBUG
-	if (!llEmpty(node->parents))
+	if (!ll2Empty(&node->parents))
 		perror("tohle by se nemelo mazat");
 #endif //DEBUG
 	free(node);

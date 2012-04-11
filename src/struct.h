@@ -40,7 +40,7 @@ struct node{
 	u32 hash;
 
 	node_t** childs;
-	ll_t* parents;
+	ll2_t parents;
 
 	u64 graph[2];
 };
