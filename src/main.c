@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// mazat false deti or a true deti and
 // testovat weak
 // prepsat update ancesor (pridava se na konec)
 // rychlejsi norm select sort --proc je to tak pomale??
