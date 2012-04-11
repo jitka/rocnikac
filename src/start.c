@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "start.h"
 #include "nodefce.h"
-#include "graphfce.h"
 #include "linkedlist.h"
 
 node_t* getRoot(){

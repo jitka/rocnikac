@@ -7,7 +7,6 @@
 #include "tabs.h"
 
 // TODO HNED
-// testuj print
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // git

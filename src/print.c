@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "nodefce.h"
-#include "graphfce.h"
 #include "print.h"
 
 void printNode(node_t* node){
