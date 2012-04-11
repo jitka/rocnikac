@@ -59,8 +59,7 @@ static inline void cacheInsert(node_t* node){
 		return;
 	}
 	cacheMiss++;
-//	printf("neni kam dat %d\n",nodeHash(node));
-	perror("neni kam dat");
+	printf("neni kam dat %d\n",nodeHash(node));
 }
 
 static inline node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
@@ -160,15 +159,19 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
 				deleteChild(node);
+#ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au1");
+#endif //DEBUG
 			} 
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
 				deleteChild(node);
+#ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au2");
+#endif //DEBUG
 			}
 		} else {
 			nodeSetProof(node,1);
@@ -206,8 +209,10 @@ static inline int testK4(node_t * node, int i, int j, color color){
 static inline node_t* createChild(node_t* node, int i, int j){
 	//vytvori potomka obarvenim hrany i,j
 	node_t* child = malloc(sizeof(node_t));
+#ifdef DEBUG
 	if (child == NULL)
 		perror("malloc child");
+#endif //DEBUG
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	ll2New( &child->parents );
@@ -261,8 +266,10 @@ static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
 	//TODO otestovat vypis viteztvi+proher, zbytek hotovo
 
+#ifdef DEBUG
 	if (nodeExpanded(node))
 		perror("uz je");
+#endif //DEBUG
 
 	node_t* childs[N*N];
 	int childsN=0;
@@ -280,7 +287,7 @@ static inline void developNode(node_t* node){
 					printNode(node);
 					exit(1);
 				}
-#endif
+#endif //DEBUG
 				setProofAndDisproofNubers(childs[childsN]);
 				childsN++;
 
@@ -294,17 +301,10 @@ static inline void developNode(node_t* node){
 	nodeSetChildsN( node, childsN);
 	
 	nodeSetExpanded(node,true);
-	if (nodeValue(node) != UNKNOWN)
-		printf("neni treba\n");
 }
 
 static inline void updateAncestors(){ //po hladinach
 
-	if (nodeHash(ll2FirstNode(&currentPath)) == 2865125){
-		//printf("!!!!!!!!!!pred\n");
-		//printNode(ll2FirstNode(&currentPath));
-		//printChilds(ll2FirstNode(&currentPath));
-	}
 	ll2_t ancestors;
        	ll2New(&ancestors);
 	ll2AddNodeEnd( &ancestors, ll2FirstNode(&currentPath));
@@ -334,8 +334,6 @@ static inline void updateAncestors(){ //po hladinach
 		}
 
 	}
-	if (nodeHash(ll2FirstNode(&currentPath)) == 2865125)
-		printf("po\n");
 }
 
 static inline void selectMostProving(){
@@ -343,6 +341,7 @@ static inline void selectMostProving(){
 	int tmp=0;
 	while (nodeExpanded(node)){
 		tmp++;
+#ifdef DEBUG
 		if (nodeValue(node)!=UNKNOWN){
 			printf("tady ne %d\n",tmp);
 			printNode(node);
@@ -351,15 +350,11 @@ static inline void selectMostProving(){
 			printf("tady nee\n");
 		}
 		u32 turn = nodeTurn(node);
+#endif //DEBUG
 		switch (nodeType(node)) {
 		case OR: 
 			for (u32 i = 0; i < nodeChildsN(node); i++){
 				if (nodeProof(node) == nodeProof(node->childs[i])){
-		if (nodeValue(node->childs[i])!=UNKNOWN){
-			printf("dite or\n");
-			printNode(node->childs[i]);
-			printNode(node);
-		}
 					node = node->childs[i];
 					break;
 				}
@@ -368,18 +363,17 @@ static inline void selectMostProving(){
 		case AND: 
 			for (u32 i = 0; i < nodeChildsN(node); i++){
 				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
-		if (nodeValue(node->childs[i])!=UNKNOWN){
-			printf("dite and\n");
-		}
 					node = node->childs[i];
 					break;
 				}
 			}
 			break;
 		}
+#ifdef DEBUG
 		if (turn == nodeTurn(node)){
 			printf("minimalni (dis)proof numer neni\n");
 		}
+#endif //DEBUG
 		ll2AddNodeBegin(&currentPath,node);
 	}
 }
@@ -389,7 +383,9 @@ nodeValue_t proofNuberSearch(node_t* root){
 	ll2New(&currentPath);
 	ll2AddNodeBegin(&currentPath,root);
 
+#ifdef DEBUG
 	int counter = 0;
+#endif //DEBUG
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
 	
 		selectMostProving();
@@ -399,7 +395,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 
 		updateAncestors(); 
 	
-		//TESTOVACI CAST	
+#ifdef DEBUG
 		counter++;
 		//if (counter % 1000 == 0){
 		//if (true){
@@ -411,6 +407,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChilds(mostProovingNode);
 		}
+#endif //DEBUG
 	}
 
 //	printf("nodes %d\n",numberOfNodes);

@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// uklid pnsearch
 // ll for 
 // ll_t fce smazat
 // deti do spojaku
