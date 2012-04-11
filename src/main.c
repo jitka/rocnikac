@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// testovat weak
 // prepsat update ancesor (pridava se na konec)
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
@@ -51,6 +50,7 @@
 // DOTAZY
 // proc je norm pomaly, pro to nezbehne pro 6 bez predvypocitani hran
 // proc je pomale prohazovani hran?
+// nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
 // Gavento - hasovani
 
 int main(){

@@ -124,11 +124,19 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				ll2FStart(&node->childs); 
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
 					childsN++;
-					if ( nodeDisproof(child) == 0 ){
+					if ( nodeValue(child) == FALSE ){
 						ll2FDel(&node->childs);
 						childsN--;
 						continue;
 					}
+#ifdef DEBUG
+/*					if ( nodeDisproof(child) + 1000 > MAXPROOF){
+						printf("to uz ma by false %d\n",MAXPROOF);
+						printNode(child);
+						printChilds(child);
+					}
+					*/
+#endif //DEBUG
 					min = MIN(min,nodeProof(child));
 #ifdef WEAK 			
 					max = MAX( max, nodeDisproof(child) );
@@ -139,16 +147,26 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				}
 				nodeSetProof( node, min);
 #ifdef WEAK
-				nodeSetDisproof( node, max + childsN - 1);
+				if (childsN == 0)
+					nodeSetDisproof( node, 0);
+				else 
+					nodeSetDisproof( node, max + childsN - 1);
 #else //WEAK
 				nodeSetDisproof( node, sum);
 #endif //WEAK
+#ifdef DEBUG
+			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
+				printf("dve nekonecna %d %d\n",min,max);
+				printNode(node);
+				printChilds(node);
+			}
+#endif //DEBUG
 				break;
 			case AND:
 				ll2FStart(&node->childs); 
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
 					childsN++;
-					if ( nodeProof(child) == 0 ){
+					if ( nodeValue(child) == TRUE ){
 						ll2FDel(&node->childs);
 						childsN--;
 						continue;
@@ -163,7 +181,10 @@ static inline void setProofAndDisproofNubers(node_t* node){
 					ll2FNext(&node->childs);
 				}
 #ifdef WEAK
-				nodeSetProof( node, max + childsN - 1 );
+				if (childsN == 0)
+					nodeSetProof( node, 0 );
+				else 
+					nodeSetProof( node, max + childsN - 1 );
 #else //WEAK
 				nodeSetProof( node, sum);
 #endif //WEAK
@@ -189,6 +210,13 @@ static inline void setProofAndDisproofNubers(node_t* node){
 					perror("au2");
 #endif //DEBUG
 			}
+#ifdef DEBUG
+			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
+				printf("dve nekonecna\n");
+				printNode(node);
+				printChilds(node);
+			}
+#endif //DEBUG
 		} else {
 			nodeSetProof(node,1);
 			nodeSetDisproof(node,1);
@@ -275,7 +303,6 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
-	//TODO otestovat vypis viteztvi+proher, zbytek hotovo
 
 #ifdef DEBUG
 	if (nodeExpanded(node))
