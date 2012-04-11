@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// prepsat update ancesor (pridava se na konec)
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // git
