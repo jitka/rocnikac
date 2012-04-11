@@ -6,10 +6,11 @@
 #include "norm.h"
 
 // TODO HNED
-// smazat static inline u32 nodeNeighbour(node_t * node, int i, color color){
+// testuj print
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // git
+// pustit z roota a koukat na turn 4
 // vetsi testy, N 7
 // vhodne CACHE_PATIENCE, velikost cache 
 // paralelizace 
@@ -56,7 +57,6 @@
 int main(){
 
 	hashInit();
-	normInit();
 
 //	node_t* root = getRoot();
 //	nodeValue_t value = proofNuberSearch(root);

@@ -35,14 +35,15 @@ void printNode(node_t* node){
 	printf("|\n");
 	for (int i = 0; i < N; i++){
 		printf("%d| ",i);
-		u32 data0 = nodeNeighbour(node,i,0);
-		u32 data1 = nodeNeighbour(node,i,1);
 		for (int j = 0; j < N; j++){
-			if (data0 & (1<<j)){
-				printf("0 ");
-			} else if (data1 & (1<<j)){
-				printf("1 ");
-			} else {
+			bool print = false;
+			for (int c = 0; c < 2; c++){
+				if ( nodeEdgeExist(node,i,j,c)){
+					printf("%d ",c);
+					print = true;
+				}
+			}
+			if (!print){
 				printf("  ");
 			}
 		}

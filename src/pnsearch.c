@@ -17,6 +17,7 @@ u32 hashNumbers[2][N][N]; //pro kazdou barvu a hranu
 u32 hashNumbers2[2][N][1<<N]; //pro kazdou barvu, vrchol a _mensi_ sousedy
 node_t* cache[CACHE_SIZE];
 int cacheMiss = 0;
+int count[1<<N];
 u64 N1s;
 u64 R1s;
 
@@ -43,6 +44,17 @@ void hashInit(){
 			hashNumbers2[1][i][s] = hash1;
 		}
 	}
+
+	for (uint m = 0; m < (1<<N); m++){
+		int ones = 0;
+		for (int i = 0; i < N; i++){
+			if ( m & (1<<i) )
+				ones++;
+		}
+		count[m] = ones;
+	}
+
+
 	N1s = ((1ULL<<N)-1ULL);
 	R1s = 0;
 	for (int i = 0; i < N; i++){
@@ -231,23 +243,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		nodeSetDisproof(node,0);
 		break;
 	}
-}
-
-static inline int testK4(node_t * node, int i, int j, color color){
-	//otestuje jestli po pridani hrany ij nevznikla K4
-	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
-	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
-	tr = nodeNeighbour(node,i,color) & nodeNeighbour(node,j,color);
-	for (int s = 0; s < N; s++)
-		if (tr & (1<<s))
-			for (int t = 0; t < N; t++)
-				if (tr & (1<<t)){
-					//staci overit jestli mezi s a t vede hrana
-					if ( nodeNeighbour(node,s,color) & (1<<t) )
-						return true;
-
-				}
-	return false;
 }
 
 static inline node_t* createChild(node_t* node, int i, int j){

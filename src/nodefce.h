@@ -23,24 +23,32 @@ static inline bool compareGraph(node_t * a, node_t * b);
 
 static inline bool nodeEdgeExist(node_t * node, int i, int j, color c);
 static inline void nodeSetEdge(node_t * node, int i, int j, color color);
+static inline int nodeDegree(node_t * node, int i, color c);
 
+static inline bool testK4(node_t * node, int i, int j, color color);
 static inline void nodeChangeNodes(node_t * node, int a, int b);
 #ifdef DEBUG
-static inline int nodeSimetric(node_t * a);
+static inline bool nodeSimetric(node_t * a);
 #endif
 
 //-------------NODE---------------DATA------------------
 static inline bool nodeExpanded(node_t * node);
 static inline void nodeSetExpanded(node_t * node, u32 expanded);
+
 static inline nodeType_t nodeType(node_t * node);
 static inline void nodeSetType(node_t * node, nodeType_t type);
+
 static inline nodeValue_t nodeValue(node_t * node);
 static inline void nodeSetValue(node_t * node, nodeValue_t value);
+
 static inline u8 nodeTurn(node_t * node);
 static inline void nodeSetTurn(node_t * node, u32 turn);
+
 static inline u32 nodeHash(node_t * node);
+
 static inline u32 nodeProof(node_t * node);
 static inline void nodeSetProof(node_t * node, u32 proof);
+
 static inline u32 nodeDisproof(node_t * node);
 static inline void nodeSetDisproof(node_t * node, u32 disproof);
 
@@ -48,6 +56,33 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof);
 //-------------NODE---------------GRAPH------------------
 extern u64 N1s; //0000..00000000000000011111
 extern u64 R1s; //0000..00100001000100010001
+extern int count[1<<N];
+
+static inline u32 nodeNeighbour2(node_t * node, int i, color color){
+	//vrati masku kde je 1 tam kde vede hrana
+	return (node->graph[color] >> (i*N)) & N1s; 
+}
+
+static inline int nodeDegree(node_t * node, int i, color c){
+	return count[ nodeNeighbour2(node,i,c) ];
+}
+
+static inline bool testK4(node_t * node, int i, int j, color color){
+	//otestuje jestli po pridani hrany ij nevznikla K4
+	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
+	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
+	tr = nodeNeighbour2(node,i,color) & nodeNeighbour2(node,j,color);
+	for (int s = 0; s < N; s++)
+		if (tr & (1<<s))
+			for (int t = 0; t < N; t++)
+				if (tr & (1<<t)){
+					//staci overit jestli mezi s a t vede hrana
+					if ( nodeEdgeExist( node, s, t, color) )
+						return true;
+
+				}
+	return false;
+}
 
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->graph[color] |= 1ULL<<(i*N+j);
@@ -55,10 +90,6 @@ static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->hash ^= hashNumbers[color][i][j];
 }
 
-static inline u32 nodeNeighbour(node_t * node, int i, color color){
-	//vrati masku kde je 1 tam kde vede hrana
-	return (node->graph[color] >> (i*N)) & N1s; 
-}
 static inline void nodeCopyGraph(node_t * to, node_t * from){
 	to->graph[0] = from->graph[0];
 	to->graph[1] = from->graph[1];
@@ -78,8 +109,8 @@ static inline bool compareGraph(node_t * a, node_t * b){
 static inline void nodeChangeNodes(node_t * node, int a, int b){
 	for (int c = 0; c < 2; c++){
 		//zahodim vahy starych hran
-		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
-		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
+		node->hash ^= hashNumbers2[c][a][nodeNeighbour2(node,a,c)];
+		node->hash ^= hashNumbers2[c][b][nodeNeighbour2(node,b,c)];
 
 		//vezmu radky a b
 		u64 sa = ( node->graph[c] & (N1s<<(a*N)) ); 
@@ -101,13 +132,13 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->graph[c] =  node->graph[c] ^ ((rb>>b)<<a); 
 
 		//pridam vahy hran
-		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
-		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
+		node->hash ^= hashNumbers2[c][a][nodeNeighbour2(node,a,c)];
+		node->hash ^= hashNumbers2[c][b][nodeNeighbour2(node,b,c)];
 	}
 }
 
 #ifdef DEBUG
-static inline int nodeSimetric(node_t * a){
+static inline bool nodeSimetric(node_t * a){
 	for (int u = 0; u < N; u++){
 		for (int v = 0; v < N; v++){
 			for (int c = 0; c < 2; c++){

@@ -5,32 +5,17 @@
 #include "norm.h"
 #include "print.h"
 
-int count[1<<N];
+
 int TMP = 0;
-
-void normInit(){
-	for (uint m = 0; m < (1<<N); m++){
-		int ones = 0;
-		for (int i = 0; i < N; i++){
-			if ( m & (1<<i) )
-				ones++;
-		}
-		count[m] = ones;
-	}
-
-//	printf("3-%d 0-%d 8-%d 15-%d",count[3],count[0],count[8],count[15]);
-}
-
 void norm(node_t* node){
 	TMP++;
 	int degree[2][N];
 
 	for (int c = 0; c < 2; c++){
 		for (int v = 0; v < N; v++){
-			degree[c][v] = count[ nodeNeighbour(node,v,c) ];
+			degree[c][v] = nodeDegree( node, v, c);
 		}
 	}
-
 
 	int fce[N];
 	int nodes[N];
