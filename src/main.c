@@ -7,7 +7,7 @@
 #include "tabs.h"
 
 // TODO HNED
-// rychlejsi norm select sort --proc je to tak pomale??
+// rychlejsi norm select sort --proc je to tak pomale?? nefunguje s permutacni tabulkou
 // permutacni tabulka
 // git
 // pustit z roota a koukat na turn 4

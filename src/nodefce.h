@@ -162,6 +162,11 @@ static inline node_t* nodeNew(){
 #endif //DEBUG
 	ll2New( &child->parents );
 	ll2New( &child->childs );
+#ifdef PERM 
+	for (int i = 0; i < N; i++){
+		perm[i]=i;
+	}
+#endif //PERM
 	nodeSetExpanded( child, false);
 	return child;
 }

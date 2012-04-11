@@ -41,6 +41,10 @@ struct node{
 	ll2_t parents;
 	ll2_t childs;
 
+#ifdef PERM 
+	u8 perm[N];
+#endif //PERM
+
 	u64 graph[2];
 };
 

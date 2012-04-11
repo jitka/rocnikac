@@ -27,6 +27,8 @@ static inline bool compareGraph(node_t * a, node_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
 
+#ifdef PERM 
+#else //PERM
 static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
 	return (node->graph[color] >> (i*N)) & N1s; 
@@ -49,8 +51,8 @@ static inline int nodeDegree(node_t * node, int i, color c){
 static inline void nodeChangeNodes(node_t * node, int a, int b){
 	for (int c = 0; c < 2; c++){
 		//zahodim vahy starych hran
-		node->hash ^= hashNumbers2[c][a][nodeNeighbour2(node,a,c)];
-		node->hash ^= hashNumbers2[c][b][nodeNeighbour2(node,b,c)];
+		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
+		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 
 		//vezmu radky a b
 		u64 sa = ( node->graph[c] & (N1s<<(a*N)) ); 
@@ -72,8 +74,8 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->graph[c] =  node->graph[c] ^ ((rb>>b)<<a); 
 
 		//pridam vahy hran
-		node->hash ^= hashNumbers[c][a][nodeNeighbour(node,a,c)];
-		node->hash ^= hashNumbers[c][b][nodeNeighbour(node,b,c)];
+		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
+		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 	}
 }
 
@@ -109,5 +111,6 @@ static inline bool nodeSimetric(node_t * a){
 	return true;
 }
 #endif
+#endif //PERM
 
 #endif //GRAPHFECE_H
