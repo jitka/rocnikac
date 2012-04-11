@@ -18,20 +18,5 @@ void ll2FNext( ll2_t* ll);
 node_t* ll2FGet( ll2_t* ll);
 void ll2FDel( ll2_t* ll);
 
-
-ll_t* llNew();
-int llEmpty(ll_t* ll);
-void llDelete(ll_t** where, node_t* node);
-void llAddll(ll_t** where, ll_t* nodes);
-
-void llAddNode(ll_t** where, node_t* node);
-node_t* llGetNode(ll_t** where); //kdyz neni vraci NULL
-node_t* llLastNode(ll_t** where); //kdyz neni vraci NULL
-void llDelete(ll_t** where, node_t* node);
-
-int llGetLength(ll_t* where); //pomale! jen pro testovani!
-
-
-
 #endif
 
