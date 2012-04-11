@@ -6,7 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// ll for 
 // ll_t fce smazat
 // deti do spojaku
 // prepsat nodeDelete

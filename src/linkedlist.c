@@ -118,22 +118,18 @@ void ll2FDel( ll2_t* ll){
 
 void ll2AddNodesEnd( ll2_t* ll, ll2_t* nodes){
 	ll2FStart(nodes);
-	node_t* node;
-	while ((node = ll2FGet(nodes)) != NULL){
-		ll2AddNodeEnd(ll,node);
-		ll2FNext(nodes);
+	for (node_t* n; (n = ll2FGet(nodes)) != NULL; ll2FNext(nodes)){
+		ll2AddNodeEnd(ll,n);
 	}
 }
 
 void ll2Delete( ll2_t* ll, node_t* node){
 	ll2FStart(ll);
-	node_t* n;
-	while ((n = ll2FGet(ll)) != NULL){
+	for (node_t* n; (n = ll2FGet(ll)) != NULL; ll2FNext(ll)){
 		if ( n == node ){
 			ll2FDel(ll);
 			return;
 		}
-		ll2FNext(ll);
 	}
 #ifdef DEBUG
 	perror("neni co mazat");
