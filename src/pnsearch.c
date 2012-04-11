@@ -1,103 +1,13 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <limits.h>
-#include "setting.h"
 #include "pnsearch.h"
+#include "setting.h"
 #include "print.h"
 #include "linkedlist.h"
 #include "nodefce.h"
-#include "graphfce.h"
 #include "norm.h"
+#include "cache.h"
 
 // or node... na tahu je prvni hrac
-
-//--------------------------CACHE-----------------------
-
-u32 hashNumbers[2][N][N]; //pro kazdou barvu a hranu
-u32 hashNumbers2[2][N][1<<N]; //pro kazdou barvu, vrchol a _mensi_ sousedy
-node_t* cache[CACHE_SIZE];
-int cacheMiss = 0;
-int count[1<<N];
-u64 N1s;
-u64 R1s;
-
-void hashInit(){
-	for (int i = 0; i < N; i++){
-		for (int j = 0; j < i; j++){
-			hashNumbers[0][i][j] = random() % CACHE_SIZE;
-			hashNumbers[0][j][i] = hashNumbers[0][i][j];
-			hashNumbers[1][i][j] = random() % CACHE_SIZE;
-			hashNumbers[1][j][i] = hashNumbers[1][i][j];
-		}
-	}
-	for (int i = 0; i < N; i++){
-		for (u32 s = 0; s < (1<<N); s++){
-			int hash0 = 0;
-			int hash1 = 0;
-			for (int j = 0; j < i; j++){
-				if ( s & (1<<j) ){
-					hash0 ^= hashNumbers[0][i][j];
-					hash1 ^= hashNumbers[1][i][j];
-				}
-			}
-			hashNumbers2[0][i][s] = hash0;
-			hashNumbers2[1][i][s] = hash1;
-		}
-	}
-
-	for (uint m = 0; m < (1<<N); m++){
-		int ones = 0;
-		for (int i = 0; i < N; i++){
-			if ( m & (1<<i) )
-				ones++;
-		}
-		count[m] = ones;
-	}
-
-
-	N1s = ((1ULL<<N)-1ULL);
-	R1s = 0;
-	for (int i = 0; i < N; i++){
-		R1s ^= (1<<i*N);
-	}
-}
-
-static inline void cacheInsert(node_t* node){
-	for (u32 i = 0; i < CACHE_PATIENCE; i++){
-		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (cache[where] != NULL)
-			continue;
-		cache[where] = node;
-		return;
-	}
-	cacheMiss++;
-	printf("neni kam dat %d\n",nodeHash(node));
-}
-
-static inline node_t* cacheFind(node_t* node){ //vrati ukazatel na stejny graf nebo NULL pokud tam neni
-	for (u32 i = 0; i < CACHE_PATIENCE; i++){
-		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (cache[where] == NULL)
-			continue;
-		if ( compareGraph( cache[where], node) )
-			return cache[where];
-	}
-	return NULL;
-}
-
-static inline void cacheDelete(node_t* node){
-	for (u32 i = 0; i < CACHE_PATIENCE; i++){
-		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (cache[where] == NULL)
-			continue;
-		if ( compareGraph( cache[where], node) ){
-			cache[where] = NULL;
-			return;
-		}
-	}
-	perror("neni v cachy");
-}
-//--------------------------PN-SEARCH-----------------------
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll2_t currentPath;
 

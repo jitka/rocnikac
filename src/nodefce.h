@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "struct.h"
 #include "linkedlist.h"
-#include "pnsearch.h"
+#include "tabs.h"
 
 #ifdef DEBUG
 #include "print.h"
@@ -54,9 +54,6 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof);
 
 
 //-------------NODE---------------GRAPH------------------
-extern u64 N1s; //0000..00000000000000011111
-extern u64 R1s; //0000..00100001000100010001
-extern int count[1<<N];
 
 static inline u32 nodeNeighbour2(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana

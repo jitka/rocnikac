@@ -4,6 +4,7 @@
 #include "start.h"
 #include "print.h"
 #include "norm.h"
+#include "tabs.h"
 
 // TODO HNED
 // testuj print
@@ -56,7 +57,7 @@
 
 int main(){
 
-	hashInit();
+	tabsInit();
 
 //	node_t* root = getRoot();
 //	nodeValue_t value = proofNuberSearch(root);
