@@ -7,6 +7,7 @@
 
 // TODO HNED
 // deti do spojaku
+// uklid nodefce
 // prepsat nodeDelete
 // nodeNew
 // testovat weak

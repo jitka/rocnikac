@@ -20,7 +20,7 @@ node_t* getRoot(){
 	nodeSetValue( node, UNKNOWN);
 	
 	ll2New(&node->parents);
-
+	ll2New(&node->childs);
 	
 	return node;
 }
@@ -51,6 +51,7 @@ node_t* readNode(){
 	nodeSetTurn( node, turn);
 	nodeSetValue( node, UNKNOWN);
 	ll2New(&node->parents);
+	ll2New(&node->childs);
 	if (turn%2==0){
 		nodeSetType( node, OR);
 	} else {

@@ -35,12 +35,11 @@ struct node{
 		   // 2,3 value
 
 	u8 turn; //kolikaty je to tah = kolik je prave obarveno hran
-	u8 childsNumber;
 
 	u32 hash;
 
-	node_t** childs;
 	ll2_t parents;
+	ll2_t childs;
 
 	u64 graph[2];
 };

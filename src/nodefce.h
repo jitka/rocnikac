@@ -146,14 +146,6 @@ static inline void nodeSetValue(node_t * node, nodeValue_t value){
 
 }
 
-//-------------NODE---------------CHILDS------------------
-static inline u32 nodeChildsN(node_t * node){
-	return node->childsNumber;
-}
-static inline void nodeSetChildsN(node_t * node, u8 v){
-	node->childsNumber = v;
-}
-
 //-------------NODE---------------OTHER------------------
 //turn
 static inline u32 nodeTurn(node_t * node){
