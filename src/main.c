@@ -6,6 +6,7 @@
 #include "norm.h"
 
 // TODO HNED
+// smazat static inline u32 nodeNeighbour(node_t * node, int i, color color){
 // rychlejsi norm select sort --proc je to tak pomale??
 // permutacni tabulka
 // git

@@ -366,7 +366,7 @@ static inline void selectMostProving(){
 		if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
 			printf("tady nee\n");
 		}
-		u32 turn = nodeTurn(node);
+		u8 turn = nodeTurn(node);
 #endif //DEBUG
 		switch (nodeType(node)) {
 		case OR: 

@@ -4,10 +4,46 @@
 #include <stdlib.h>
 #include "struct.h"
 #include "linkedlist.h"
-#include "print.h"
 #include "pnsearch.h"
+
+#ifdef DEBUG
+#include "print.h"
+#endif //DEBUG
+
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+static inline node_t* nodeNew();
+static inline void nodeDelete(node_t* node);
+
+//-------------NODE---------------GRAPH------------------
+static inline void nodeEmptyGraph(node_t * node);
+static inline void nodeCopyGraph(node_t * to, node_t * from);
+static inline bool compareGraph(node_t * a, node_t * b);
+
+static inline bool nodeEdgeExist(node_t * node, int i, int j, color c);
+static inline void nodeSetEdge(node_t * node, int i, int j, color color);
+
+static inline void nodeChangeNodes(node_t * node, int a, int b);
+#ifdef DEBUG
+static inline int nodeSimetric(node_t * a);
+#endif
+
+//-------------NODE---------------DATA------------------
+static inline bool nodeExpanded(node_t * node);
+static inline void nodeSetExpanded(node_t * node, u32 expanded);
+static inline nodeType_t nodeType(node_t * node);
+static inline void nodeSetType(node_t * node, nodeType_t type);
+static inline nodeValue_t nodeValue(node_t * node);
+static inline void nodeSetValue(node_t * node, nodeValue_t value);
+static inline u8 nodeTurn(node_t * node);
+static inline void nodeSetTurn(node_t * node, u32 turn);
+static inline u32 nodeHash(node_t * node);
+static inline u32 nodeProof(node_t * node);
+static inline void nodeSetProof(node_t * node, u32 proof);
+static inline u32 nodeDisproof(node_t * node);
+static inline void nodeSetDisproof(node_t * node, u32 disproof);
+
 
 //-------------NODE---------------GRAPH------------------
 extern u64 N1s; //0000..00000000000000011111
@@ -33,10 +69,10 @@ static inline void nodeEmptyGraph(node_t * node){
 	node->graph[1] = 0ULL;
 	node->hash = 0;
 }
-static inline int nodeEdgeExist(node_t * node, int i, int j, color c){
+static inline bool nodeEdgeExist(node_t * node, int i, int j, color c){
 	return (!!(node->graph[c] & (1ULL<<(i*N+j))));
 }
-static inline int compareGraph(node_t * a, node_t * b){
+static inline bool compareGraph(node_t * a, node_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
 static inline void nodeChangeNodes(node_t * node, int a, int b){
@@ -95,7 +131,7 @@ static inline u8 getBit(u8 data, u8 bit){
 }
 
 //expanded
-static inline u32 nodeExpanded(node_t * node){
+static inline bool nodeExpanded(node_t * node){
 	return getBit(node->data,0);
 }
 static inline void nodeSetExpanded(node_t * node, u32 expanded){
@@ -146,38 +182,28 @@ static inline void nodeSetValue(node_t * node, nodeValue_t value){
 
 }
 
-//-------------NODE---------------OTHER------------------
-//turn
-static inline u32 nodeTurn(node_t * node){
+//-------------NODE---------------TURN------------------
+static inline u8 nodeTurn(node_t * node){
 	return node->turn;
 }
 static inline void nodeSetTurn(node_t * node, u32 turn){
 	node->turn = turn;
 }
 
-//hash
+//-------------NODE---------------HASH------------------
 static inline u32 nodeHash(node_t * node){
 	return node->hash;
 }
 
-//proof
+//-------------NODE---------------PROOF------------------
 static inline u32 nodeProof(node_t * node){
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, u32 proof){
-/*#ifdef DEBUG
-	if (proof > MAXPROOF){
-		printf("moc %d %d \n",proof, MAXPROOF);
-		printNode(node);
-//		printChilds(node);
-	}
-	node->proof2 = proof;
-#else
-*/	node->proof2 = MIN( proof, MAXPROOF);
-//#endif
+	node->proof2 = MIN( proof, MAXPROOF);
 }
 
-//disproof
+//-------------NODE---------------DISPROOF------------------
 static inline u32 nodeDisproof(node_t * node){
 	return node->disproof;
 }
@@ -210,3 +236,4 @@ static inline node_t* nodeNew(){
 }
 
 #endif
+
