@@ -25,8 +25,8 @@ static inline bool nodeEdgeExist(node_t * node, int i, int j, color c);
 static inline void nodeSetEdge(node_t * node, int i, int j, color color);
 static inline int nodeDegree(node_t * node, int i, color c);
 
-static inline bool testK4(node_t * node, int i, int j, color color);
 static inline void nodeChangeNodes(node_t * node, int a, int b);
+static inline bool testK4(node_t * node, int i, int j, color color);
 #ifdef DEBUG
 static inline bool nodeSimetric(node_t * a);
 #endif
