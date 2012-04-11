@@ -196,5 +196,17 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 	free(node);
 }
 
+//-------------NODE---------------NEW------------------
+static inline node_t* nodeNew(){
+	node_t* child = malloc(sizeof(node_t));
+#ifdef DEBUG
+	if (child == NULL)
+		perror("malloc child");
+#endif //DEBUG
+	ll2New( &child->parents );
+	ll2New( &child->childs );
+	nodeSetExpanded( child, false);
+	return child;
+}
 
 #endif

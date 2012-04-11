@@ -6,30 +6,22 @@
 #include "linkedlist.h"
 
 node_t* getRoot(){
-	node_t* node = malloc(sizeof(node_t));
-	if (node == NULL)
-		perror("malloc node");
+	node_t* node = nodeNew();
 
 	nodeEmptyGraph(node);
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
-	nodeSetExpanded( node, false);
 	nodeSetTurn( node, 0);
 	nodeSetType( node, OR);
 	nodeSetValue( node, UNKNOWN);
-	
-	ll2New(&node->parents);
-	ll2New(&node->childs);
 	
 	return node;
 }
 
 node_t* readNode(){
-	node_t* node = malloc(sizeof(node_t));
-	if (node == NULL)
-		perror("malloc node");
-
+	node_t* node = nodeNew();
+	
 	nodeEmptyGraph(node);
 	
 	int u,v,turn=0;
@@ -50,8 +42,6 @@ node_t* readNode(){
 	nodeSetExpanded( node, false);
 	nodeSetTurn( node, turn);
 	nodeSetValue( node, UNKNOWN);
-	ll2New(&node->parents);
-	ll2New(&node->childs);
 	if (turn%2==0){
 		nodeSetType( node, OR);
 	} else {

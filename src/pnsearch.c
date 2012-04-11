@@ -216,15 +216,9 @@ static inline int testK4(node_t * node, int i, int j, color color){
 
 static inline node_t* createChild(node_t* node, int i, int j){
 	//vytvori potomka obarvenim hrany i,j
-	node_t* child = malloc(sizeof(node_t));
-#ifdef DEBUG
-	if (child == NULL)
-		perror("malloc child");
-#endif //DEBUG
-	nodeSetExpanded(child, false);
+	node_t* child = nodeNew();
+
 	nodeSetTurn(child, nodeTurn(node)+1 );
-	ll2New( &child->parents );
-	ll2New( &child->childs );
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac

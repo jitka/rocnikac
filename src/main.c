@@ -6,9 +6,6 @@
 #include "norm.h"
 
 // TODO HNED
-// uklid nodefce
-// prepsat nodeDelete
-// nodeNew
 // mazat false deti or a true deti and
 // testovat weak
 // prepsat update ancesor (pridava se na konec)
@@ -22,6 +19,7 @@
 //
 //
 // TODO NEKDY
+// uklid nodefce
 // kdyz nucene tahy DB-search
 // oprofile
 // vhodnejsi cisla na zacatku - testovat!
