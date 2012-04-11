@@ -187,11 +187,11 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 
 //-------------NODE---------------DELETE------------------
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
-	if (nodeExpanded(node))
-		free(node->childs);
 #ifdef DEBUG
-	if (!ll2Empty(&node->parents))
-		perror("tohle by se nemelo mazat");
+	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) || (!ll2Empty(&node->childs)) ){
+		printf("tohle by se nemelo mazat\n");
+		printNode(node);
+	}
 #endif //DEBUG
 	free(node);
 }

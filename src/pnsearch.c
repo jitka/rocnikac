@@ -90,9 +90,11 @@ int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll2_t currentPath;
 
 static inline void deleteChild(node_t* node){
-	if (nodeExpanded(node)){
-		for (u32 i = 0; i < nodeChildsN(node); i++){
-			node_t* child = node->childs[i];
+	if (nodeExpanded(node)){	
+		while ( ! ll2Empty(&node->childs) ){
+			node_t* child = ll2FirstNode(&node->childs);
+			ll2DelFirst(&node->childs);
+
 			ll2Delete(&(child->parents),node);
 			if ( ll2Empty( &child->parents ) ){
 				deleteChild(child);
@@ -118,38 +120,44 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 			switch (nodeType(node)) {
 			case OR:
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					min = MIN(min,nodeProof(node->childs[i]));
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					min = MIN(min,nodeProof(child));
 				}
 				nodeSetProof( node, min);
 #ifdef WEAK
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					max = MAX(max,nodeDisproof(node->childs[i]));
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					max = MAX(max,nodeDisproof(childs));
 				}
 				nodeSetDisproof( node, max+nodeChildsN(node)-1);
 
 #else //WEAK
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					sum += nodeDisproof(node->childs[i]);
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					sum += nodeDisproof(child);
 				}
 				nodeSetDisproof( node, sum);
 #endif //WEAK
 				break;
 			case AND:
 #ifdef WEAK
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					max = MAX(max,nodeProof(node->childs[i]));
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					max = MAX(max,nodeProof(child));
 				}
 				nodeSetProof( node, max+nodeChildsN(node)-1);
 #else //WEAK
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					sum += nodeProof(node->childs[i]);
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					sum += nodeProof(child);
 				}
 				nodeSetProof( node, sum);
 #endif //WEAK
 
-				for (u32 i = 0; i < nodeChildsN(node); i++){
-					min = MIN(min,nodeDisproof(node->childs[i]));
+				ll2FStart(&node->childs); 
+				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+					min = MIN( min, nodeDisproof(child) );
 				}
 				nodeSetDisproof( node, min);
 			
@@ -216,6 +224,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	nodeSetExpanded(child, false);
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	ll2New( &child->parents );
+	ll2New( &child->childs );
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
@@ -271,35 +280,14 @@ static inline void developNode(node_t* node){
 		perror("uz je");
 #endif //DEBUG
 
-	node_t* childs[N*N];
-	int childsN=0;
-
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( ! ( nodeEdgeExist(node, i, j, 0) || nodeEdgeExist(node, i, j, 1) ) ){ 
 				//ij je hrana ktera jeste nema barvu
-				childs[childsN] = createChild(node,i,j);
-#ifdef DEBUG
-				if ( !nodeSimetric( childs[childsN] ) ){
-				
-					perror("nesimetricke");
-					printNode(childs[childsN]);
-					printNode(node);
-					exit(1);
-				}
-#endif //DEBUG
-				setProofAndDisproofNubers(childs[childsN]);
-				childsN++;
-
+				node_t* child =  createChild(node,i,j);
+				setProofAndDisproofNubers( child );    
+				ll2AddNodeBegin( &node->childs, child );
 			}
-
-	//umistim potomky do stromu
-	node->childs = malloc(sizeof(node_t*) * childsN);
-	for (int i = 0; i < childsN; i++){
-		node->childs[i] = childs[i];
-	}
-	nodeSetChildsN( node, childsN);
-	
 	nodeSetExpanded(node,true);
 }
 
@@ -353,17 +341,19 @@ static inline void selectMostProving(){
 #endif //DEBUG
 		switch (nodeType(node)) {
 		case OR: 
-			for (u32 i = 0; i < nodeChildsN(node); i++){
-				if (nodeProof(node) == nodeProof(node->childs[i])){
-					node = node->childs[i];
+			ll2FStart(&node->childs); 
+			for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+				if ( nodeProof(node) == nodeProof(child) ){
+					node = child;
 					break;
 				}
 			}
 			break;
 		case AND: 
-			for (u32 i = 0; i < nodeChildsN(node); i++){
-				if (nodeDisproof(node) == nodeDisproof(node->childs[i])){
-					node = node->childs[i];
+			ll2FStart(&node->childs); 
+			for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+				if ( nodeDisproof(node) == nodeDisproof(child) ){
+					node = child;
 					break;
 				}
 			}

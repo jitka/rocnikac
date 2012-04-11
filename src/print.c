@@ -66,7 +66,7 @@ void printValue(nodeValue_t value){
 	}
 }
 
-
+/*
 void printChilds(node_t* node){
 
 	if (!nodeExpanded(node)){
@@ -82,4 +82,4 @@ void printChilds(node_t* node){
 	printf("-------------------------------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);
 }
-
+*/
