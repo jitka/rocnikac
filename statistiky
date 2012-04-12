@@ -1,0 +1,17 @@
+FORMAT VYSTUPU Z HASKELU:
+N; vsech stavu hry; az na izomorfizmus
+patro; vsech stavu hry; az na izomorfizmus
+
+FORMAT VYSTUPU Z C:
+
+N; cas pusteni bez stat, debug;  datum; commit; varianty; popis //cele rucne, zbytek generovany
+update;
+select;
+
+tri radky celkove a pak po patrech
+ 
+patro; vytvorenych; vytvorenech true; false; vynucenych tahu; otcu pri vypocitani;
+cetnost pousteni set pred urcenim
+cetnost pousteni set pred 
+
+

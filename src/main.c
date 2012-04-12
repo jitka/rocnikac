@@ -7,7 +7,25 @@
 #include "tabs.h"
 
 // TODO HNED
-// herni strom
+// herni strom 
+// 	- pripravit prostor
+// 	- novy soubory na ukladani, vypis statictik
+// 	- nastavovatko STATS 
+// 		- update;
+// 		- select;
+//              - patro - vytvorenych; 
+//                      - vytvorenech true; 
+//                      - false; 
+//                      - vynucenych tahu; 
+//                      - otcu pri vypocitani;
+//  			- cetnost pousteni set pred urcenim
+// 			- cetnost pousteni set pred 
+// 	- soucet cekove
+// 	- haskell novym srovnat stary ...
+// 	- cele pustit pro N 5..7 s/bez WEAK
+// 	- zkusit strcit co calc
+// 	- vyrobit grafy (vsechny varianty)
+// 	 	- celkove; mych; az na izo;
 // googlit
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
 // heuristika podle volnych vrcholu
