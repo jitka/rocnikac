@@ -7,44 +7,38 @@
 #include "tabs.h"
 
 // TODO HNED
+// nejdriv se koukat do cache a pak teprve testovat
+// childs
+// herni strom
+// googlit
+// testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
+// heuristika podle volnych vrcholu
 //
 // TODO NEKDY
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 
 // radit listy podle heuristik
 // norm hasovanani
-// kdyz nucene tahy DB-search
+// kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
+// normalizace i podle vedlejsich stupnu
+// pri vkladani co cache skusit permutovat vrcholy se stejnou ohodnocovacich fci
 // oprofile
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
 //
-// CIST
-//
 // MOZNE ZRYCHLENI
-// spojak do pole? a cely strom do pole?
+// spojak do pole a cely strom do pole
 // do cache data + ukazatel/true/false
 // nepristupovat pres ukazatel ale zkusit cele node_t zkopirovat
 // rychlejsi normalizace -malloc, trizeni
-// normalizace i podle vedlejsich stupnu
+// mensi node_t (brum prvocisla,ukazatele)
 // rychlejsi predani tupu blue/or spojit dohromady
 // rekurze v delete
-// test v K4
-// nejdriv se koukat do cache a pak teprve testovat
-// zmensit data v node - brum prvocisla
-// zmensit i ukazatele v node
-// proc je sys tak velike? malloc? ptat se jineho time
-// pole na syny mit globalni?
-// odstranit vypisy chyb co nikdy nenastanou
-// mazat true deti v and a mazat false deti v or
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
-// spojaky v poli
-// cely strom v poli
-// posladni stavy (uz dohrano) zabiraji moc mista v cachy
 //
 // DOTAZY
 // norm a hasovani (prohazovani radku/tabulka)
 // nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
-// Gavento - hasovani
 
 int main(){
 
