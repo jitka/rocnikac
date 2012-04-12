@@ -8,7 +8,6 @@
 
 // TODO HNED
 // herni strom 
-// 	- pripravit prostor
 // 	- novy soubory na ukladani, vypis statictik
 // 	- nastavovatko STATS 
 // 		- update;
