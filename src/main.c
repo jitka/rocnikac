@@ -5,10 +5,10 @@
 #include "print.h"
 #include "norm.h"
 #include "tabs.h"
+#include "stats.h"
 
 // TODO HNED
 // herni strom 
-// 	- novy soubory na ukladani, vypis statictik
 // 	- nastavovatko STATS 
 // 		- update;
 // 		- select;
@@ -25,7 +25,7 @@
 // 	- zkusit strcit co calc
 // 	- vyrobit grafy (vsechny varianty)
 // 	 	- celkove; mych; az na izo;
-// googlit
+// googlit, stare clanky od Toma
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
 // heuristika podle volnych vrcholu
 //
@@ -80,5 +80,10 @@ int main(){
 	}
 	printf("\nhotovo\n");
 */
+
+#ifdef STATS
+//	printStats( );
+	printStats("/dev/stdout");
+#endif //STATS
 	return 0;
 }
