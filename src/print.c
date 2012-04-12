@@ -67,15 +67,15 @@ void printValue(nodeValue_t value){
 }
 
 
-void printChilds(node_t* node){
+void printChildren(node_t* node){
 
 	if (!nodeExpanded(node)){
 		printf("nejsou deti\n");
 		return;
 	}
 	printf("potomci:\n");
-	ll2FStart(&node->childs); 
-	for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+	ll2FStart(&node->children); 
+	for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
 		printNode(child);
 	}
 	printf("potomci konec------------------------------------------------------------------\n");

@@ -40,7 +40,7 @@ struct node{
 	u32 hash;
 
 	ll2_t parents;
-	ll2_t childs; // children
+	ll2_t children;
 
 #ifdef PERM 
 	u8 perm[N];

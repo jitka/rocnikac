@@ -11,14 +11,14 @@
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll2_t currentPath;
 
-void deleteChilds(node_t* node);
+void deleteChildren(node_t* node);
 
 void deleteChild(node_t* node, node_t* child){
-	ll2Delete( &node->childs, child );
+	ll2Delete( &node->children, child );
 	ll2Delete( &child->parents, node);
 
 	if ( ll2Empty( &child->parents ) ){
-		deleteChilds(child);
+		deleteChildren(child);
 		cacheDelete(child);
 		nodeDelete(child);
 		numberOfNodes--;
@@ -26,10 +26,10 @@ void deleteChild(node_t* node, node_t* child){
 
 }
 
-void deleteChilds(node_t* node){
+void deleteChildren(node_t* node){
 	if (nodeExpanded(node)){	
-		while ( ! ll2Empty(&node->childs) ){
-			node_t* child = ll2FirstNode(&node->childs);
+		while ( ! ll2Empty(&node->children) ){
+			node_t* child = ll2FirstNode(&node->children);
 			deleteChild( node, child);
 		}
 		nodeSetExpanded(node,false);
@@ -41,7 +41,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	case UNKNOWN:
 		if (nodeExpanded(node)){
 			u32 min = MAXPROOF;
-			u32 childsN = 0;
+			u32 childrenN = 0;
 #ifdef WEAK
 			u32 max = 0;
 #else //WEAK
@@ -49,19 +49,19 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 			switch (nodeType(node)) {
 			case OR:
-				ll2FStart(&node->childs); 
-				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
-					childsN++;
+				ll2FStart(&node->children); 
+				for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
+					childrenN++;
 					if ( nodeValue(child) == FALSE ){
 						deleteChild( node, child);
-						childsN--;
+						childrenN--;
 						continue;
 					}
 #ifdef DEBUG
 /*					if ( nodeDisproof(child) + 1000 > MAXPROOF){
 						printf("to uz ma by false %d\n",MAXPROOF);
 						printNode(child);
-						printChilds(child);
+						printChildren(child);
 					}
 					*/
 #endif //DEBUG
@@ -71,14 +71,14 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #else //WEAK
 					sum += nodeDisproof(child);
 #endif //WEAK
-					ll2FNext(&node->childs);
+					ll2FNext(&node->children);
 				}
 				nodeSetProof( node, min);
 #ifdef WEAK
-				if (childsN == 0)
+				if (childrenN == 0)
 					nodeSetDisproof( node, 0);
 				else 
-					nodeSetDisproof( node, max + childsN - 1);
+					nodeSetDisproof( node, max + childrenN - 1);
 #else //WEAK
 				nodeSetDisproof( node, sum);
 #endif //WEAK
@@ -86,17 +86,17 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
 				printf("dve nekonecna %d %d\n",min,max);
 				printNode(node);
-				printChilds(node);
+				printChildren(node);
 			}
 #endif //DEBUG
 				break;
 			case AND:
-				ll2FStart(&node->childs); 
-				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
-					childsN++;
+				ll2FStart(&node->children); 
+				for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
+					childrenN++;
 					if ( nodeValue(child) == TRUE ){
 						deleteChild( node, child);
-						childsN--;
+						childrenN--;
 						continue;
 					}
 #ifdef WEAK
@@ -106,13 +106,13 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 					min = MIN( min, nodeDisproof(child) );
 
-					ll2FNext(&node->childs);
+					ll2FNext(&node->children);
 				}
 #ifdef WEAK
-				if (childsN == 0)
+				if (childrenN == 0)
 					nodeSetProof( node, 0 );
 				else 
-					nodeSetProof( node, max + childsN - 1 );
+					nodeSetProof( node, max + childrenN - 1 );
 #else //WEAK
 				nodeSetProof( node, sum);
 #endif //WEAK
@@ -123,7 +123,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
-				deleteChilds(node);
+				deleteChildren(node);
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au1");
@@ -132,7 +132,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
-				deleteChilds(node);
+				deleteChildren(node);
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au2");
@@ -142,7 +142,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
 				printf("dve nekonecna\n");
 				printNode(node);
-				printChilds(node);
+				printChildren(node);
 			}
 #endif //DEBUG
 		} else {
@@ -225,7 +225,7 @@ static inline void developNode(node_t* node){
 			if ( ! ( nodeEdgeExist(node, i, j, 0) || nodeEdgeExist(node, i, j, 1) ) ){ 
 				//ij je hrana ktera jeste nema barvu
 				node_t* child =  createChild(node,i,j);
-				ll2AddNodeBegin( &node->childs, child );
+				ll2AddNodeBegin( &node->children, child );
 			}
 	nodeSetExpanded(node,true);
 }
@@ -292,8 +292,8 @@ static inline void selectMostProving(){
 #endif //DEBUG
 		switch (nodeType(node)) {
 		case OR: 
-			ll2FStart(&node->childs); 
-			for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+			ll2FStart(&node->children); 
+			for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
 				if ( nodeProof(node) == nodeProof(child) ){
 					node = child;
 					break;
@@ -301,8 +301,8 @@ static inline void selectMostProving(){
 			}
 			break;
 		case AND: 
-			ll2FStart(&node->childs); 
-			for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ll2FNext(&node->childs)){
+			ll2FStart(&node->children); 
+			for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
 				if ( nodeDisproof(node) == nodeDisproof(child) ){
 					node = child;
 					break;
@@ -314,7 +314,7 @@ static inline void selectMostProving(){
 		if (turn == nodeTurn(node)){
 			printf("minimalni (dis)proof numer neni\n");
 			printNode(node);
-			printChilds(node);
+			printChildren(node);
 		}
 #endif //DEBUG
 		ll2AddNodeBegin(&currentPath,node);
@@ -348,7 +348,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 			//printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
-			//printChilds(mostProovingNode);
+			//printChildren(mostProovingNode);
 		}
 #endif //DEBUG
 	}

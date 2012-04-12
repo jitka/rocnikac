@@ -143,7 +143,7 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 //delete
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
 #ifdef DEBUG
-	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) || (!ll2Empty(&node->childs)) ){
+	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) || (!ll2Empty(&node->children)) ){
 		printf("tohle by se nemelo mazat\n");
 		printNode(node);
 	}
@@ -159,7 +159,7 @@ static inline node_t* nodeNew(){
 		perror("malloc node");
 #endif //DEBUG
 	ll2New( &node->parents );
-	ll2New( &node->childs );
+	ll2New( &node->children );
 #ifdef PERM 
 	for (int i = 0; i < N; i++){
 		node->perm[i]=i;

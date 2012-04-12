@@ -7,8 +7,6 @@
 #include "tabs.h"
 
 // TODO HNED
-// nejdriv se koukat do cache a pak teprve testovat
-// childs
 // herni strom
 // googlit
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
@@ -43,18 +41,18 @@
 int main(){
 
 	tabsInit();
-/*
+
 	node_t* root = getRoot();
 	nodeValue_t value = proofNuberSearch(root);
 	printValue(value);
-*/
+
 /*
 	node_t* root = readNode();
 	printNode(root);
 	norm(root);
 	printNode(root);
 */
-
+/*
 	ll2_t nodes = readNodes();
 	ll2FStart(&nodes); 
 	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){
@@ -64,6 +62,6 @@ int main(){
 			printValue(v);
 	}
 	printf("\nhotovo\n");
-
+*/
 	return 0;
 }

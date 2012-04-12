@@ -5,6 +5,6 @@
 
 void printNode(node_t* node);
 void printValue(nodeValue_t value);
-void printChilds(node_t* node);
+void printChildren(node_t* node);
 
 #endif
