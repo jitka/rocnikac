@@ -5,3 +5,8 @@ tmp/
 *.swp
 program-dbg
 program-opt
+zacatky/zacatky
+zacatky/zacatky.hi
+zacatky/zacatky.o
+
+
