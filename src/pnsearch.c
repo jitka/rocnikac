@@ -204,8 +204,9 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		nodeDelete(child);
 		return n;
 	} else {
-		ll2AddNodeEnd( &child->parents, node);
 		numberOfNodes++;
+		ll2AddNodeEnd( &child->parents, node);
+		setProofAndDisproofNubers( child );    
 		cacheInsert(child);
 		return child;
 	}
@@ -224,7 +225,6 @@ static inline void developNode(node_t* node){
 			if ( ! ( nodeEdgeExist(node, i, j, 0) || nodeEdgeExist(node, i, j, 1) ) ){ 
 				//ij je hrana ktera jeste nema barvu
 				node_t* child =  createChild(node,i,j);
-				setProofAndDisproofNubers( child );    
 				ll2AddNodeBegin( &node->childs, child );
 			}
 	nodeSetExpanded(node,true);

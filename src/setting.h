@@ -10,7 +10,7 @@
 
 #define CACHE_SIZE (1<<24)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
-#define MAXNODES 1000000 //kolik node se vleze do pameti
+#define MAXNODES 6000000 //kolik node se vleze do pameti
 
 #define bool int
 #define u8 char

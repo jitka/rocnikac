@@ -13,19 +13,22 @@ void norm(node_t* node){
 		fce[v] = 10000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
 		nodes[v] = v;
 	}
-//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
+//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf(" pred \n");
+//	printNode(node);
 
 #ifdef NOVECHANGE
  //TOHLE BY MELO BYT RYCHLEJSI
-//	printNode(node);
 	for (int i = 0; i < N; i++){
 		int min = i;
 		for (int j = i+1; j < N; j++){
 			if (fce[min] > fce[j])
 				min = j;
 		}
-		if (i != min)
+		if (i != min){
+//			printf("menim %d %d\n",i,min);
+			int tmp = fce[i]; fce[i] = fce[min]; fce[min] = tmp;
 			nodeChangeNodes(node, i, min);
+		}
 	}
 //	printNode(node);	printf("--------------------------------------\n");
 #else
@@ -74,7 +77,8 @@ void norm(node_t* node){
 	for (int v = 0; v < N; v++){
 		fce[v] = 10000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
 	}
-//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
+//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("po \n");
+//	printNode(node);
 #endif //DEBUG
 
 }
