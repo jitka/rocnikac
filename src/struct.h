@@ -33,13 +33,16 @@ struct node{
 	           // 0 expanded
 		   // 1 type
 		   // 2,3 value
+	u8 expanded:1;
+	u8 type:1;
+	u8 value:2;
 
 	u8 turn; //kolikaty je to tah = kolik je prave obarveno hran
 
 	u32 hash;
 
 	ll2_t parents;
-	ll2_t childs;
+	ll2_t childs; // children
 
 #ifdef PERM 
 	u8 perm[N];
