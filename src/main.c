@@ -7,21 +7,14 @@
 #include "tabs.h"
 
 // TODO HNED
-// testovat norm
-// rychlejsi norm select sort --proc je to tak pomale?? nefunguje s permutacni tabulkou testovat fce
-// permutacni tabulka
-// git
-// vetsi testy, N 7
-// vhodne CACHE_PATIENCE, velikost cache 
-// paralelizace 
-// radit listy podle heuristik
-//
 //
 // TODO NEKDY
-// uklid nodefce
+// paralelizace 
+// vhodne CACHE_PATIENCE, velikost cache 
+// radit listy podle heuristik
+// norm hasovanani
 // kdyz nucene tahy DB-search
 // oprofile
-// vhodnejsi cisla na zacatku - testovat!
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
 //
@@ -49,26 +42,25 @@
 // posladni stavy (uz dohrano) zabiraji moc mista v cachy
 //
 // DOTAZY
-// proc je norm pomaly, pro to nezbehne pro 6 bez predvypocitani hran
-// proc je pomale prohazovani hran?
+// norm a hasovani (prohazovani radku/tabulka)
 // nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
 // Gavento - hasovani
 
 int main(){
 
 	tabsInit();
-
+/*
 	node_t* root = getRoot();
 	nodeValue_t value = proofNuberSearch(root);
 	printValue(value);
-
+*/
 /*
 	node_t* root = readNode();
 	printNode(root);
 	norm(root);
 	printNode(root);
 */
-/*
+
 	ll2_t nodes = readNodes();
 	ll2FStart(&nodes); 
 	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){
@@ -78,6 +70,6 @@ int main(){
 			printValue(v);
 	}
 	printf("\nhotovo\n");
-*/
+
 	return 0;
 }

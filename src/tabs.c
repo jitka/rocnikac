@@ -2,7 +2,8 @@
 #include "setting.h"
 
 u32 hashNumbers[2][N][N]; //pro kazdou barvu a hranu
-u32 hashNumbers2[2][N][1<<N]; //pro kazdou barvu, vrchol a _mensi_ sousedy
+u32 hashNumbers2[2][N][1<<N]; //pro kazdou barvu, vrchol a _mensi_ sousedy radky
+//u32 hashNumbers3[2][N][1<<N]; //pro kazdou barvu, vrchol a _mensi_ sousedy sloupce
 int count[1<<N];
 u64 N1s;
 u64 R1s;

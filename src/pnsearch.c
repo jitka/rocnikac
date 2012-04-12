@@ -353,9 +353,11 @@ nodeValue_t proofNuberSearch(node_t* root){
 #endif //DEBUG
 	}
 
+#ifdef DEBUG
 	printf("nodes %d\n",numberOfNodes);
 	printf("cache miss %d\n",cacheMiss);
 //	extern int TMP;	printf("norm %d\n",TMP);
+#endif //DEBUG
 
 
 	return nodeValue(root);

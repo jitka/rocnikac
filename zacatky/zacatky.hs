@@ -59,3 +59,5 @@ ekvialent n a b = or $ map (\c -> c == b) $ map ((flip permutateGraph) a) (all n
 
 --nubBy rozdeli na tridy exvivalence
 hui n k = concat $ map (nubBy (ekvialent n)) $ generate2 n k
+
+main = print $ hui 7 6
