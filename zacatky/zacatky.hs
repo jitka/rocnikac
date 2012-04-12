@@ -57,5 +57,5 @@ generate2 n k = groupGraphs n evaluate2 $ normGraphs n evaluate2 $ graphs n k
 ekvialent n a b = or $ map (\c -> c == b) $ map ((flip permutateGraph) a) (all n)
         where all n = map (\p-> array (0,n-1) $ zip p (sort p)) $  permutations [0..n-1]
 
---TODO nubBy rozdeli na tridy exvivalence
+--nubBy rozdeli na tridy exvivalence
 hui n k = concat $ map (nubBy (ekvialent n)) $ generate2 n k

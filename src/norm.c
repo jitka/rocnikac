@@ -5,23 +5,16 @@
 #include "print.h"
 
 
-int TMP = 0;
 void norm(node_t* node){
-	TMP++;
-	int degree[2][N];
-
-	for (int c = 0; c < 2; c++){
-		for (int v = 0; v < N; v++){
-			degree[c][v] = nodeDegree( node, v, c);
-		}
-	}
 
 	int fce[N];
 	int nodes[N];
 	for (int v = 0; v < N; v++){
-		fce[v] = 10*degree[0][v] + 1000*degree[1][v];
+		fce[v] = 10000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
 		nodes[v] = v;
 	}
+//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
+
 #ifdef NOVECHANGE
  //TOHLE BY MELO BYT RYCHLEJSI
 //	printNode(node);
@@ -51,6 +44,13 @@ void norm(node_t* node){
 			}
 		}	
 	}
+	int nodes2[N];
+	for (int i = 0; i < N; i++){
+		for (int j = 0; j < N; j++){
+			if (nodes[j]==i)
+				nodes2[i]=j;
+		}
+	}
 //	for (int v = 0; v < N; v++){	printf("%d ",nodes[v]);	} printf("\n");
 //	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
 //	printNode(node);	printf("--------------------------------------\n");
@@ -60,7 +60,7 @@ void norm(node_t* node){
 		for (int j = i+1; j < N; j++){
 			for (int c = 0; c < 2; c++){
 				if (nodeEdgeExist(node,i,j,c)) {
-					nodeSetEdge(newNode,nodes[i],nodes[j],c);
+					nodeSetEdge(newNode,nodes2[i],nodes2[j],c);
 				}
 			}
 		}
@@ -69,5 +69,12 @@ void norm(node_t* node){
 //	printNode(newNode);
 	free(newNode);
 #endif
-		
+
+#ifdef DEBUG
+	for (int v = 0; v < N; v++){
+		fce[v] = 10000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
+	}
+//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
+#endif //DEBUG
+
 }

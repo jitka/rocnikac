@@ -89,7 +89,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
 					childsN++;
 					if ( nodeValue(child) == TRUE ){
-						ll2FDel(&node->childs);
 						childsN--;
 						continue;
 					}
@@ -328,7 +327,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 		if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u %u\n",nodeHash(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
-			printNode(mostProovingNode);
+			//printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChilds(mostProovingNode);
@@ -336,8 +335,8 @@ nodeValue_t proofNuberSearch(node_t* root){
 #endif //DEBUG
 	}
 
-//	printf("nodes %d\n",numberOfNodes);
-//	printf("cache miss %d\n",cacheMiss);
+	printf("nodes %d\n",numberOfNodes);
+	printf("cache miss %d\n",cacheMiss);
 //	extern int TMP;	printf("norm %d\n",TMP);
 
 
