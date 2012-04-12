@@ -15,11 +15,11 @@ static inline void cacheDelete(node_t* node);
 int tmp42 = 0;
 static inline void cacheInsert(node_t* node){
 #ifdef DEBUG
-	if (nodeTurn(node)==4){
+/*	if (nodeTurn(node)==4){
 		tmp42++;
 		printf("%d\n",tmp42);
 		printNode(node);
-	}
+	} */
 #endif //DEBUG
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;

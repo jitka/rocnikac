@@ -7,10 +7,11 @@
 #include "tabs.h"
 
 // TODO HNED
+// testovat norm
+// pustit z roota a koukat na turn 4
 // rychlejsi norm select sort --proc je to tak pomale?? nefunguje s permutacni tabulkou testovat fce
 // permutacni tabulka
 // git
-// pustit z roota a koukat na turn 4
 // vetsi testy, N 7
 // vhodne CACHE_PATIENCE, velikost cache 
 // paralelizace 
@@ -57,18 +58,18 @@
 int main(){
 
 	tabsInit();
-
+/*
 	node_t* root = getRoot();
 	nodeValue_t value = proofNuberSearch(root);
 	printValue(value);
-
+*/
 /*
 	node_t* root = readNode();
 	printNode(root);
 	norm(root);
 	printNode(root);
 */
-/*
+
 	ll2_t nodes = readNodes();
 	ll2FStart(&nodes); 
 	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){
@@ -78,6 +79,6 @@ int main(){
 			printValue(v);
 	}
 	printf("\nhotovo\n");
-*/
+
 	return 0;
 }

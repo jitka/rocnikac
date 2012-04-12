@@ -11,26 +11,32 @@
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 ll2_t currentPath;
 
-static inline void deleteChild(node_t* node){
+void deleteChilds(node_t* node);
+
+void deleteChild(node_t* node, node_t* child){
+	ll2Delete( &node->childs, child );
+	ll2Delete( &child->parents, node);
+
+	if ( ll2Empty( &child->parents ) ){
+		deleteChilds(child);
+		cacheDelete(child);
+		nodeDelete(child);
+		numberOfNodes--;
+	}
+
+}
+
+void deleteChilds(node_t* node){
 	if (nodeExpanded(node)){	
 		while ( ! ll2Empty(&node->childs) ){
 			node_t* child = ll2FirstNode(&node->childs);
-			ll2DelFirst(&node->childs);
-
-			ll2Delete(&(child->parents),node);
-			if ( ll2Empty( &child->parents ) ){
-				deleteChild(child);
-				cacheDelete(child);
-				nodeDelete(child);
-				numberOfNodes--;
-			}
+			deleteChild( node, child);
 		}
 		nodeSetExpanded(node,false);
 	}
 }
 
 static inline void setProofAndDisproofNubers(node_t* node){
-
 	switch (nodeValue(node)) {
 	case UNKNOWN:
 		if (nodeExpanded(node)){
@@ -47,7 +53,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
 					childsN++;
 					if ( nodeValue(child) == FALSE ){
-						ll2FDel(&node->childs);
+						deleteChild( node, child);
 						childsN--;
 						continue;
 					}
@@ -89,6 +95,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				for (node_t* child; (child = ll2FGet(&node->childs)) != NULL; ){
 					childsN++;
 					if ( nodeValue(child) == TRUE ){
+						deleteChild( node, child);
 						childsN--;
 						continue;
 					}
@@ -116,7 +123,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeProof(node) == 0){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
-				deleteChild(node);
+				deleteChilds(node);
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au1");
@@ -125,7 +132,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeDisproof(node) == 0){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
-				deleteChild(node);
+				deleteChilds(node);
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au2");
@@ -189,8 +196,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		break;
 	}
 
-//	if (nodeTurn(child) == 10)
-		norm(child);
+	norm(child);
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { //je v cachy?
@@ -229,16 +235,25 @@ static inline void updateAncestors(){ //po hladinach
 	ll2_t ancestors;
        	ll2New(&ancestors);
 	ll2AddNodeEnd( &ancestors, ll2FirstNode(&currentPath));
+/*
+	bool chyceno = false;
+	if (nodeHash(ll2FirstNode(&currentPath))==13768022){
+		printf("chyceno\n");
+		chyceno = true;
+	}
+*/	while ( ! ll2Empty(&ancestors) ){
 
-	while ( ! ll2Empty(&ancestors) ){
-	
 		node_t* node = ll2FirstNode(&ancestors);
 		ll2DelFirst(&ancestors);
 
 		u32 oldProof = nodeProof(node);
 		u32 oldDisproof = nodeDisproof(node);
 
+	//	if (chyceno)
+	//		printNode(node);
 		setProofAndDisproofNubers(node);
+	//	if (chyceno)
+	//		printf("ok\n");
 
 		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		if (!changed)
@@ -255,6 +270,9 @@ static inline void updateAncestors(){ //po hladinach
 		}
 
 	}
+/*	if (chyceno){
+		printf("odchod\n");
+	}*/
 }
 
 static inline void selectMostProving(){
