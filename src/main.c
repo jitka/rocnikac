@@ -11,13 +11,12 @@
 // herni strom 
 // 	- nastavovatko STATS 
 //              - patro 
-//                      - vynucenych tahu; 
 //                      - otcu pri vypocitani;
 //  			- cetnost pousteni set pred urcenim
 // 			- cetnost pousteni set pred 
 // 	- soucet cekove
 // 	- haskell novym srovnat stary ...
-// 	- cele pustit pro N 5..7 s/bez WEAK
+// 	- cele pustit pro N 5..7 s/bez WEAK, NORM, DELETECHILDS
 // 	- zkusit strcit co calc
 // 	- vyrobit grafy (vsechny varianty)
 // 	 	- celkove; mych; az na izo;

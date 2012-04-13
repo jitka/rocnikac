@@ -26,57 +26,6 @@ static inline void nodeCopyGraph(node_t * to, node_t * from){
 static inline bool compareGraph(node_t * a, node_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
-
-#ifdef PERM 
-
-static inline u32 nodeNeighbour(node_t * node, int i, color color){
-	//vrati masku kde je 1 tam kde vede hrana
-	return (node->graph[color] >> ((node->perm[i])*N)) & N1s; 
-}
-
-static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c){
-	return (!!(node->graph[c] & (1ULL<<((node->perm[i])*N+(node->perm[j])))));
-}
-
-static inline bool nodeEdgeExist(node_t * node, int i, int j){
-	return nodeColorEdgeExist(node,i,j,RED) || nodeColorEdgeExist(node,i,j,BLUE);
-}
-
-static inline void nodeSetEdge(node_t * node, int i, int j, color color){
-	node->graph[color] |= 1ULL<<((node->perm[i])*N+(node->perm[j]));
-	node->graph[color] |= 1ULL<<((node->perm[j])*N+(node->perm[i]));
-	node->hash ^= hashNumbers[color][node->perm[i]][node->perm[j]];
-}
-
-static inline int nodeDegree(node_t * node, int i, color c){
-	return count[ nodeNeighbour(node,(node->perm[i]),c) ];
-}
-
-static inline void nodeChangeNodes(node_t * node, int a, int b){
-	u8 tmp = node->perm[a];
-	node->perm[a] = node->perm[b];
-	node->perm[b] = tmp;
-}
-
-static inline bool testK4(node_t * node, int i, int j, color color){
-	//otestuje jestli po pridani hrany ij nevznikla K4
-	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
-	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
-	tr = nodeNeighbour(node,(node->perm[i]),color) & nodeNeighbour(node,node->perm[j],color);
-	for (int s = 0; s < N; s++)
-		if (tr & (1<<s))
-			for (int t = 0; t < N; t++)
-				if (tr & (1<<t)){
-					//staci overit jestli mezi s a t vede hrana
-					if ( nodeEdgeExist( node, s, t, color) )
-						return true;
-
-				}
-	return false;
-}
-
-#else //PERM
-
 static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
 	return (node->graph[color] >> (i*N)) & N1s; 
@@ -138,7 +87,7 @@ static inline bool testK4(node_t * node, int i, int j, color color){
 	tr = nodeNeighbour(node,i,color) & nodeNeighbour(node,j,color);
 	for (int s = 0; s < N; s++)
 		if (tr & (1<<s))
-			for (int t = 0; t < N; t++)
+			for (int t = s+1; t < N; t++)
 				if (tr & (1<<t)){
 					//staci overit jestli mezi s a t vede hrana
 					if ( nodeColorEdgeExist( node, s, t, color) )
@@ -157,12 +106,13 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 	for (int s = 0; s < N; s++)
 		if (tr & (1<<s))
 			// i, j, s jsou troj
-			for (int t = 0; t < N; t++)
+			for (int t = s+1; t < N; t++)
 				if (tr & (1<<t)){
 					// i, j, t jsou troj
-					if ( !nodeEdgeExist( node, s, t) )
+					if ( !nodeEdgeExist( node, s, t) ){
 						//s t je hrozba
 						return true;
+					}
 
 				}
 	//troj na tron
@@ -170,8 +120,8 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 		if (tr & (1<<s)){
 			//i,j,s jsou trojuhelnik
 			u32 tr2 = nodeNeighbour(node,i,color) & nodeNeighbour(node,s,color);
-			for (int t = 0; t < N; t++)
-				if (tr2 & (1<<t)){
+			for (int t = s+1; t < N; t++)
+				if ((tr2 & (1<<t)) && (t != j)){
 					//i,s,t jsou trojhulenik
 					if ( !nodeEdgeExist( node, j, t) ){
 						//j t je hrozba
@@ -180,7 +130,7 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 				}
 			u32 tr3 = nodeNeighbour(node,j,color) & nodeNeighbour(node,s,color);
 			for (int t = 0; t < N; t++)
-				if (tr3 & (1<<t)){
+				if ((tr3 & (1<<t)) && (t != i)){
 					//j,s,t jsou trojhulenik
 					if ( !nodeEdgeExist( node, i, t) ){
 						//i t je hrozba
@@ -208,6 +158,5 @@ static inline bool nodeSimetric(node_t * a){
 }
 #endif
 */
-#endif //PERM
 
 #endif //GRAPHFECE_H

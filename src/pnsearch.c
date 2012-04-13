@@ -220,6 +220,10 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 		break;
 	}
+#ifdef STATS
+	bool threat = nodeThreat(child, i, j, color);
+#endif //STATS
+
 
 	norm(child);
 
@@ -241,9 +245,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			turn_stats[nodeTurn(child)].created_false++;
 		}
 
-		if (nodeThreat(child, i, j, color)){
-			printf("%d %d\n",i,j);
-			printNode(child);
+		if (threat){
+			if (nodeTurn(child) == 7)
+				printNode(child);
+			all_stats.threat++;
+			turn_stats[nodeTurn(child)].threat++;
 		}
 
 #endif //STATS
@@ -331,7 +337,7 @@ static inline void selectMostProving(){
 #endif //STATS
 #ifdef DEBUG
 		if (nodeValue(node)!=UNKNOWN){
-			printf("tady ne %d\n",tmp);
+			printf("tady ne\n");
 			printNode(node);
 		}
 		if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
@@ -404,7 +410,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 		if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u %u\n",nodeHash(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
-			//printNode(mostProovingNode);
+			printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChildren(mostProovingNode);

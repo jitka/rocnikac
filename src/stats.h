@@ -17,6 +17,7 @@ typedef struct {
 	int finished;
 	int finished_true;
 	int finished_false;
+	int threat;
 } stats_t;
 
 
