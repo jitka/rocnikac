@@ -13,8 +13,6 @@
 // 		- update;
 // 		- select;
 //              - patro 
-//                      - vytvorenech true; 
-//                      - false; 
 //                      - vynucenych tahu; 
 //                      - otcu pri vypocitani;
 //  			- cetnost pousteni set pred urcenim

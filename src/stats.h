@@ -11,6 +11,9 @@ typedef struct {
 	int created;
 	int created_true;
 	int created_false;
+	int finished;
+	int finished_true;
+	int finished_false;
 } stats_t;
 
 

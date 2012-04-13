@@ -125,6 +125,13 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				nodeSetValue(node, TRUE);
 				nodeSetDisproof(node,MAXPROOF);
 				deleteChildren(node);
+#ifdef STATS
+				all_stats.finished++;
+				turn_stats[nodeTurn(node)].finished++;
+				all_stats.finished_true++;
+				turn_stats[nodeTurn(node)].finished_true++;
+#endif //STATS
+
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au1");
@@ -134,6 +141,14 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				nodeSetValue(node, FALSE);
 				nodeSetProof(node,MAXPROOF);
 				deleteChildren(node);
+#ifdef STATS
+				all_stats.finished++;
+				turn_stats[nodeTurn(node)].finished++;
+				all_stats.finished_false++;
+				turn_stats[nodeTurn(node)].finished_false++;
+
+#endif //STATS
+
 #ifdef DEBUG
 				if (nodeExpanded(node))
 					perror("au2");
