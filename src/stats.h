@@ -8,7 +8,7 @@
 #ifdef STATS
 
 typedef struct {
-	int all_created_nodes;
+	int created;
 } stats_t;
 
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "pnsearch.h"
+#include "stats.h"
 #include "setting.h"
 #include "print.h"
 #include "linkedlist.h"
@@ -204,6 +205,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		nodeDelete(child);
 		return n;
 	} else {
+#ifdef STATS
+		all_stats.created++;
+		turn_stats[nodeTurn(child)].created++;
+#endif //STATS
+
 		numberOfNodes++;
 		ll2AddNodeEnd( &child->parents, node);
 		setProofAndDisproofNubers( child );    

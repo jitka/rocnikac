@@ -12,7 +12,7 @@
 // 	- nastavovatko STATS 
 // 		- update;
 // 		- select;
-//              - patro - vytvorenych; 
+//              - patro 
 //                      - vytvorenech true; 
 //                      - false; 
 //                      - vynucenych tahu; 
