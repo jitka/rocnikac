@@ -7,6 +7,9 @@
 
 #ifdef STATS
 
+#define SELECT_STATS_MAX 15
+#define UPDATE_STATS_MAX 4651
+
 typedef struct {
 	int created;
 	int created_true;
@@ -19,6 +22,11 @@ typedef struct {
 
 extern stats_t all_stats;
 extern stats_t turn_stats[N*N];
+extern int update_stats_max;
+extern int update_stats[UPDATE_STATS_MAX];
+extern int select_stats_max;
+extern int select_stats[SELECT_STATS_MAX];
+extern int interations_stats;
 
 void printStats(char * file_name);
 //void printStats();

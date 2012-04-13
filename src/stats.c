@@ -7,6 +7,11 @@
 
 stats_t all_stats;
 stats_t turn_stats[N*N];
+int update_stats_max = 0;
+int update_stats[UPDATE_STATS_MAX];
+int select_stats_max = 0;
+int select_stats[SELECT_STATS_MAX];
+int interations_stats = 0;
 
 void printStats(char * file_name){
 	FILE* f = fopen(file_name,"w");
@@ -19,6 +24,15 @@ void printStats(char * file_name){
 			all_stats.finished_true,
 			all_stats.finished_false
 			);
+	fprintf(f,"interations %d\n",interations_stats);
+	fprintf(f,"update max %d;\n",update_stats_max);
+	//for (int s = 0; s < UPDATE_STATS_MAX; s++){
+	//	fprintf(f,"%d-%d; ",s,update_stats[s]);
+	//} fprintf(f,"\n");
+	fprintf(f,"select max %d;",select_stats_max);
+	for (int s = 0; s < SELECT_STATS_MAX; s++){
+		fprintf(f,"%d-%d; ",s,select_stats[s]);
+	} fprintf(f,"\n");
 	fprintf(f,"tah: vytvorenych; true; false; vypocitanych; true; false;\n");
 	for (int turn = 0; turn < (N*(N-1))/2; turn++){
 		fprintf(f,"%d: %d; %d; %d; %d; %d; %d;\n",

@@ -262,28 +262,25 @@ static inline void developNode(node_t* node){
 
 static inline void updateAncestors(){ //po hladinach
 
+#ifdef STATS
+	int update = 0;
+#endif //STATS
+
 	ll2_t ancestors;
        	ll2New(&ancestors);
 	ll2AddNodeEnd( &ancestors, ll2FirstNode(&currentPath));
-/*
-	bool chyceno = false;
-	if (nodeHash(ll2FirstNode(&currentPath))==13768022){
-		printf("chyceno\n");
-		chyceno = true;
-	}
-*/	while ( ! ll2Empty(&ancestors) ){
+	while ( ! ll2Empty(&ancestors) ){
 
+#ifdef STATS
+		update++;
+#endif //STATS
 		node_t* node = ll2FirstNode(&ancestors);
 		ll2DelFirst(&ancestors);
 
 		u32 oldProof = nodeProof(node);
 		u32 oldDisproof = nodeDisproof(node);
 
-	//	if (chyceno)
-	//		printNode(node);
 		setProofAndDisproofNubers(node);
-	//	if (chyceno)
-	//		printf("ok\n");
 
 		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
 		if (!changed)
@@ -300,16 +297,24 @@ static inline void updateAncestors(){ //po hladinach
 		}
 
 	}
-/*	if (chyceno){
-		printf("odchod\n");
-	}*/
+#ifdef STATS
+	if (update > update_stats_max)
+		update_stats_max = update;
+	if (update > UPDATE_STATS_MAX)
+		perror("zvetsit UPDATE_STATS_MAX");
+	update_stats[update]++;
+#endif //STATS
 }
 
 static inline void selectMostProving(){
 	node_t * node = ll2FirstNode(&currentPath);
-	int tmp=0;
+#ifdef STATS
+	int select = 0;
+#endif //STATS
 	while (nodeExpanded(node)){
-		tmp++;
+#ifdef STATS
+		select++;
+#endif //STATS
 #ifdef DEBUG
 		if (nodeValue(node)!=UNKNOWN){
 			printf("tady ne %d\n",tmp);
@@ -349,6 +354,13 @@ static inline void selectMostProving(){
 #endif //DEBUG
 		ll2AddNodeBegin(&currentPath,node);
 	}
+#ifdef STATS
+	if (select > select_stats_max)
+		select_stats_max = select;
+	if (select > SELECT_STATS_MAX)
+		perror("zvetsit SELECT_STATS_MAX");
+	select_stats[select]++;
+#endif //STATS
 }
 
 nodeValue_t proofNuberSearch(node_t* root){
@@ -360,7 +372,10 @@ nodeValue_t proofNuberSearch(node_t* root){
 	int counter = 0;
 #endif //DEBUG
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
-	
+#ifdef STATS
+		interations_stats++;
+#endif //STATS
+
 		selectMostProving();
 		node_t* mostProovingNode = ll2FirstNode(&currentPath);
 		

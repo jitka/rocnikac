@@ -10,8 +10,6 @@
 // TODO HNED
 // herni strom 
 // 	- nastavovatko STATS 
-// 		- update;
-// 		- select;
 //              - patro 
 //                      - vynucenych tahu; 
 //                      - otcu pri vypocitani;
@@ -28,6 +26,7 @@
 // heuristika podle volnych vrcholu
 //
 // TODO NEKDY
+// updatete jednoho predka vickrat?
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 
 // radit listy podle heuristik
