@@ -182,9 +182,15 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	node_t* child = nodeNew();
 
 	nodeSetTurn(child, nodeTurn(node)+1 );
+#ifdef STATS
+	color color;
+#endif //STATS
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
+#ifdef STATS
+		color=RED;
+#endif //STATS
 		nodeSetType(child, AND);
 		nodeCopyGraph(child,node);
 		nodeSetEdge(child,i,j,RED);
@@ -198,6 +204,9 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 		break;
 	case AND: //hraje druhy
+#ifdef STATS
+		color=BLUE;
+#endif //STATS
 		nodeSetType(child, OR);
 		nodeCopyGraph(child,node);
 		nodeSetEdge(child,i,j,BLUE);
@@ -232,6 +241,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			turn_stats[nodeTurn(child)].created_false++;
 		}
 
+		if (nodeThreat(child, i, j, color)){
+			printf("%d %d\n",i,j);
+			printNode(child);
+		}
+
 #endif //STATS
 
 		numberOfNodes++;
@@ -252,7 +266,7 @@ static inline void developNode(node_t* node){
 
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
-			if ( ! ( nodeEdgeExist(node, i, j, 0) || nodeEdgeExist(node, i, j, 1) ) ){ 
+			if ( ! nodeEdgeExist(node, i, j) ){ 
 				//ij je hrana ktera jeste nema barvu
 				node_t* child =  createChild(node,i,j);
 				ll2AddNodeBegin( &node->children, child );

@@ -26,6 +26,7 @@
 // heuristika podle volnych vrcholu
 //
 // TODO NEKDY
+// nemit vic stejnych deti - hlavne na zacatku TRIK
 // updatete jednoho predka vickrat?
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 

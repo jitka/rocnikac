@@ -62,7 +62,7 @@ void norm(node_t* node){
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
 			for (int c = 0; c < 2; c++){
-				if (nodeEdgeExist(node,i,j,c)) {
+				if (nodeColorEdgeExist(node,i,j,c)) {
 					nodeSetEdge(newNode,nodes2[i],nodes2[j],c);
 				}
 			}

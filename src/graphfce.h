@@ -34,8 +34,12 @@ static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	return (node->graph[color] >> ((node->perm[i])*N)) & N1s; 
 }
 
-static inline bool nodeEdgeExist(node_t * node, int i, int j, color c){
+static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c){
 	return (!!(node->graph[c] & (1ULL<<((node->perm[i])*N+(node->perm[j])))));
+}
+
+static inline bool nodeEdgeExist(node_t * node, int i, int j){
+	return nodeColorEdgeExist(node,i,j,RED) || nodeColorEdgeExist(node,i,j,BLUE);
 }
 
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
@@ -78,8 +82,12 @@ static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	return (node->graph[color] >> (i*N)) & N1s; 
 }
 
-static inline bool nodeEdgeExist(node_t * node, int i, int j, color c){
+static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c){
 	return (!!(node->graph[c] & (1ULL<<(i*N+j))));
+}
+
+static inline bool nodeEdgeExist(node_t * node, int i, int j){
+	return nodeColorEdgeExist(node,i,j,RED) || nodeColorEdgeExist(node,i,j,BLUE);
 }
 
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
@@ -133,12 +141,56 @@ static inline bool testK4(node_t * node, int i, int j, color color){
 			for (int t = 0; t < N; t++)
 				if (tr & (1<<t)){
 					//staci overit jestli mezi s a t vede hrana
-					if ( nodeEdgeExist( node, s, t, color) )
+					if ( nodeColorEdgeExist( node, s, t, color) )
 						return true;
 
 				}
 	return false;
 }
+
+static inline bool nodeThreat(node_t * node, int i, int j, color color){
+	//otestuje jestli po pridani hrany ij nevznikla hrozba
+	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
+	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
+	tr = nodeNeighbour(node,i,color) & nodeNeighbour(node,j,color);
+	//dva troj bez hrany
+	for (int s = 0; s < N; s++)
+		if (tr & (1<<s))
+			// i, j, s jsou troj
+			for (int t = 0; t < N; t++)
+				if (tr & (1<<t)){
+					// i, j, t jsou troj
+					if ( !nodeEdgeExist( node, s, t) )
+						//s t je hrozba
+						return true;
+
+				}
+	//troj na tron
+	for (int s = 0; s < N; s++)
+		if (tr & (1<<s)){
+			//i,j,s jsou trojuhelnik
+			u32 tr2 = nodeNeighbour(node,i,color) & nodeNeighbour(node,s,color);
+			for (int t = 0; t < N; t++)
+				if (tr2 & (1<<t)){
+					//i,s,t jsou trojhulenik
+					if ( !nodeEdgeExist( node, j, t) ){
+						//j t je hrozba
+						return true;
+					}
+				}
+			u32 tr3 = nodeNeighbour(node,j,color) & nodeNeighbour(node,s,color);
+			for (int t = 0; t < N; t++)
+				if (tr3 & (1<<t)){
+					//j,s,t jsou trojhulenik
+					if ( !nodeEdgeExist( node, i, t) ){
+						//i t je hrozba
+						return true;
+					}
+				}
+		}
+	return false;
+}
+
 /*
 #ifdef DEBUG
 static inline bool nodeSimetric(node_t * a){
