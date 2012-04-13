@@ -9,6 +9,8 @@
 
 typedef struct {
 	int created;
+	int created_true;
+	int created_false;
 } stats_t;
 
 

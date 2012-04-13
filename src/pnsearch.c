@@ -208,6 +208,15 @@ static inline node_t* createChild(node_t* node, int i, int j){
 #ifdef STATS
 		all_stats.created++;
 		turn_stats[nodeTurn(child)].created++;
+		if (nodeValue(child) == TRUE){
+			all_stats.created_true++;
+			turn_stats[nodeTurn(child)].created_true++;
+		}
+		if (nodeValue(child) == FALSE){
+			all_stats.created_false++;
+			turn_stats[nodeTurn(child)].created_false++;
+		}
+
 #endif //STATS
 
 		numberOfNodes++;
