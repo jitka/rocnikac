@@ -9,7 +9,6 @@
 
 // TODO HNED
 // zprovaznit WEAK
-// ne STATS
 // oboji zaroven
 // smazat perm
 // herni strom 

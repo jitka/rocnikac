@@ -19,8 +19,10 @@ void deleteChild(node_t* node, node_t* child){
 	ll2Delete( &child->parents, node);
 
 	if ( ll2Empty( &child->parents ) ){
+#ifdef STATS
 		histogramAdd ( &turn_stats[nodeTurn(child)].setDel, child->set_stats);
 		histogramAdd ( &all_stats.setDel, child->set_stats);
+#endif //STATS
 		deleteChildren(child);
 		cacheDelete(child);
 		nodeDelete(child);
