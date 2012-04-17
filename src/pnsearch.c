@@ -134,8 +134,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_true++;
 				turn_stats[nodeTurn(node)].finished_true++;
 				int s = node->set_stats;
-				histagramAdd ( &all_stats.setDel, s);
-				histagramAdd ( &turn_stats[nodeTurn(node)].setDel, s);
+				histogramAdd ( &all_stats.setDel, s);
+				histogramAdd ( &turn_stats[nodeTurn(node)].setDel, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -154,8 +154,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_false++;
 				turn_stats[t].finished_false++;
 				int s = node->set_stats;
-				histagramAdd ( &all_stats.setDel, s);
-				histagramAdd ( &turn_stats[t].setDel, s);
+				histogramAdd ( &all_stats.setDel, s);
+				histogramAdd ( &turn_stats[t].setDel, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -327,7 +327,7 @@ static inline void updateAncestors(){ //po hladinach
 
 	}
 #ifdef STATS
-	histagramAdd( &updateStats, update);
+	histogramAdd( &updateStats, update);
 #endif //STATS
 }
 
@@ -380,7 +380,7 @@ static inline void selectMostProving(){
 		ll2AddNodeBegin(&currentPath,node);
 	}
 #ifdef STATS
-	histagramAdd( &selectStats, select);
+	histogramAdd( &selectStats, select);
 #endif //STATS
 }
 

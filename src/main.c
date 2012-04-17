@@ -8,7 +8,6 @@
 #include "stats.h"
 
 // TODO HNED
-// histagram->histogram
 // herni strom 
 //      - otcu pri vypocitani;
 //      - cetnost pousteni set pred smazanim 

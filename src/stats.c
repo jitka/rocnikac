@@ -6,8 +6,8 @@ stats_t all_stats;
 stats_t turn_stats[M+1];
 int interations_stats = 0;
 
-histagram_t updateStats;
-histagram_t selectStats;
+histogram_t updateStats;
+histogram_t selectStats;
 
 void statsInit(){
 	updateStats.maxVal = UPDATE_STATS_MAX;
@@ -22,7 +22,7 @@ void statsInit(){
 	}
 }
 
-void histagramAdd( histagram_t* h, int value ){
+void histogramAdd( histogram_t* h, int value ){
 	h->max = MAX( h->max, value);
 	if ( value >= h->maxVal)
 		h->more++;
@@ -30,7 +30,7 @@ void histagramAdd( histagram_t* h, int value ){
 		h->values[value]++;
 }
 
-void histagramPrint( FILE* f,  histagram_t* h){
+void histogramPrint( FILE* f,  histogram_t* h){
 	fprintf(f,"%s max: %d; more then %d: %d\n",h->name,h->max,h->maxVal,h->more);
 	for (int s = 0; s < h->maxVal; s++){
 		fprintf(f,"%d-%d; ",s,h->values[s]);
@@ -64,9 +64,9 @@ void printStats(char * file_name){
 
 	printf("\n");
 	fprintf(f,"interations %d\n",interations_stats);
-	histagramPrint( f, &all_stats.setDel );
-	histagramPrint( f, &updateStats );
-	histagramPrint( f, &selectStats );
+	histogramPrint( f, &all_stats.setDel );
+	histogramPrint( f, &updateStats );
+	histogramPrint( f, &selectStats );
 	printf("\n");
 	fprintf(f,"%d, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
@@ -91,7 +91,7 @@ void printStats(char * file_name){
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
 		       );
-		histagramPrint( f, &turn_stats[turn].setDel );
+		histogramPrint( f, &turn_stats[turn].setDel );
 		printf("\n");
 	}
 	fclose(f);

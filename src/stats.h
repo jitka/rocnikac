@@ -16,10 +16,10 @@
 #define STATS_MAX  MAX( SET_STATS_MAX, MAX( UPDATE_STATS_MAX, SET_STATS_MAX ) )
 
 
-typedef struct histagram_T histagram_t;
+typedef struct histogram_T histogram_t;
 typedef struct stats_T stats_t;
 
-struct histagram_T {
+struct histogram_T {
 	int values[STATS_MAX];
 	int maxVal; //maximalni velikost pole
 	int max; //nejvyssi hodnota
@@ -36,19 +36,19 @@ struct stats_T {
 	int finished_false;
 	int threat;
 
-	histagram_t setDel;
+	histogram_t setDel;
 };
 
 
 extern stats_t all_stats;
 extern stats_t turn_stats[M+1];
 extern int interations_stats;
-extern histagram_t updateStats;
-extern histagram_t selectStats;
+extern histogram_t updateStats;
+extern histogram_t selectStats;
 
 void printStats(char * file_name);
 void statsInit();
-void histagramAdd( histagram_t* h, int value );
+void histogramAdd( histogram_t* h, int value );
 
 #endif //STATS
 
