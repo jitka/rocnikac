@@ -9,22 +9,19 @@
 
 // TODO HNED
 // herni strom 
-// 	- nastavovatko STATS 
-//              - patro 
-//                      - otcu pri vypocitani;
-//  			- cetnost pousteni set pred urcenim
-// 			- cetnost pousteni set pred 
-// 	- soucet cekove
-// 	- cele pustit pro N 5..7 s/bez WEAK, NORM, DELETECHILDS
+//      - otcu pri vypocitani;
+//      - cetnost pousteni set pred smazanim 
+//      - cetnosti obecnej
+// 	- cele pustit pro N 5..7 s/bez WEAK,
 // 	- zkusit strcit co calc
-// 	- vyrobit grafy (vsechny varianty)
-// 	 	- celkove; mych; az na izo;
+// 	- tisk
+// 	- ucesat vypis, ulozit pro budouci generace
 // googlit, stare clanky od Toma
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
 // heuristika podle volnych vrcholu
 //
-// TODO NEKDY
-// nemit vic stejnych deti - hlavne na zacatku TRIK
+// TODO NEKDY 
+// nemit vic stejnych deti - hlavne na zacatku TRIK DELETECHILDS
 // updatete jednoho predka vickrat?
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 

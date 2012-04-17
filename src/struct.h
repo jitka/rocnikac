@@ -42,9 +42,9 @@ struct node{
 	ll2_t parents;
 	ll2_t children;
 
-#ifdef PERM 
-	u8 perm[N];
-#endif //PERM
+#ifdef STATS
+	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
+#endif //stats
 
 	u64 graph[2];
 };

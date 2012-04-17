@@ -9,6 +9,7 @@
 
 #define SELECT_STATS_MAX 15
 #define UPDATE_STATS_MAX 4651
+#define SET_STATS_MAX 10
 
 typedef struct {
 	int created;
@@ -18,6 +19,9 @@ typedef struct {
 	int finished_true;
 	int finished_false;
 	int threat;
+	int set_stats_max;
+	int set_stats_more_then_max;
+	int set[SET_STATS_MAX];
 } stats_t;
 
 

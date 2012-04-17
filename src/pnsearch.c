@@ -38,6 +38,9 @@ void deleteChildren(node_t* node){
 }
 
 static inline void setProofAndDisproofNubers(node_t* node){
+#ifdef STATS
+	node->set_stats++;
+#endif //STATS
 	switch (nodeValue(node)) {
 	case UNKNOWN:
 		if (nodeExpanded(node)){
@@ -142,11 +145,24 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				nodeSetProof(node,MAXPROOF);
 				deleteChildren(node);
 #ifdef STATS
+				int t = nodeTurn(node);
 				all_stats.finished++;
-				turn_stats[nodeTurn(node)].finished++;
+				turn_stats[t].finished++;
 				all_stats.finished_false++;
-				turn_stats[nodeTurn(node)].finished_false++;
-
+				turn_stats[t].finished_false++;
+				int s = node->set_stats;
+				if (s > SET_STATS_MAX){
+					all_stats.set_stats_more_then_max++;
+					turn_stats[t].set_stats_more_then_max++;
+				} else {
+					all_stats.set[s]++;
+					turn_stats[t].set[s]++;
+				}
+				if (s > all_stats.set_stats_max)
+					all_stats.set_stats_max = s;
+				if (s > turn_stats[t].set_stats_max)
+					turn_stats[t].set_stats_max = s;
+					
 #endif //STATS
 
 #ifdef DEBUG

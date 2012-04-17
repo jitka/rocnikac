@@ -44,10 +44,18 @@ void printStats(char * file_name){
 			all_stats.created_true,
 			all_stats.created_false,
 			all_stats.threat,
+			all_stats.finished,
 			all_stats.finished_true,
-			all_stats.finished_false,
-			all_stats.finished
+			all_stats.finished_false
 			);
+
+	fprintf(f,"set-finished max: %d more then %d: %d \n",
+			all_stats.set_stats_max, 
+			SET_STATS_MAX, 
+			all_stats.set_stats_more_then_max);
+	for (int s = 0; s < SET_STATS_MAX; s++){
+		fprintf(f,"%d-%d; ",s,all_stats.set[s]);
+	} fprintf(f,"\n");
 	fprintf(f,"interations %d\n",interations_stats);
 	fprintf(f,"update max %d;\n",update_stats_max);
 	//for (int s = 0; s < UPDATE_STATS_MAX; s++){
@@ -69,7 +77,15 @@ void printStats(char * file_name){
 				turn_stats[turn].finished,
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
-				);
+		       );
+		fprintf(f,"set-finished max: %d more then %d: %d \n",
+				turn_stats[turn].set_stats_max, 
+				SET_STATS_MAX, 
+				turn_stats[turn].set_stats_more_then_max
+			);
+		for (int s = 0; s < SET_STATS_MAX; s++){
+			fprintf(f,"%d-%d; ",s,turn_stats[turn].set[s]);
+		} fprintf(f,"\n");
 	}
 	fclose(f);
 }
