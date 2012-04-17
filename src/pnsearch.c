@@ -92,7 +92,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 #ifdef DEBUG
 			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-				printf("dve nekonecna %d %d\n",min,max);
+				printf("dve nekonecna %d\n",min);
 				printNode(node);
 				printChildren(node);
 			}

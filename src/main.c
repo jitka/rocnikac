@@ -8,8 +8,6 @@
 #include "stats.h"
 
 // TODO HNED
-// zprovaznit WEAK
-// oboji zaroven
 // smazat perm
 // herni strom 
 // 	- cele pustit pro N 5..7 s/bez WEAK,
