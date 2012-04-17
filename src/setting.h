@@ -6,7 +6,6 @@
 #define M ((N*(N-1))/2) 
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
-//#define PERM //jestli se pouziva permutacni tabulka NEFUNGUE
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
 #define STATS
 
