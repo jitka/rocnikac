@@ -1,17 +1,37 @@
 #include "stats.h"
-
 #ifdef STATS
-#endif //STATS
 
-#ifdef STATS
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 
 stats_t all_stats;
 stats_t turn_stats[N*N];
-int update_stats_max = 0;
-int update_stats[UPDATE_STATS_MAX];
 int select_stats_max = 0;
 int select_stats[SELECT_STATS_MAX];
 int interations_stats = 0;
+
+histagram_t updateStats;
+
+void statsInit(){
+	updateStats.maxVal = UPDATE_STATS_MAX;
+	updateStats.name = "updates";
+}
+
+void histagramAdd( histagram_t* h, int value ){
+	h->max = MAX( h->max, value);
+	if ( value >= h->maxVal)
+		h->more++;
+	else 
+		h->values[value]++;
+}
+
+void histagramPrint( FILE* f,  histagram_t* h){
+	fprintf(f,"%s max: %d; more then %d: %d\n",h->name,h->max,h->maxVal,h->more);
+	for (int s = 0; s < h->maxVal; s++){
+		fprintf(f,"%d-%d; ",s,h->values[s]);
+	} fprintf(f,"\n");
+}
 
 int choose(int n, int k){
 	if (n < k || k < 0 || n < 0)
@@ -57,10 +77,7 @@ void printStats(char * file_name){
 		fprintf(f,"%d-%d; ",s,all_stats.set[s]);
 	} fprintf(f,"\n");
 	fprintf(f,"interations %d\n",interations_stats);
-	fprintf(f,"update max %d;\n",update_stats_max);
-	//for (int s = 0; s < UPDATE_STATS_MAX; s++){
-	//	fprintf(f,"%d-%d; ",s,update_stats[s]);
-	//} fprintf(f,"\n");
+	histagramPrint( f, &updateStats );
 	fprintf(f,"select max %d;",select_stats_max);
 	for (int s = 0; s < SELECT_STATS_MAX; s++){
 		fprintf(f,"%d-%d; ",s,select_stats[s]);

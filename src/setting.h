@@ -15,7 +15,7 @@
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 
 #define bool int
-#define u8 char
+#define u8 unsigned char
 #define u32 unsigned int
 #define u64 unsigned long long int
 

@@ -11,7 +11,6 @@
 // herni strom 
 //      - otcu pri vypocitani;
 //      - cetnost pousteni set pred smazanim 
-//      - cetnosti obecnej
 // 	- cele pustit pro N 5..7 s/bez WEAK,
 // 	- zkusit strcit co calc
 // 	- tisk
@@ -50,6 +49,9 @@
 
 int main(){
 
+#ifdef STATS
+	statsInit();
+#endif //STATS
 	tabsInit();
 
 	node_t* root = getRoot();

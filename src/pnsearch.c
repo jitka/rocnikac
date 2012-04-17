@@ -334,11 +334,7 @@ static inline void updateAncestors(){ //po hladinach
 
 	}
 #ifdef STATS
-	if (update > update_stats_max)
-		update_stats_max = update;
-	if (update > UPDATE_STATS_MAX)
-		perror("zvetsit UPDATE_STATS_MAX");
-	update_stats[update]++;
+	histagramAdd( &updateStats, update);
 #endif //STATS
 }
 
