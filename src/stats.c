@@ -1,21 +1,25 @@
 #include "stats.h"
 #ifdef STATS
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
 
 stats_t all_stats;
-stats_t turn_stats[N*N];
-int select_stats_max = 0;
-int select_stats[SELECT_STATS_MAX];
+stats_t turn_stats[M+1];
 int interations_stats = 0;
 
 histagram_t updateStats;
+histagram_t selectStats;
 
 void statsInit(){
 	updateStats.maxVal = UPDATE_STATS_MAX;
-	updateStats.name = "updates";
+	updateStats.name = "updateAncestors";
+	selectStats.maxVal = SELECT_STATS_MAX;
+	selectStats.name = "selectMostProving";
+	all_stats.set.maxVal = SET_STATS_MAX;
+	all_stats.set.name = "setPD-Numbers";
+	for (int t = 0; t <= M; t++){
+		turn_stats[t].set.maxVal = SET_STATS_MAX;
+		turn_stats[t].set.name = "setPD-Numbers";
+	}
 }
 
 void histagramAdd( histagram_t* h, int value ){
@@ -57,7 +61,10 @@ int differentNodes(){
 
 void printStats(char * file_name){
 	FILE* f = fopen(file_name,"w");
-	fprintf(f,"stats\n");
+	fprintf(f,"interations %d\n",interations_stats);
+	histagramPrint( f, &all_stats.set );
+	histagramPrint( f, &updateStats );
+	histagramPrint( f, &selectStats );
 	fprintf(f,"%d, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
@@ -68,20 +75,6 @@ void printStats(char * file_name){
 			all_stats.finished_true,
 			all_stats.finished_false
 			);
-
-	fprintf(f,"set-finished max: %d more then %d: %d \n",
-			all_stats.set_stats_max, 
-			SET_STATS_MAX, 
-			all_stats.set_stats_more_then_max);
-	for (int s = 0; s < SET_STATS_MAX; s++){
-		fprintf(f,"%d-%d; ",s,all_stats.set[s]);
-	} fprintf(f,"\n");
-	fprintf(f,"interations %d\n",interations_stats);
-	histagramPrint( f, &updateStats );
-	fprintf(f,"select max %d;",select_stats_max);
-	for (int s = 0; s < SELECT_STATS_MAX; s++){
-		fprintf(f,"%d-%d; ",s,select_stats[s]);
-	} fprintf(f,"\n");
 	fprintf(f,"tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
 	for (int turn = 0; turn <= M; turn++){
 		fprintf(f,"%d: %d; %d; %d; %d; %d;; %d; %d; %d; \n",
@@ -95,14 +88,7 @@ void printStats(char * file_name){
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
 		       );
-		fprintf(f,"set-finished max: %d more then %d: %d \n",
-				turn_stats[turn].set_stats_max, 
-				SET_STATS_MAX, 
-				turn_stats[turn].set_stats_more_then_max
-			);
-		for (int s = 0; s < SET_STATS_MAX; s++){
-			fprintf(f,"%d-%d; ",s,turn_stats[turn].set[s]);
-		} fprintf(f,"\n");
+		histagramPrint( f, &turn_stats[turn].set );
 	}
 	fclose(f);
 }

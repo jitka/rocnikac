@@ -133,6 +133,9 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				turn_stats[nodeTurn(node)].finished++;
 				all_stats.finished_true++;
 				turn_stats[nodeTurn(node)].finished_true++;
+				int s = node->set_stats;
+				histagramAdd ( &all_stats.set, s);
+				histagramAdd ( &turn_stats[nodeTurn(node)].set, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -151,18 +154,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_false++;
 				turn_stats[t].finished_false++;
 				int s = node->set_stats;
-				if (s > SET_STATS_MAX){
-					all_stats.set_stats_more_then_max++;
-					turn_stats[t].set_stats_more_then_max++;
-				} else {
-					all_stats.set[s]++;
-					turn_stats[t].set[s]++;
-				}
-				if (s > all_stats.set_stats_max)
-					all_stats.set_stats_max = s;
-				if (s > turn_stats[t].set_stats_max)
-					turn_stats[t].set_stats_max = s;
-					
+				histagramAdd ( &all_stats.set, s);
+				histagramAdd ( &turn_stats[t].set, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -387,11 +380,7 @@ static inline void selectMostProving(){
 		ll2AddNodeBegin(&currentPath,node);
 	}
 #ifdef STATS
-	if (select > select_stats_max)
-		select_stats_max = select;
-	if (select > SELECT_STATS_MAX)
-		perror("zvetsit SELECT_STATS_MAX");
-	select_stats[select]++;
+	histagramAdd( &selectStats, select);
 #endif //STATS
 }
 
