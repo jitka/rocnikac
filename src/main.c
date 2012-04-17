@@ -15,7 +15,6 @@
 //  			- cetnost pousteni set pred urcenim
 // 			- cetnost pousteni set pred 
 // 	- soucet cekove
-// 	- haskell novym srovnat stary ...
 // 	- cele pustit pro N 5..7 s/bez WEAK, NORM, DELETECHILDS
 // 	- zkusit strcit co calc
 // 	- vyrobit grafy (vsechny varianty)

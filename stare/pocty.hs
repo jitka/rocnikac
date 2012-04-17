@@ -3,9 +3,10 @@ import Data.Ord
 import Data.Function
 import Data.Array
 
-import Control.DeepSeq
-import Control.Parallel
-import Control.Parallel.Strategies
+
+--import Control.DeepSeq
+--import Control.Parallel
+--import Control.Parallel.Strategies
 
 -- pomocny binec..
 nad :: (Integral a) => a -> a -> a
@@ -52,7 +53,7 @@ f1 n tah = let pul = ((tah+1) `div` 2)
 --kdyz uz mam takovy vysledek pro nejake skupiny, pro jejich sjednoceni
 --ziskam vysledek tak, ze vezmu vsechny kombinace moznych obarveni jedne
 --a druhe pocty hran sectu, protoze sjednocuji a moznosti kolik takovych grafu je
---vynasobim protoze obarveni prvni i druhe skupiny jsou nezavysle (vis funkce
+--vynasobim protoze obarveni prvni i druhe skupiny jsou nezavysle (viz funkce
 --nasobek)
 --
 --vysledek jedne skupiny zistam tak, ze si hrany ze skupiny rozdelim do jeste
@@ -115,7 +116,7 @@ pocetTakovych permutace = (vyber permutace) * (product $ map fac $ map genericLe
 f2 n tah = (sum $ map (\per -> (k4 n tah per)*(pocetTakovych per)) $ typyPermutaci n) `div` (product [1..n]) where
         --kolik fixpointu ma hra v nejakem tahu pro nejakou permutaci 
         k4 n tah permutace = snd $ head $ (filter (\((z,c),_) -> ( z==((tah+1)`div`2) && c==(tah`div`2) )) $ fixpointy n permutace) ++ [((0,0),0)]
-
+{-
 -- rychlejsi vypis vsecho
 f6 n = let tabulka = (map (\p -> (p,fixpointy n p)) $ typyPermutaci n) `using` parList rdeepseq
            vytahni' permutace = snd $ head $ filter (\x->fst x == permutace) tabulka
@@ -123,6 +124,7 @@ f6 n = let tabulka = (map (\p -> (p,fixpointy n p)) $ typyPermutaci n) `using` p
            vytahni tah permutace = snd $ head $ (filter (\(b,_) -> ( b == barvy tah )) $ vytahni' permutace) ++ [((undefined,undefined),0)]
            vysl n tah = (sum $ map (\per -> (vytahni tah per)*(pocetTakovych per)) $ typyPermutaci n) `div` (product [1..n])
         in tabulka `deepseq` map (\tah -> (tah,l $ f1 n tah,l $ vysl n tah )) [1..(n`nad`2)]
+-}
 
-main = print $ map (\x -> (x,f6 x)) [8..18]
+--main = print $ map (\x -> (x,f6 x)) [8..18]
 

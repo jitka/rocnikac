@@ -3,6 +3,7 @@
 
 #define MAXPROOF (INT_MAX/1000)
 #define N 6 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define M ((N*(N-1))/2) 
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define PERM //jestli se pouziva permutacni tabulka NEFUNGUE
