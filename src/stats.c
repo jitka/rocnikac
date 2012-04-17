@@ -14,11 +14,11 @@ void statsInit(){
 	updateStats.name = "updateAncestors";
 	selectStats.maxVal = SELECT_STATS_MAX;
 	selectStats.name = "selectMostProving";
-	all_stats.set.maxVal = SET_STATS_MAX;
-	all_stats.set.name = "setPD-Numbers";
+	all_stats.setDel.maxVal = SET_STATS_MAX;
+	all_stats.setDel.name = "setPD-Numbers";
 	for (int t = 0; t <= M; t++){
-		turn_stats[t].set.maxVal = SET_STATS_MAX;
-		turn_stats[t].set.name = "setPD-Numbers";
+		turn_stats[t].setDel.maxVal = SET_STATS_MAX;
+		turn_stats[t].setDel.name = "setPD-Numbers";
 	}
 }
 
@@ -61,10 +61,13 @@ int differentNodes(){
 
 void printStats(char * file_name){
 	FILE* f = fopen(file_name,"w");
+
+	printf("\n");
 	fprintf(f,"interations %d\n",interations_stats);
-	histagramPrint( f, &all_stats.set );
+	histagramPrint( f, &all_stats.setDel );
 	histagramPrint( f, &updateStats );
 	histagramPrint( f, &selectStats );
+	printf("\n");
 	fprintf(f,"%d, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
@@ -88,7 +91,8 @@ void printStats(char * file_name){
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
 		       );
-		histagramPrint( f, &turn_stats[turn].set );
+		histagramPrint( f, &turn_stats[turn].setDel );
+		printf("\n");
 	}
 	fclose(f);
 }

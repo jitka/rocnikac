@@ -134,8 +134,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_true++;
 				turn_stats[nodeTurn(node)].finished_true++;
 				int s = node->set_stats;
-				histagramAdd ( &all_stats.set, s);
-				histagramAdd ( &turn_stats[nodeTurn(node)].set, s);
+				histagramAdd ( &all_stats.setDel, s);
+				histagramAdd ( &turn_stats[nodeTurn(node)].setDel, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -154,8 +154,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_false++;
 				turn_stats[t].finished_false++;
 				int s = node->set_stats;
-				histagramAdd ( &all_stats.set, s);
-				histagramAdd ( &turn_stats[t].set, s);
+				histagramAdd ( &all_stats.setDel, s);
+				histagramAdd ( &turn_stats[t].setDel, s);
 #endif //STATS
 
 #ifdef DEBUG

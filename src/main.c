@@ -21,12 +21,15 @@
 // heuristika podle volnych vrcholu
 //
 // TODO NEKDY 
-// nemit vic stejnych deti - hlavne na zacatku TRIK DELETECHILDS
+// nemit vic stejnych deti 
+// 	- prepinac DELETECHILDS
+//      - otcu pri vypocitani statiskka
 // updatete jednoho predka vickrat?
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 
 // radit listy podle heuristik
 // norm hasovanani
+// absolutni norm = vyber reprezentanta, knihovna
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
 // normalizace i podle vedlejsich stupnu
 // pri vkladani co cache skusit permutovat vrcholy se stejnou ohodnocovacich fci
