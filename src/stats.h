@@ -36,6 +36,7 @@ struct stats_T {
 	int finished_false;
 	int threat;
 
+	histogram_t setFin;
 	histogram_t setDel;
 };
 

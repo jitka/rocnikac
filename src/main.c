@@ -10,7 +10,6 @@
 // TODO HNED
 // herni strom 
 //      - otcu pri vypocitani;
-//      - cetnost pousteni set pred smazanim 
 // 	- cele pustit pro N 5..7 s/bez WEAK,
 // 	- zkusit strcit co calc
 // 	- tisk

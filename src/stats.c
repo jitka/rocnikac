@@ -14,11 +14,15 @@ void statsInit(){
 	updateStats.name = "updateAncestors";
 	selectStats.maxVal = SELECT_STATS_MAX;
 	selectStats.name = "selectMostProving";
+	all_stats.setFin.maxVal = SET_STATS_MAX;
+	all_stats.setFin.name = "setPD-NumbersHotove";
 	all_stats.setDel.maxVal = SET_STATS_MAX;
-	all_stats.setDel.name = "setPD-Numbers";
+	all_stats.setDel.name = "setPD-NumbersSmazane";
 	for (int t = 0; t <= M; t++){
+		turn_stats[t].setFin.maxVal = SET_STATS_MAX;
+		turn_stats[t].setFin.name = "setPD-NumbersHotove";
 		turn_stats[t].setDel.maxVal = SET_STATS_MAX;
-		turn_stats[t].setDel.name = "setPD-Numbers";
+		turn_stats[t].setDel.name = "setPD-NumbersSmazane";
 	}
 }
 
@@ -62,12 +66,13 @@ int differentNodes(){
 void printStats(char * file_name){
 	FILE* f = fopen(file_name,"w");
 
-	printf("\n");
+	fprintf(f,"\n");
 	fprintf(f,"interations %d\n",interations_stats);
+	histogramPrint( f, &all_stats.setFin );
 	histogramPrint( f, &all_stats.setDel );
 	histogramPrint( f, &updateStats );
 	histogramPrint( f, &selectStats );
-	printf("\n");
+	fprintf(f,"\n");
 	fprintf(f,"%d, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
@@ -79,6 +84,7 @@ void printStats(char * file_name){
 			all_stats.finished_false
 			);
 	fprintf(f,"tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
+	fprintf(f,"\n");
 	for (int turn = 0; turn <= M; turn++){
 		fprintf(f,"%d: %d; %d; %d; %d; %d;; %d; %d; %d; \n",
 				turn,
@@ -91,8 +97,9 @@ void printStats(char * file_name){
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
 		       );
+		histogramPrint( f, &turn_stats[turn].setFin );
 		histogramPrint( f, &turn_stats[turn].setDel );
-		printf("\n");
+		fprintf(f,"\n");
 	}
 	fclose(f);
 }

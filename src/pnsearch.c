@@ -19,6 +19,8 @@ void deleteChild(node_t* node, node_t* child){
 	ll2Delete( &child->parents, node);
 
 	if ( ll2Empty( &child->parents ) ){
+		histogramAdd ( &turn_stats[nodeTurn(child)].setDel, child->set_stats);
+		histogramAdd ( &all_stats.setDel, child->set_stats);
 		deleteChildren(child);
 		cacheDelete(child);
 		nodeDelete(child);
@@ -134,8 +136,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_true++;
 				turn_stats[nodeTurn(node)].finished_true++;
 				int s = node->set_stats;
-				histogramAdd ( &all_stats.setDel, s);
-				histogramAdd ( &turn_stats[nodeTurn(node)].setDel, s);
+				histogramAdd ( &all_stats.setFin, s);
+				histogramAdd ( &turn_stats[nodeTurn(node)].setFin, s);
 #endif //STATS
 
 #ifdef DEBUG
@@ -154,8 +156,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				all_stats.finished_false++;
 				turn_stats[t].finished_false++;
 				int s = node->set_stats;
-				histogramAdd ( &all_stats.setDel, s);
-				histogramAdd ( &turn_stats[t].setDel, s);
+				histogramAdd ( &all_stats.setFin, s);
+				histogramAdd ( &turn_stats[t].setFin, s);
 #endif //STATS
 
 #ifdef DEBUG
