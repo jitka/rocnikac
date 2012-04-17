@@ -47,7 +47,7 @@ extern int interations_stats;
 extern histogram_t updateStats;
 extern histogram_t selectStats;
 
-void printStats(char * file_name);
+void printStats();
 void statsInit();
 void histogramAdd( histogram_t* h, int value );
 

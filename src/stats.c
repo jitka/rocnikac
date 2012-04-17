@@ -34,11 +34,11 @@ void histogramAdd( histogram_t* h, int value ){
 		h->values[value]++;
 }
 
-void histogramPrint( FILE* f,  histogram_t* h){
-	fprintf(f,"%s max: %d; more then %d: %d\n",h->name,h->max,h->maxVal,h->more);
+void histogramPrint( histogram_t* h){
+	printf("%s max: %d; more then %d: %d\n",h->name,h->max,h->maxVal,h->more);
 	for (int s = 0; s < h->maxVal; s++){
-		fprintf(f,"%d-%d; ",s,h->values[s]);
-	} fprintf(f,"\n");
+		printf("%d-%d; ",s,h->values[s]);
+	} printf("\n");
 }
 
 int choose(int n, int k){
@@ -63,17 +63,16 @@ int differentNodes(){
 	return sum;
 }
 
-void printStats(char * file_name){
-	FILE* f = fopen(file_name,"w");
+void printStats(){
 
-	fprintf(f,"\n");
-	fprintf(f,"interations %d\n",interations_stats);
-	histogramPrint( f, &all_stats.setFin );
-	histogramPrint( f, &all_stats.setDel );
-	histogramPrint( f, &updateStats );
-	histogramPrint( f, &selectStats );
-	fprintf(f,"\n");
-	fprintf(f,"%d, %d; %d; %d; %d;; %d; %d; %d;\n",
+	printf("N %d\n",N);
+	printf("interace %d\n",interations_stats);
+	histogramPrint( &all_stats.setFin );
+	histogramPrint( &all_stats.setDel );
+	histogramPrint( &updateStats );
+	histogramPrint( &selectStats );
+	printf("\n");
+	printf("%d, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
 			all_stats.created_true,
@@ -83,10 +82,10 @@ void printStats(char * file_name){
 			all_stats.finished_true,
 			all_stats.finished_false
 			);
-	fprintf(f,"tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
-	fprintf(f,"\n");
+	printf("tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
+//	printf("\n");
 	for (int turn = 0; turn <= M; turn++){
-		fprintf(f,"%d: %d; %d; %d; %d; %d;; %d; %d; %d; \n",
+		printf("%d: %d; %d; %d; %d; %d;; %d; %d; %d; \n",
 				turn,
 				differentNodesOnTurn(turn),
 				turn_stats[turn].created,
@@ -97,11 +96,10 @@ void printStats(char * file_name){
 				turn_stats[turn].finished_true,
 				turn_stats[turn].finished_false
 		       );
-		histogramPrint( f, &turn_stats[turn].setFin );
-		histogramPrint( f, &turn_stats[turn].setDel );
-		fprintf(f,"\n");
+//		histogramPrint( &turn_stats[turn].setFin );
+//		histogramPrint( &turn_stats[turn].setDel );
+//		printf("\n");
 	}
-	fclose(f);
 }
 
 #endif //STATS

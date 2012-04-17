@@ -7,7 +7,7 @@
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define PERM //jestli se pouziva permutacni tabulka NEFUNGUE
-//#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE
+//#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
 #define STATS
 
 #define CACHE_SIZE (1<<24)

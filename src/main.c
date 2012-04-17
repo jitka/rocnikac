@@ -8,8 +8,11 @@
 #include "stats.h"
 
 // TODO HNED
+// zprovaznit WEAK
+// ne STATS
+// oboji zaroven
+// smazat perm
 // herni strom 
-//      - otcu pri vypocitani;
 // 	- cele pustit pro N 5..7 s/bez WEAK,
 // 	- zkusit strcit co calc
 // 	- tisk
@@ -49,12 +52,31 @@
 // norm a hasovani (prohazovani radku/tabulka)
 // nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
 
+void printSetting(){
+
+	printf("N %d M %d\n",N,M);
+	printf("CACHE_SIZE %d, CACHE_PATIENCE %d, MAXNODES %d\n", CACHE_SIZE, CACHE_PATIENCE, MAXNODES);
+#ifdef DEBUG 
+	printf("DEBUG\n");
+#endif
+
+#ifdef WEAK 
+	printf("WEAK\n");
+#endif
+#ifdef STATS
+	printf("STATS\n");
+#endif
+	printf("---------------------------------------------------------\n");
+}
+
 int main(){
 
 #ifdef STATS
 	statsInit();
 #endif //STATS
 	tabsInit();
+
+	printSetting();
 
 	node_t* root = getRoot();
 	nodeValue_t value = proofNuberSearch(root);
@@ -79,8 +101,7 @@ int main(){
 */
 
 #ifdef STATS
-//	printStats( );
-	printStats("/dev/stdout");
+	printStats( );
 #endif //STATS
 	return 0;
 }
