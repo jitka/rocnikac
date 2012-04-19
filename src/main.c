@@ -25,10 +25,11 @@
 // paralelizace 
 // vhodne CACHE_PATIENCE, velikost cache 
 // radit listy podle heuristik
-// norm hasovanani
+// norm-rychlejsi hasovanani
+// norm-lepsi fce
+// 	- normalizace i podle vedlejsich stupnu
 // absolutni norm = vyber reprezentanta, knihovna
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
-// normalizace i podle vedlejsich stupnu
 // pri vkladani co cache skusit permutovat vrcholy se stejnou ohodnocovacich fci
 // oprofile
 // davat dohromady vysledky z ruznych pozic

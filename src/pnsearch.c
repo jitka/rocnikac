@@ -92,7 +92,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 #ifdef DEBUG
 			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-				printf("dve nekonecna %d\n",min);
+				printf("dve nekonecna %d %d\n",min,max);
 				printNode(node);
 				printChildren(node);
 			}
@@ -192,21 +192,51 @@ static inline void setProofAndDisproofNubers(node_t* node){
 
 static inline node_t* createChild(node_t* node, int i, int j){
 	//vytvori potomka obarvenim hrany i,j
+	
+	//-----vytvorim vrchol
 	node_t* child = nodeNew();
 
 	nodeSetTurn(child, nodeTurn(node)+1 );
+	nodeCopyGraph(child,node);
+
 #ifdef STATS
 	color color;
 #endif //STATS
-
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
 #ifdef STATS
 		color=RED;
 #endif //STATS
 		nodeSetType(child, AND);
-		nodeCopyGraph(child,node);
 		nodeSetEdge(child,i,j,RED);
+		break;
+	case AND: //hraje druhy
+#ifdef STATS
+		color=BLUE;
+#endif //STATS
+		nodeSetType(child, OR);
+		nodeSetEdge(child,i,j,BLUE);
+		break;
+	}
+	
+	//-----znormuju
+	norm(child,&i,&j);
+#ifdef STATS
+	bool threat = nodeThreat(child, i, j, color);
+#endif //STATS
+
+
+	//-----je v cachy?
+	node_t* n = cacheFind(child);
+	if ( n != NULL ) { //je v cachy?
+		ll2AddNodeEnd( &n->parents, node);
+		nodeDelete(child);
+		return n;
+	} 
+
+	//-----doplnim value
+	switch (nodeType(node)) {
+	case OR:	
 		//nevyhral prvni hrac?
 		if (testK4(node,i,j,0)){
 			nodeSetValue(child, TRUE);
@@ -216,13 +246,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 			nodeSetValue(child, UNKNOWN);
 		}
 		break;
-	case AND: //hraje druhy
-#ifdef STATS
-		color=BLUE;
-#endif //STATS
-		nodeSetType(child, OR);
-		nodeCopyGraph(child,node);
-		nodeSetEdge(child,i,j,BLUE);
+	case AND: 
 		//neprohral prvni hrac?
 		if (testK4(node,i,j,1)){
 			nodeSetValue(child, FALSE);
@@ -233,46 +257,37 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		}
 		break;
 	}
+
+
 #ifdef STATS
-	bool threat = nodeThreat(child, i, j, color);
-#endif //STATS
-
-
-	norm(child);
-
-	node_t* n = cacheFind(child);
-	if ( n != NULL ) { //je v cachy?
-		ll2AddNodeEnd( &n->parents, node);
-		nodeDelete(child);
-		return n;
-	} else {
-#ifdef STATS
-		all_stats.created++;
-		turn_stats[nodeTurn(child)].created++;
-		if (nodeValue(child) == TRUE){
-			all_stats.created_true++;
-			turn_stats[nodeTurn(child)].created_true++;
-		}
-		if (nodeValue(child) == FALSE){
-			all_stats.created_false++;
-			turn_stats[nodeTurn(child)].created_false++;
-		}
-
-		if (threat){
-			if (nodeTurn(child) == 7)
-				printNode(child);
-			all_stats.threat++;
-			turn_stats[nodeTurn(child)].threat++;
-		}
-
-#endif //STATS
-
-		numberOfNodes++;
-		ll2AddNodeEnd( &child->parents, node);
-		setProofAndDisproofNubers( child );    
-		cacheInsert(child);
-		return child;
+	all_stats.created++;
+	turn_stats[nodeTurn(child)].created++;
+	if (nodeValue(child) == TRUE){
+		all_stats.created_true++;
+		turn_stats[nodeTurn(child)].created_true++;
 	}
+	if (nodeValue(child) == FALSE){
+		all_stats.created_false++;
+		turn_stats[nodeTurn(child)].created_false++;
+	}
+
+	if (threat){
+		if (nodeTurn(child) == 7)
+			printNode(child);
+		all_stats.threat++;
+		turn_stats[nodeTurn(child)].threat++;
+	}
+
+#endif //STATS
+
+
+	//-----pridam do hry
+	numberOfNodes++;
+	ll2AddNodeEnd( &child->parents, node);
+	setProofAndDisproofNubers( child );    
+	cacheInsert(child);
+	return child;
+
 }
 
 static inline void developNode(node_t* node){

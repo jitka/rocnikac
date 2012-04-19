@@ -5,7 +5,7 @@
 #include "print.h"
 
 
-void norm(node_t* node){
+void norm(node_t* node, int *u, int *v){
 
 	int fce[N];
 	int nodes[N];
@@ -16,7 +16,9 @@ void norm(node_t* node){
 //	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf(" pred \n");
 //	printNode(node);
 
-#ifdef NOVECHANGE
+//	printf("%d %d\n",*u,*v);
+//	printNode(node);
+#ifdef NOVECHANGE //NEFUNGUJE JE POTREBA MENIT HASH I PRO SLOUPCE
  //TOHLE BY MELO BYT RYCHLEJSI
 	for (int i = 0; i < N; i++){
 		int min = i;
@@ -25,15 +27,11 @@ void norm(node_t* node){
 				min = j;
 		}
 		if (i != min){
-//			printf("menim %d %d\n",i,min);
 			int tmp = fce[i]; fce[i] = fce[min]; fce[min] = tmp;
 			nodeChangeNodes(node, i, min);
 		}
 	}
-//	printNode(node);	printf("--------------------------------------\n");
 #else
-	//A TOHLE POMALEJSI
-//	printNode(node);
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
 			if (fce[i] > fce[j]){
@@ -43,7 +41,6 @@ void norm(node_t* node){
 				pom = nodes[i];
 				nodes[i] = nodes[j];
 				nodes[j] = pom;
-//				nodeChangeNodes(node, i, j);
 			}
 		}	
 	}
@@ -68,8 +65,13 @@ void norm(node_t* node){
 			}
 		}
 	}
+
+	*u = nodes2[*u];
+	*v = nodes2[*v];
+
 	nodeCopyGraph(node,newNode);
-//	printNode(newNode);
+//	printf("%d %d\n",*u,*v);
+//	printNode(node);
 	free(newNode);
 #endif
 
