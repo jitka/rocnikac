@@ -16,8 +16,11 @@
 // googlit, stare clanky od Toma
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
 // heuristika podle volnych vrcholu
+// other color
 //
-// TODO NEKDY 
+// TODO NEKDY
+// testovat vsechny binarni veci
+// vadi svapovani? 
 // nemit vic stejnych deti 
 // 	- prepinac DELETECHILDS
 //      - otcu pri vypocitani statiskka

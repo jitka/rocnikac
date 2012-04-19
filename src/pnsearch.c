@@ -14,6 +14,7 @@ ll2_t currentPath;
 
 void deleteChildren(node_t* node);
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 void deleteChild(node_t* node, node_t* child){
 	ll2Delete( &node->children, child );
 	ll2Delete( &child->parents, node);
@@ -31,6 +32,7 @@ void deleteChild(node_t* node, node_t* child){
 
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 void deleteChildren(node_t* node){
 	if (nodeExpanded(node)){	
 		while ( ! ll2Empty(&node->children) ){
@@ -41,6 +43,53 @@ void deleteChildren(node_t* node){
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void setTrue(node_t* node){
+	nodeSetValue(node, TRUE);
+	nodeSetProof(node,0);
+	nodeSetDisproof(node,MAXPROOF);
+	deleteChildren(node);
+#ifdef STATS
+	all_stats.finished++;
+	turn_stats[nodeTurn(node)].finished++;
+	all_stats.finished_true++;
+	turn_stats[nodeTurn(node)].finished_true++;
+	int s = node->set_stats;
+	histogramAdd ( &all_stats.setFin, s);
+	histogramAdd ( &turn_stats[nodeTurn(node)].setFin, s);
+#endif //STATS
+
+#ifdef DEBUG
+	if (nodeExpanded(node))
+		perror("au1");
+#endif //DEBUG
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void setFalse(node_t* node){
+	nodeSetValue(node, FALSE);
+	nodeSetProof(node,MAXPROOF);
+	nodeSetDisproof(node,0);
+	deleteChildren(node);
+#ifdef STATS
+	int t = nodeTurn(node);
+	all_stats.finished++;
+	turn_stats[t].finished++;
+	all_stats.finished_false++;
+	turn_stats[t].finished_false++;
+	int s = node->set_stats;
+	histogramAdd ( &all_stats.setFin, s);
+	histogramAdd ( &turn_stats[t].setFin, s);
+#endif //STATS
+
+#ifdef DEBUG
+	if (nodeExpanded(node))
+		perror("au2");
+#endif //DEBUG
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setProofAndDisproofNubers(node_t* node){
 #ifdef STATS
 	node->set_stats++;
@@ -129,43 +178,10 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				break;
 			}
 			if (nodeProof(node) == 0){
-				nodeSetValue(node, TRUE);
-				nodeSetDisproof(node,MAXPROOF);
-				deleteChildren(node);
-#ifdef STATS
-				all_stats.finished++;
-				turn_stats[nodeTurn(node)].finished++;
-				all_stats.finished_true++;
-				turn_stats[nodeTurn(node)].finished_true++;
-				int s = node->set_stats;
-				histogramAdd ( &all_stats.setFin, s);
-				histogramAdd ( &turn_stats[nodeTurn(node)].setFin, s);
-#endif //STATS
-
-#ifdef DEBUG
-				if (nodeExpanded(node))
-					perror("au1");
-#endif //DEBUG
+				setTrue(node);
 			} 
 			if (nodeDisproof(node) == 0){
-				nodeSetValue(node, FALSE);
-				nodeSetProof(node,MAXPROOF);
-				deleteChildren(node);
-#ifdef STATS
-				int t = nodeTurn(node);
-				all_stats.finished++;
-				turn_stats[t].finished++;
-				all_stats.finished_false++;
-				turn_stats[t].finished_false++;
-				int s = node->set_stats;
-				histogramAdd ( &all_stats.setFin, s);
-				histogramAdd ( &turn_stats[t].setFin, s);
-#endif //STATS
-
-#ifdef DEBUG
-				if (nodeExpanded(node))
-					perror("au2");
-#endif //DEBUG
+				setFalse(node);
 			}
 #ifdef DEBUG
 			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
@@ -182,14 +198,21 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	case TRUE:
 		nodeSetProof(node,0);
 		nodeSetDisproof(node,MAXPROOF);
+//		printf("pred\n");
+		deleteChildren(node);
+//		printf("po\n");
 		break;
 	case FALSE:
 		nodeSetProof(node,MAXPROOF);
 		nodeSetDisproof(node,0);
+//		printf("pred\n");
+		deleteChildren(node);
+//		printf("po\n");
 		break;
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	//vytvori potomka obarvenim hrany i,j
 	
@@ -221,6 +244,8 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	
 	//-----znormuju
 	norm(child,&i,&j);
+	//printf("po norm %d %d\n",i,j);
+	//printNode(child);
 #ifdef STATS
 	bool threat = nodeThreat(child, i, j, color);
 #endif //STATS
@@ -238,7 +263,7 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	switch (nodeType(node)) {
 	case OR:	
 		//nevyhral prvni hrac?
-		if (testK4(node,i,j,0)){
+		if (testK4andFreeK4(child,i,j,0,freeK4)){
 			nodeSetValue(child, TRUE);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
@@ -248,7 +273,7 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 		break;
 	case AND: 
 		//neprohral prvni hrac?
-		if (testK4(node,i,j,1)){
+		if (testK4andFreeK4(child,i,j,1,freeK4)){
 			nodeSetValue(child, FALSE);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
 			nodeSetValue(child, FALSE);
@@ -290,6 +315,7 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
 
@@ -298,17 +324,27 @@ static inline void developNode(node_t* node){
 		perror("uz je");
 #endif //DEBUG
 
+	bool possible = false;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( ! nodeEdgeExist(node, i, j) ){ 
 				//ij je hrana ktera jeste nema barvu
-				int freeK4; //kolik ruznych K4 sve barvy muze udelat s pouzitim (i,j)
+				int freeK4 = 0; //kolik ruznych K4 sve barvy muze udelat s pouzitim (i,j)
 				node_t* child =  createChild(node,i,j,&freeK4);
+				if (freeK4 > 0)
+					possible = true;
 				ll2AddNodeBegin( &node->children, child );
 			}
 	nodeSetExpanded(node,true);
+	if (possible == false && nodeType(node)==OR ){
+//		printf("prvni hrac nema moznost vyhrat %d %d %d\n",				nodeHash(node),				nodeProof(node),				nodeDisproof(node));
+//		printNode(node);
+//		nodeSetValue(node, FALSE);
+//		setProofAndDisproofNubers( node );    
+	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void updateAncestors(){ //po hladinach
 
 #ifdef STATS
@@ -348,9 +384,10 @@ static inline void updateAncestors(){ //po hladinach
 	}
 #ifdef STATS
 	histogramAdd( &updateStats, update);
+//	printf("update %d\n",update);
 #endif //STATS
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void selectMostProving(){
 	node_t * node = ll2FirstNode(&currentPath);
 #ifdef STATS
@@ -401,9 +438,11 @@ static inline void selectMostProving(){
 	}
 #ifdef STATS
 	histogramAdd( &selectStats, select);
+//	printf("select %d\n",select);
 #endif //STATS
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 nodeValue_t proofNuberSearch(node_t* root){
 
 	ll2New(&currentPath);

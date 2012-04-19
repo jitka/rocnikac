@@ -97,6 +97,42 @@ static inline bool testK4(node_t * node, int i, int j, color color){
 	return false;
 }
 
+static inline bool testK4andFreeK4(node_t * node, int i, int j, color color, int * freeK4){
+	//otestuje jestli po pridani hrany ij nevznikla K4
+	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
+	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
+
+	*freeK4=0;
+	tr = (~nodeNeighbour(node,i,(color+1)%2)) & (~nodeNeighbour(node,j,(color+1)%2)); 
+	    //trojuhelniky kam nevede souperova hrana
+	for (int s = 0; s < N; s++)
+		if ((tr & (1<<s)) && s != i && s != j)
+			for (int t = s+1; t < N; t++)
+				if ((tr & (1<<t)) && t != i && t !=j ){
+					//staci overit jestli mezi s a t nevede souperova hrana
+					if ( !nodeColorEdgeExist( node, s, t, (color+1)%2) ){
+//						printf("hrana %d %d\n", s, t);
+						(*freeK4)++;
+					}
+				}
+//		printf("%d %d %d\n",i,j,*freeK4);
+//		printNode(node);
+
+
+	tr = nodeNeighbour(node,i,color) & nodeNeighbour(node,j,color);
+	for (int s = 0; s < N; s++)
+		if ((tr & (1<<s)) && s != i && s != j)
+			for (int t = s+1; t < N; t++)
+				if ((tr & (1<<t)) && t != i && t !=j ){
+					//staci overit jestli mezi s a t vede hrana
+					if ( nodeColorEdgeExist( node, s, t, color) )
+						return true;
+
+				}
+	return false;
+
+}
+
 static inline bool nodeThreat(node_t * node, int i, int j, color color){
 	//otestuje jestli po pridani hrany ij nevznikla hrozba
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je

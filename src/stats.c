@@ -41,7 +41,7 @@ void histogramPrint( histogram_t* h){
 	} printf("\n");
 }
 
-int choose(int n, int k){
+u64 choose(int n, int k){
 	if (n < k || k < 0 || n < 0)
 		perror("komibanci cislo");
 	if (k == 0)
@@ -50,14 +50,14 @@ int choose(int n, int k){
 		return (n * choose(n-1,k-1) ) / k;
 }
 
-int differentNodesOnTurn(int turn){
+u64 differentNodesOnTurn(int turn){
 	int red = turn/2;
 	int blue = turn - red;
 	return choose( M,red) * choose( M-red, blue);
 }
 
-int differentNodes(){
-	int sum = 0;
+u64 differentNodes(){
+	u64 sum = 0;
 	for (int turn = 0; turn <= M; turn++)
 		sum += differentNodesOnTurn(turn);
 	return sum;
@@ -72,7 +72,7 @@ void printStats(){
 	histogramPrint( &updateStats );
 	histogramPrint( &selectStats );
 	printf("\n");
-	printf("%d, %d; %d; %d; %d;; %d; %d; %d;\n",
+	printf("%llu, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
 			all_stats.created_true,
@@ -85,7 +85,7 @@ void printStats(){
 	printf("tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
 //	printf("\n");
 	for (int turn = 0; turn <= M; turn++){
-		printf("%d: %d; %d; %d; %d; %d;; %d; %d; %d; \n",
+		printf("%d: %llu; %d; %d; %d; %d;; %d; %d; %d; \n",
 				turn,
 				differentNodesOnTurn(turn),
 				turn_stats[turn].created,

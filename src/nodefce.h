@@ -28,6 +28,7 @@ static inline int nodeDegree(node_t * node, int i, color c);
 
 static inline void nodeChangeNodes(node_t * node, int a, int b);
 static inline bool testK4(node_t * node, int i, int j, color color);
+static inline bool testK4andFreeK4(node_t * node, int i, int j, color color, int * freeK4);
 static inline bool nodeThreat(node_t * node, int i, int j, color color);
 //static inline bool nodeSimetric(node_t * a);
 

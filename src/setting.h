@@ -7,7 +7,7 @@
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
-//#define STATS
+#define STATS
 
 #define CACHE_SIZE (1<<24)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
