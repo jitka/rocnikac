@@ -8,32 +8,35 @@
 #include "stats.h"
 
 // TODO HNED
-// herni strom 
-// 	- cele pustit pro N 5..7 s/bez WEAK,
-// 	- zkusit strcit co calc
-// 	- tisk
-// 	- ucesat vypis, ulozit pro budouci generace
-// googlit, stare clanky od Toma
+// depth first - cist
+// googlit, stare clanky od Toma, od pauliho
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
-// heuristika podle volnych vrcholu
+// 	- pri zacikleni pustit z roota
+// 	- vzdy pustit z roota
+// 	- zprovoznit toto
 // other color
-//
-// TODO NEKDY
-// testovat vsechny binarni veci
-// vadi svapovani? 
 // nemit vic stejnych deti 
 // 	- prepinac DELETECHILDS
 //      - otcu pri vypocitani statiskka
-// updatete jednoho predka vickrat?
+// konstanty 
+// 	- vhodne CACHE_PATIENCE, 
+// 	- velikost cache 
+// 	- max node
+// norm - normalizace i podle vedlejsich stupnu
+// updatete jednoho predka vickrat? 
+// 	- do vrcholu psat cislo update
+// 	- kolikrat v tom update tam bylo
+// 	- statistika
+//
+// TODO NEKDY
+// testovat vsechny binarni veci
 // paralelizace 
-// vhodne CACHE_PATIENCE, velikost cache 
 // radit listy podle heuristik
 // norm-rychlejsi hasovanani
-// norm-lepsi fce
-// 	- normalizace i podle vedlejsich stupnu
+// norm-lepsi fce, vic fci
 // absolutni norm = vyber reprezentanta, knihovna
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
-// pri vkladani co cache skusit permutovat vrcholy se stejnou ohodnocovacich fci
+// pri vkladani co cache zkusit permutovat vrcholy se stejnou ohodnocovacich fci
 // oprofile
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
@@ -49,8 +52,6 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
-// nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
-// zacykleni pd kvuli update s vice syny, vzdy od root?
 
 void printSetting(){
 
