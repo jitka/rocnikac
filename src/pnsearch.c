@@ -90,126 +90,129 @@ static inline void setFalse(node_t* node){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void setUnknown(node_t* node){
+	nodeSetValue(node, UNKNOWN);
+	nodeSetProof(node,1);
+	nodeSetDisproof(node,1);
+#ifdef DEBUG
+	if (nodeExpanded(node))
+		perror("tohle se teprve tvori");
+#endif //DEBUG
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setProofAndDisproofNubers(node_t* node){
 #ifdef STATS
 	node->set_stats++;
 #endif //STATS
-	switch (nodeValue(node)) {
-	case UNKNOWN:
-		if (nodeExpanded(node)){
-			u32 min = MAXPROOF;
-			u32 childrenN = 0;
-#ifdef WEAK
-			u32 max = 0;
-#else //WEAK
-			u32 sum = 0;
-#endif //WEAK
-			switch (nodeType(node)) {
-			case OR:
-				ll2FStart(&node->children); 
-				for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
-					childrenN++;
-					if ( nodeValue(child) == FALSE ){
-						deleteChild( node, child);
-						childrenN--;
-						continue;
-					}
+	if (nodeValue(node) != UNKNOWN){
 #ifdef DEBUG
-/*					if ( nodeDisproof(child) + 1000 > MAXPROOF){
-						printf("to uz ma by false %d\n",MAXPROOF);
-						printNode(child);
-						printChildren(child);
-					}
-					*/
+		if (nodeProof(node) != 0 && nodeProof(node) != MAXPROOF)
+			perror("au");
+		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
+			perror("au");
 #endif //DEBUG
-					min = MIN(min,nodeProof(child));
-#ifdef WEAK 			
-					max = MAX( max, nodeDisproof(child) );
-#else //WEAK
-					sum += nodeDisproof(child);
-#endif //WEAK
-					ll2FNext(&node->children);
-				}
-				nodeSetProof( node, min);
-#ifdef WEAK
-				if (childrenN == 0)
-					nodeSetDisproof( node, 0);
-				else 
-					nodeSetDisproof( node, max + childrenN - 1);
-#else //WEAK
-				nodeSetDisproof( node, sum);
-#endif //WEAK
+		return; //TODO tohle by slo odstanit, predek se nemusi updatovat tak mockrat
+	}
+	
 #ifdef DEBUG
-			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-				printf("dve nekonecna %d %d\n",min,max);
-				printNode(node);
-				printChildren(node);
-			}
+	if (!nodeExpanded(node)){
+		perror("neexpandove");
+	}
 #endif //DEBUG
-				break;
-			case AND:
-				ll2FStart(&node->children); 
-				for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
-					childrenN++;
-					if ( nodeValue(child) == TRUE ){
-						deleteChild( node, child);
-						childrenN--;
-						continue;
-					}
-#ifdef WEAK
-					max = MAX(max,nodeProof(child));
-#else //WEAK
-					sum += nodeProof(child);
-#endif //WEAK
-					min = MIN( min, nodeDisproof(child) );
 
-					ll2FNext(&node->children);
-				}
+	u32 min = MAXPROOF;
+	u32 childrenN = 0;
 #ifdef WEAK
-				if (childrenN == 0)
-					nodeSetProof( node, 0 );
-				else 
-					nodeSetProof( node, max + childrenN - 1 );
+	u32 max = 0;
 #else //WEAK
-				nodeSetProof( node, sum);
+	u32 sum = 0;
 #endif //WEAK
-				nodeSetDisproof( node, min);
-			
-				break;
-			}
-			if (nodeProof(node) == 0){
-				setTrue(node);
-			} 
-			if (nodeDisproof(node) == 0){
-				setFalse(node);
+	switch (nodeType(node)) {
+	case OR:
+		ll2FStart(&node->children); 
+		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
+			childrenN++;
+			if ( nodeValue(child) == FALSE ){
+				deleteChild( node, child);
+				childrenN--;
+				continue;
 			}
 #ifdef DEBUG
-			if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-				printf("dve nekonecna\n");
-				printNode(node);
-				printChildren(node);
-			}
+			/*					if ( nodeDisproof(child) + 1000 > MAXPROOF){
+								printf("to uz ma by false %d\n",MAXPROOF);
+								printNode(child);
+								printChildren(child);
+								}
+								*/
 #endif //DEBUG
-		} else {
-			nodeSetProof(node,1);
-			nodeSetDisproof(node,1);
+			min = MIN(min,nodeProof(child));
+#ifdef WEAK 			
+			max = MAX( max, nodeDisproof(child) );
+#else //WEAK
+			sum += nodeDisproof(child);
+#endif //WEAK
+			ll2FNext(&node->children);
 		}
+		nodeSetProof( node, min);
+#ifdef WEAK
+		if (childrenN == 0)
+			nodeSetDisproof( node, 0);
+		else 
+			nodeSetDisproof( node, max + childrenN - 1);
+#else //WEAK
+		nodeSetDisproof( node, sum);
+#endif //WEAK
+#ifdef DEBUG
+		if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
+			printf("dve nekonecna %d %d\n",min,max);
+			printNode(node);
+			printChildren(node);
+		}
+#endif //DEBUG
 		break;
-	case TRUE:
-		nodeSetProof(node,0);
-		nodeSetDisproof(node,MAXPROOF);
-//		printf("pred\n");
-		deleteChildren(node);
-//		printf("po\n");
-		break;
-	case FALSE:
-		nodeSetProof(node,MAXPROOF);
-		nodeSetDisproof(node,0);
-//		printf("pred\n");
-		deleteChildren(node);
-//		printf("po\n");
+	case AND:
+		ll2FStart(&node->children); 
+		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
+			childrenN++;
+			if ( nodeValue(child) == TRUE ){
+				deleteChild( node, child);
+				childrenN--;
+				continue;
+			}
+#ifdef WEAK
+			max = MAX(max,nodeProof(child));
+#else //WEAK
+			sum += nodeProof(child);
+#endif //WEAK
+			min = MIN( min, nodeDisproof(child) );
+
+			ll2FNext(&node->children);
+		}
+#ifdef WEAK
+		if (childrenN == 0)
+			nodeSetProof( node, 0 );
+		else 
+			nodeSetProof( node, max + childrenN - 1 );
+#else //WEAK
+		nodeSetProof( node, sum);
+#endif //WEAK
+		nodeSetDisproof( node, min);
+
 		break;
 	}
+	if (nodeProof(node) == 0){
+		setTrue(node);
+	} 
+	if (nodeDisproof(node) == 0){
+		setFalse(node);
+	}
+#ifdef DEBUG
+	if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
+		printf("dve nekonecna\n");
+		printNode(node);
+		printChildren(node);
+	}
+#endif //DEBUG
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,21 +267,21 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	case OR:	
 		//nevyhral prvni hrac?
 		if (testK4andFreeK4(child,i,j,0,freeK4)){
-			nodeSetValue(child, TRUE);
+			setTrue(child);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			nodeSetValue(child, FALSE);
+			setFalse(child);
 		} else {
-			nodeSetValue(child, UNKNOWN);
+			setUnknown(child);
 		}
 		break;
 	case AND: 
 		//neprohral prvni hrac?
 		if (testK4andFreeK4(child,i,j,1,freeK4)){
-			nodeSetValue(child, FALSE);
+			setFalse(child);
 		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			nodeSetValue(child, FALSE);
+			setFalse(child);
 		} else {
-			nodeSetValue(child, UNKNOWN);
+			setUnknown(child);
 		}
 		break;
 	}
@@ -309,7 +312,6 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	//-----pridam do hry
 	numberOfNodes++;
 	ll2AddNodeEnd( &child->parents, node);
-	setProofAndDisproofNubers( child );    
 	cacheInsert(child);
 	return child;
 
