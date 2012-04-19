@@ -190,7 +190,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	}
 }
 
-static inline node_t* createChild(node_t* node, int i, int j){
+static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	//vytvori potomka obarvenim hrany i,j
 	
 	//-----vytvorim vrchol
@@ -302,7 +302,8 @@ static inline void developNode(node_t* node){
 		for (int j = 0; j < i; j++)
 			if ( ! nodeEdgeExist(node, i, j) ){ 
 				//ij je hrana ktera jeste nema barvu
-				node_t* child =  createChild(node,i,j);
+				int freeK4; //kolik ruznych K4 sve barvy muze udelat s pouzitim (i,j)
+				node_t* child =  createChild(node,i,j,&freeK4);
 				ll2AddNodeBegin( &node->children, child );
 			}
 	nodeSetExpanded(node,true);
