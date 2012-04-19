@@ -327,6 +327,11 @@ static inline void developNode(node_t* node){
 #endif //DEBUG
 
 	bool possible = false;
+#ifdef HEURISTIC1
+	node_t* childs[M];
+	int childsN = 0;
+	int free[M];
+#endif //HEURISTIC1
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( ! nodeEdgeExist(node, i, j) ){ 
@@ -335,15 +340,38 @@ static inline void developNode(node_t* node){
 				node_t* child =  createChild(node,i,j,&freeK4);
 				if (freeK4 > 0)
 					possible = true;
+#ifdef HEURISTIC1
+				childs[childsN]=child;
+				free[childsN]=freeK4;
+				childsN++;
+#else //HEURISTIC1
 				ll2AddNodeBegin( &node->children, child );
+#endif //HEURISTIC1
 			}
-	nodeSetExpanded(node,true);
-	if (possible == false && nodeType(node)==OR ){
-//		printf("prvni hrac nema moznost vyhrat %d %d %d\n",				nodeHash(node),				nodeProof(node),				nodeDisproof(node));
-//		printNode(node);
-//		nodeSetValue(node, FALSE);
-//		setProofAndDisproofNubers( node );    
+
+#ifdef HEURISTIC1
+	for (int i = 0; i < childsN; i++){
+		for (int j = i+1; j < childsN; j++){
+			if (free[i] < free[j]){
+				{int tmp = free[i]; free[i] = free[j]; free[j] = tmp;}
+				{node_t* tmp = childs[i]; childs[i] = childs[j]; childs[j] = tmp;}
+			}
+		}	
 	}
+//	for (int v = 0; v < childsN; v++){ printf("%d ",free[v]);} printf("\n");
+	for (int v = 0; v < childsN; v++){ 
+		ll2AddNodeEnd( &node->children, childs[v] );
+	}
+#endif //HEURISTIC1
+	nodeSetExpanded(node,true);
+
+	if (possible == false && nodeType(node)==OR ){
+//		printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+//		printNode(node);
+//		setFalse(node);
+	}
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

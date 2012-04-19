@@ -49,8 +49,8 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
-// norm a hasovani (prohazovani radku/tabulka)
 // nekonecno... nesmim se tam dostat a nekonecno plus konstanta je nekonecno
+// zacykleni pd kvuli update s vice syny, vzdy od root?
 
 void printSetting(){
 
@@ -65,6 +65,9 @@ void printSetting(){
 #endif
 #ifdef STATS
 	printf("STATS\n");
+#endif
+#ifdef HEURISTIC1
+	printf("HEURISTIC1\n");
 #endif
 	printf("---------------------------------------------------------\n");
 }
