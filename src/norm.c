@@ -10,10 +10,33 @@ void norm(node_t* node, int *u, int *v){
 	int fce[N];
 	int nodes[N];
 	for (int v = 0; v < N; v++){
-		fce[v] = 10000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
+		fce[v] = 100000*nodeDegree(node,v,0) + 100*nodeDegree(node,v,1);
 		nodes[v] = v;
 	}
-//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf(" pred \n");
+#ifdef NORM2
+	int fce2[N];
+	for (int i = 0; i < N; i++){
+		fce2[i]=fce[i];
+	}
+	for (int i = 0; i < N; i++){
+		for (int j = i+1; j < N; j++){
+			if (nodeColorEdgeExist(node,i,j,0)) {
+				fce2[i] += fce[j]/10;
+				fce2[j] += fce[i]/10;
+			}
+			if (nodeColorEdgeExist(node,i,j,1)) {
+				fce2[i] += fce[j]/100;
+				fce2[j] += fce[i]/100;
+			}
+		}
+	}
+	for (int i = 0; i < N; i++){
+		fce[i]=fce2[i];
+	}
+#endif //NORM2
+
+//	for (int v = 0; v < N; v++){		printf("%d ",fce2[v]);	} printf(" lepsi \n");
+//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf(" horsi \n");
 //	printNode(node);
 
 //	printf("%d %d\n",*u,*v);

@@ -366,9 +366,9 @@ static inline void developNode(node_t* node){
 	nodeSetExpanded(node,true);
 
 	if (possible == false && nodeType(node)==OR ){
-//		printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
-//		printNode(node);
-//		setFalse(node);
+		//printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+		//printNode(node);
+		//setFalse(node);
 	}
 
 
@@ -481,6 +481,9 @@ nodeValue_t proofNuberSearch(node_t* root){
 #ifdef DEBUG
 	int counter = 0;
 #endif //DEBUG
+#ifdef UNLOOP1 
+	node_t* oldMostProovingNode = NULL;
+#endif
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
 #ifdef STATS
 		interations_stats++;
@@ -488,6 +491,14 @@ nodeValue_t proofNuberSearch(node_t* root){
 
 		selectMostProving();
 		node_t* mostProovingNode = ll2FirstNode(&currentPath);
+#ifdef UNLOOP1 
+		if (oldMostProovingNode == mostProovingNode){
+			printf("au cyklus\n");
+	ll2New(&currentPath);
+	ll2AddNodeBegin(&currentPath,root);
+		}
+		oldMostProovingNode = mostProovingNode;
+#endif
 		
 		developNode(mostProovingNode);
 

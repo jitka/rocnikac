@@ -11,7 +11,9 @@
 // depth first - cist
 // googlit, stare clanky od Toma, od pauliho
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
+// 	- prepinac
 // 	- pri zacikleni pustit z roota
+// 	-  mazat spojak current node
 // 	- vzdy pustit z roota
 // 	- zprovoznit toto
 // nemit vic stejnych deti 
@@ -68,6 +70,9 @@ void printSetting(){
 #endif
 #ifdef HEURISTIC1
 	printf("HEURISTIC1\n");
+#endif
+#ifdef NORM2
+	printf("NORM2\n");
 #endif
 	printf("---------------------------------------------------------\n");
 }
