@@ -14,7 +14,6 @@
 // 	- pri zacikleni pustit z roota
 // 	- vzdy pustit z roota
 // 	- zprovoznit toto
-// other color
 // nemit vic stejnych deti 
 // 	- prepinac DELETECHILDS
 //      - otcu pri vypocitani statiskka

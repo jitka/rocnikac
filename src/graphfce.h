@@ -103,14 +103,14 @@ static inline bool testK4andFreeK4(node_t * node, int i, int j, color color, int
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
 
 	*freeK4=0;
-	tr = (~nodeNeighbour(node,i,(color+1)%2)) & (~nodeNeighbour(node,j,(color+1)%2)); 
+	tr = (~nodeNeighbour(node,i,otherColor(color))) & (~nodeNeighbour(node,j,otherColor(color))); 
 	    //trojuhelniky kam nevede souperova hrana
 	for (int s = 0; s < N; s++)
 		if ((tr & (1<<s)) && s != i && s != j)
 			for (int t = s+1; t < N; t++)
 				if ((tr & (1<<t)) && t != i && t !=j ){
 					//staci overit jestli mezi s a t nevede souperova hrana
-					if ( !nodeColorEdgeExist( node, s, t, (color+1)%2) ){
+					if ( !nodeColorEdgeExist( node, s, t, otherColor(color)) ){
 //						printf("hrana %d %d\n", s, t);
 						(*freeK4)++;
 					}

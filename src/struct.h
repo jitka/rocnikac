@@ -9,6 +9,7 @@
 typedef enum { AND, OR } nodeType_t;
 typedef enum { TRUE=1, FALSE=0, UNKNOWN=2 } nodeValue_t;
 typedef enum { RED=0, BLUE=1 } color;
+#define otherColor( x ) (((x)+1)%2)
 
 typedef struct node node_t;
 
