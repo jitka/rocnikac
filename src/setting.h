@@ -9,8 +9,7 @@
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
 #define STATS
-//#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic
-//#define UNLOOP1 //odstarni vymota se ze zacykleni na cyklu velikosti 1 NEFUNGUJE
+//#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 #define NORM2
 
 #define CACHE_SIZE (1<<24)

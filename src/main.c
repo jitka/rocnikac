@@ -8,22 +8,29 @@
 #include "stats.h"
 
 // TODO HNED
-// depth first - cist
-// googlit, stare clanky od Toma, od pauliho
+// vylepsovaky nahrat, cist
+// googlit klikovou hru
+// nemit vic stejnych deti
+//      - oddelit createchildnrens
+//      - z createchild dat pric setValue a cache ty dat do expand node
+// 	- prepinac DELETECHILDRENS
+// 	- trizeni deti v create podle hase
+// 	- zahozeni prebytecnich
+// 	- prepinac TURNDDELETECHILDRENST //do kud se to maze
+//      - otcu pri vypocitani statiskka
+// napsat df (ε trik)
+// 	- nejdriv bez nasobnych deti
+// 	- zarazky
+// 	- nekonecno
+// 	- pri probublani bocnimy otci navrch zastavit
+// 	- hasovaci tabulka
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
 // 	- prepinac
-// 	- pri zacikleni pustit z roota
-// 	-  mazat spojak current node
-// 	- vzdy pustit z roota
-// 	- zprovoznit toto
-// nemit vic stejnych deti 
-// 	- prepinac DELETECHILDS
-//      - otcu pri vypocitani statiskka
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
+// 	- TURNDELETECHILDRENST 
 // 	- velikost cache 
-// 	- max node
-// norm - normalizace i podle vedlejsich stupnu
+// 	- velikost stomu pocitat s sizeof
 // updatete jednoho predka vickrat? 
 // 	- do vrcholu psat cislo update
 // 	- kolikrat v tom update tam bylo
@@ -53,6 +60,7 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
+// gavento hasovani
 
 void printSetting(){
 
