@@ -12,7 +12,7 @@
 // googlit klikovou hru
 // nemit vic stejnych deti
 //      - oddelit createchildnrens
-//      - z createchild dat pric setValue a cache ty dat do expand node
+//      - z createchild dat pric  a cache ty dat do expand node
 // 	- prepinac DELETECHILDRENS
 // 	- trizeni deti v create podle hase
 // 	- zahozeni prebytecnich
@@ -25,7 +25,7 @@
 // 	- pri probublani bocnimy otci navrch zastavit
 // 	- hasovaci tabulka
 // testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
-// 	- prepinac
+// 	- prepinac NOFREEK4
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 

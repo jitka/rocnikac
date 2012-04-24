@@ -1,6 +1,7 @@
 #include "stats.h"
 #ifdef STATS
 
+#include "nodefce.h"
 
 stats_t all_stats;
 stats_t turn_stats[M+1];
@@ -24,6 +25,32 @@ void statsInit(){
 		turn_stats[t].setDel.maxVal = SET_STATS_MAX;
 		turn_stats[t].setDel.name = "setPD-NumbersSmazane";
 	}
+}
+
+void statsNewNode(node_t* node,int i,int j){
+	all_stats.created++;
+	turn_stats[nodeTurn(node)].created++;
+	if (nodeValue(node) == TRUE){
+		all_stats.created_true++;
+		turn_stats[nodeTurn(node)].created_true++;
+	}
+	if (nodeValue(node) == FALSE){
+		all_stats.created_false++;
+		turn_stats[nodeTurn(node)].created_false++;
+	}
+
+	color color; //ktera se obarvila kdyz se slo do tohohle stavu
+	if (nodeType(node)==OR) 
+		color = BLUE;
+	else
+		color = RED;
+	if (nodeThreat(node, i, j, color)){
+		if (nodeTurn(node) == 7)
+			printNode(node);
+		all_stats.threat++;
+		turn_stats[nodeTurn(node)].threat++;
+	}
+
 }
 
 void histogramAdd( histogram_t* h, int value ){

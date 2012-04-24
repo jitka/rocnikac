@@ -216,6 +216,34 @@ static inline void setProofAndDisproofNubers(node_t* node){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+static inline int setValue(node_t* node, int i, int j){
+	//zjisti hodnotu hry a vrati kolik volnych K4 pouziva hranu ij
+	int freeK4;
+	switch (nodeType(node)) {
+	case OR:	
+		//nevyhral prvni hrac?
+		if (testK4andFreeK4(node,i,j,0,&freeK4)){
+			setTrue(node);
+		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
+			setFalse(node);
+		} else {
+			setUnknown(node);
+		}
+		break;
+	case AND: 
+		//neprohral prvni hrac?
+		if (testK4andFreeK4(node,i,j,1,&freeK4)){
+			setFalse(node);
+		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
+			setFalse(node);
+		} else {
+			setUnknown(node);
+		}
+		break;
+	}
+	return freeK4;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
 static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	//vytvori potomka obarvenim hrany i,j
 	
@@ -225,21 +253,12 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	nodeSetTurn(child, nodeTurn(node)+1 );
 	nodeCopyGraph(child,node);
 
-#ifdef STATS
-	color color;
-#endif //STATS
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
-#ifdef STATS
-		color=RED;
-#endif //STATS
 		nodeSetType(child, AND);
 		nodeSetEdge(child,i,j,RED);
 		break;
 	case AND: //hraje druhy
-#ifdef STATS
-		color=BLUE;
-#endif //STATS
 		nodeSetType(child, OR);
 		nodeSetEdge(child,i,j,BLUE);
 		break;
@@ -249,9 +268,6 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	norm(child,&i,&j);
 	//printf("po norm %d %d\n",i,j);
 	//printNode(child);
-#ifdef STATS
-	bool threat = nodeThreat(child, i, j, color);
-#endif //STATS
 
 
 	//-----je v cachy?
@@ -263,49 +279,10 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 	} 
 
 	//-----doplnim value
-	switch (nodeType(node)) {
-	case OR:	
-		//nevyhral prvni hrac?
-		if (testK4andFreeK4(child,i,j,0,freeK4)){
-			setTrue(child);
-		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			setFalse(child);
-		} else {
-			setUnknown(child);
-		}
-		break;
-	case AND: 
-		//neprohral prvni hrac?
-		if (testK4andFreeK4(child,i,j,1,freeK4)){
-			setFalse(child);
-		} else if ( nodeTurn(child) == (N*(N-1))/2 ){
-			setFalse(child);
-		} else {
-			setUnknown(child);
-		}
-		break;
-	}
-
+	*freeK4 = setValue(child,i,j);
 
 #ifdef STATS
-	all_stats.created++;
-	turn_stats[nodeTurn(child)].created++;
-	if (nodeValue(child) == TRUE){
-		all_stats.created_true++;
-		turn_stats[nodeTurn(child)].created_true++;
-	}
-	if (nodeValue(child) == FALSE){
-		all_stats.created_false++;
-		turn_stats[nodeTurn(child)].created_false++;
-	}
-
-	if (threat){
-		if (nodeTurn(child) == 7)
-			printNode(child);
-		all_stats.threat++;
-		turn_stats[nodeTurn(child)].threat++;
-	}
-
+	statsNewNode(child,i,j);
 #endif //STATS
 
 

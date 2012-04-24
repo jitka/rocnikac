@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "setting.h"
+#include "struct.h"
 
 #ifdef STATS
 
@@ -49,6 +50,7 @@ extern histogram_t selectStats;
 
 void printStats();
 void statsInit();
+void statsNewNode(node_t* node, int i, int j);
 void histogramAdd( histogram_t* h, int value );
 
 #endif //STATS
