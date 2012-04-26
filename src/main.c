@@ -10,7 +10,6 @@
 // TODO HNED
 // vylepsovaky nahrat, cist
 // googlit klikovou hru
-// #define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // napsat df (ε trik)
 // 	- nejdriv bez nasobnych deti

@@ -359,10 +359,11 @@ static inline void developNode(node_t* node){
 		if (freeK4 > 0)
 			possible = true;
 #endif //NOFREEK4
+*/
 #ifdef HEURISTIC1
-		free[childsN]=freeK4;
+		free[v]=freeK4;
 #endif //HEURISTIC1
-*/		setValue(children[v],fullK4);
+		setValue(children[v],fullK4);
 
 	}
 /*#ifdef NOFREEK4
@@ -371,19 +372,21 @@ static inline void developNode(node_t* node){
 		//printNode(node);
 		setFalse(node);
 	}
-#endif //NOFREEK4
+#endif //NOFREEK4*/
 #ifdef HEURISTIC1
 	//tridi deti aby nejdriv byly ty s vyce moznostmi
-	for (int i = 0; i < childsN; i++){
-		for (int j = i+1; j < childsN; j++){
+	for (int i = 0; i < childrenN; i++){
+		for (int j = i+1; j < childrenN; j++){
 			if (free[i] < free[j]){
 				{int tmp = free[i]; free[i] = free[j]; free[j] = tmp;}
-				{node_t* tmp = childs[i]; childs[i] = childs[j]; childs[j] = tmp;}
+				{node_t* tmp = children[i]; children[i] = children[j]; children[j] = tmp;}
 			}
 		}	
 	}
+/*		for (int i = 0; i < childrenN; i++){
+			printf("%d ",free[i]);
+		} printf("\n");*/
 #endif //HEURISTIC1
-*/
 	for (int v = 0; v < childrenN; v++){ 
 		insertChild(node,children[v]);
 	}
