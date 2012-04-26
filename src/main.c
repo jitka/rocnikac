@@ -10,9 +10,6 @@
 // TODO HNED
 // vylepsovaky nahrat, cist
 // googlit klikovou hru
-// nemit vic stejnych deti
-// 	- trizeni deti v create podle hase
-// 	- zahozeni prebytecnich
 // #define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // napsat df (ε trik)
@@ -58,6 +55,7 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
+// proc je update ancesor tak vysoke? proc nepomohlo mazani?
 
 void printSetting(){
 
@@ -79,6 +77,7 @@ void printSetting(){
 #ifdef NORM2
 	printf("NORM2\n");
 #endif
+	printf("TURNDDELETECHILDRENST %d\n",TURNDDELETECHILDRENST);
 	printf("---------------------------------------------------------\n");
 }
 

@@ -326,6 +326,27 @@ static inline void developNode(node_t* node){
 				children[childrenN++] = createChild(node,i,j);
 	//maze dvojcata	
 	if (nodeTurn(node) < TURNDDELETECHILDRENST) {
+		for (int i = 0; i < childrenN; i++){
+			for (int j = i+1; j < childrenN; j++){
+				if (nodeHash(children[i]) < nodeHash(children[j]) ){
+					node_t * tmp = children[i];
+					children[i] = children[j];
+					children[j] = tmp;
+				}
+			}
+		}
+		u32 last = 0;
+		int where = 0;
+		for (int i = 0; i < childrenN; i++){
+			if (nodeHash(children[i]) != last){
+				children[where++]=children[i];
+				last = nodeHash(children[i]);
+			}
+		} 
+		childrenN = where;
+/*		for (int i = 0; i < childrenN; i++){
+			printf("%d ",nodeHash(children[i]));
+		} printf("\n");*/
 	}
 
 	//vyhodnocuje deti	

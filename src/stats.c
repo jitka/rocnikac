@@ -94,13 +94,12 @@ u64 differentNodes(){
 
 void printStats(){
 
-	printf("N %d\n",N);
 	printf("interace %d\n",interations_stats);
 	//histogramPrint( &all_stats.setFin );
 	//histogramPrint( &all_stats.setDel );
 	//histogramPrint( &updateStats );
 	//histogramPrint( &selectStats );
-	printf("\n");
+	//printf("\n");
 	printf("%llu, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
 			all_stats.created,
