@@ -96,10 +96,10 @@ void printStats(){
 
 	printf("N %d\n",N);
 	printf("interace %d\n",interations_stats);
-	histogramPrint( &all_stats.setFin );
-	histogramPrint( &all_stats.setDel );
-	histogramPrint( &updateStats );
-	histogramPrint( &selectStats );
+	//histogramPrint( &all_stats.setFin );
+	//histogramPrint( &all_stats.setDel );
+	//histogramPrint( &updateStats );
+	//histogramPrint( &selectStats );
 	printf("\n");
 	printf("%llu, %d; %d; %d; %d;; %d; %d; %d;\n",
 			differentNodes(),
@@ -113,7 +113,7 @@ void printStats(){
 			);
 	printf("tah: moznych; vytvorenych; true; false; threats;; vypocitanych; true; false;\n");
 //	printf("\n");
-	for (int turn = 0; turn <= M; turn++){
+/*	for (int turn = 0; turn <= M; turn++){
 		printf("%d: %llu; %d; %d; %d; %d;; %d; %d; %d; \n",
 				turn,
 				differentNodesOnTurn(turn),
@@ -129,6 +129,7 @@ void printStats(){
 //		histogramPrint( &turn_stats[turn].setDel );
 //		printf("\n");
 	}
+*/
 }
 
 #endif //STATS

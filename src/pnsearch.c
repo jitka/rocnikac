@@ -226,31 +226,20 @@ static inline void setProofAndDisproofNubers(node_t* node){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-static inline void setValue(node_t* node){
-	//zjisti hodnotu hry a vrati kolik volnych K4 pouziva posledni hranu
-	int i = nodeLastEdgeI(node);
-	int j = nodeLastEdgeJ(node);
-	switch (nodeType(node)) {
-	case OR:	
-		//nevyhral prvni hrac?
-		if (testK4(node,i,j,0)){
+static inline void setValue(node_t* node, bool fullK4){
+	if (fullK4){
+		switch (nodeType(node)) {
+		case OR:	
 			setTrue(node);
-		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
+			break;
+		case AND: 
 			setFalse(node);
-		} else {
-			setUnknown(node);
+			break;
 		}
-		break;
-	case AND: 
-		//neprohral prvni hrac?
-		if (testK4(node,i,j,1)){
-			setFalse(node);
-		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
-			setFalse(node);
-		} else {
-			setUnknown(node);
-		}
-		break;
+	} else if ( nodeTurn(node) == (N*(N-1))/2 ){
+		setFalse(node);
+	} else {
+		setUnknown(node);
 	}
 }
 static inline node_t* createChild(node_t* node, int i, int j){
@@ -339,9 +328,9 @@ static inline void developNode(node_t* node){
 	//vyhodnocuje deti	
 	for (int v = 0; v < childrenN; v++){
 		int freeK4;
-		bool fullK4;
-//		testK4andFreeK4(children[v], i, j, c, &freeK4, &fullK4);
-/*
+		bool fullK4; 
+		testK4andFreeK4(children[v], &freeK4, &fullK4);
+/* 6446
 #ifdef NOFREEK4
 		if (freeK4 > 0)
 			possible = true;
@@ -349,7 +338,7 @@ static inline void developNode(node_t* node){
 #ifdef HEURISTIC1
 		free[childsN]=freeK4;
 #endif //HEURISTIC1
-*/		setValue(children[v]);
+*/		setValue(children[v],fullK4);
 
 	}
 /*#ifdef NOFREEK4

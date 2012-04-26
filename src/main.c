@@ -10,8 +10,6 @@
 // TODO HNED
 // vylepsovaky nahrat, cist
 // googlit klikovou hru
-// prepsani develop
-//      - zbytecne testK4
 // nemit vic stejnych deti
 // 	- prepinac DELETECHILDRENS
 // 	- prepinac TURNDDELETECHILDRENST //do kud se to maze

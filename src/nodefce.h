@@ -322,9 +322,10 @@ static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
 			for (int t = s+1; t < N; t++)
 				if ((tr & (1<<t)) && t != i && t !=j ){
 					//staci overit jestli mezi s a t vede hrana
-					if ( nodeColorEdgeExist( node, s, t, color) )
+					if ( nodeColorEdgeExist( node, s, t, color) ){
 						*fullK4 = true;
 						return;
+					}
 
 				}
 	*fullK4 = false;
