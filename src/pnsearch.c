@@ -354,25 +354,24 @@ static inline void developNode(node_t* node){
 		int freeK4;
 		bool fullK4; 
 		testK4andFreeK4(children[v], &freeK4, &fullK4);
-/* 
+ 
 #ifdef NOFREEK4
 		if (freeK4 > 0)
 			possible = true;
 #endif //NOFREEK4
-*/
 #ifdef HEURISTIC1
 		free[v]=freeK4;
 #endif //HEURISTIC1
 		setValue(children[v],fullK4);
 
 	}
-/*#ifdef NOFREEK4
+#ifdef NOFREEK4
 	if (possible == false && nodeType(node)==OR ){
-		//printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
-		//printNode(node);
-		setFalse(node);
+	//	printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+	//	printNode(node);
+		//setFalse(node);
 	}
-#endif //NOFREEK4*/
+#endif //NOFREEK4
 #ifdef HEURISTIC1
 	//tridi deti aby nejdriv byly ty s vyce moznostmi
 	for (int i = 0; i < childrenN; i++){
