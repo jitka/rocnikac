@@ -10,33 +10,37 @@
 // TODO HNED
 // vylepsovaky nahrat, cist
 // googlit klikovou hru
+// prepsani develop
+//      - zbytecne testK4
+//      - fuj graphfce
 // nemit vic stejnych deti
-//      - oddelit createchildnrens
-//      - z createchild dat pric  a cache ty dat do expand node
 // 	- prepinac DELETECHILDRENS
+// 	- prepinac TURNDDELETECHILDRENST //do kud se to maze
 // 	- trizeni deti v create podle hase
 // 	- zahozeni prebytecnich
-// 	- prepinac TURNDDELETECHILDRENST //do kud se to maze
-//      - otcu pri vypocitani statiskka
+// otcu pri vypocitani statiskka
+// #define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
+// #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // napsat df (ε trik)
 // 	- nejdriv bez nasobnych deti
 // 	- zarazky
 // 	- nekonecno
 // 	- pri probublani bocnimy otci navrch zastavit
 // 	- hasovaci tabulka
-// testovat jestli ma prvni na alespon jedne hrane alespon 2 volne sousedy jinak false
-// 	- prepinac NOFREEK4
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
 // 	- velikost cache 
-// 	- velikost stomu pocitat s sizeof
+// 	- velikost stomu 
+// 	- pocitat s sizeof
 // updatete jednoho predka vickrat? 
 // 	- do vrcholu psat cislo update
 // 	- kolikrat v tom update tam bylo
 // 	- statistika
+// node - mensi
 //
 // TODO NEKDY
+// hasovaci funkce z graph
 // testovat vsechny binarni veci
 // paralelizace 
 // radit listy podle heuristik
@@ -60,7 +64,6 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
-// gavento hasovani
 
 void printSetting(){
 

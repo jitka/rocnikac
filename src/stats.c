@@ -27,7 +27,9 @@ void statsInit(){
 	}
 }
 
-void statsNewNode(node_t* node,int i,int j){
+void statsNewNode(node_t* node){
+	int i = nodeLastEdgeI(node);
+	int j = nodeLastEdgeJ(node);
 	all_stats.created++;
 	turn_stats[nodeTurn(node)].created++;
 	if (nodeValue(node) == TRUE){

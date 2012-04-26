@@ -5,7 +5,7 @@
 #include "print.h"
 
 
-void norm(node_t* node, int *u, int *v){
+void norm(node_t* node){
 
 	int fce[N];
 	int nodes[N];
@@ -89,13 +89,11 @@ void norm(node_t* node, int *u, int *v){
 		}
 	}
 
-	*u = nodes2[*u];
-	*v = nodes2[*v];
-
 	nodeCopyGraph(node,newNode);
-//	printf("%d %d\n",*u,*v);
-//	printNode(node);
 	free(newNode);
+
+	//prohodi souradnice posledni hrany
+	nodeLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
 #endif
 
 #ifdef DEBUG

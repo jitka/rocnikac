@@ -3,14 +3,14 @@
 
 //pozor spojuju hrany -> pn search se muze zacyklit
 #define MAXPROOF (INT_MAX/1000)
-#define N 6 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define N 7 //funguje pro N 5..8 aby sla matice sousedu ulozit 
 #define M ((N*(N-1))/2) 
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
 #define STATS
-//#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 #define NORM2
+//#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 
 #define CACHE_SIZE (1<<24)

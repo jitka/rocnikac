@@ -43,6 +43,13 @@ static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->graph[color] |= 1ULL<<(i*N+j);
 	node->graph[color] |= 1ULL<<(j*N+i);
 	node->hash ^= hashNumbers[color][i][j];
+	node->last_i = i;
+	node->last_j = j;
+}
+
+static inline void nodeLastEdge(node_t * node, int i, int j){
+	node->last_i = i;
+	node->last_j = j;
 }
 
 static inline int nodeDegree(node_t * node, int i, color c){
@@ -177,7 +184,7 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 	return false;
 }
 
-/*
+
 #ifdef DEBUG
 static inline bool nodeSimetric(node_t * a){
 	for (int u = 0; u < N; u++){
@@ -192,7 +199,23 @@ static inline bool nodeSimetric(node_t * a){
 	}
 	return true;
 }
+
+static inline bool nodeTurnChack(node_t * a){
+	u8 turn = 0;
+	for (int u = 0; u < N; u++){
+		for (int v = u+1; v < N; v++){
+			for (int c = 0; c < 2; c++){
+				if ( nodeColorEdgeExist(a,u,v,c) ){
+					turn++;
+				}
+			}
+		}
+	}
+//	printf("turn %d %d\n",turn,a->turn);
+	return turn == a->turn;
+
+}
 #endif
-*/
+
 
 #endif //GRAPHFECE_H

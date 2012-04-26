@@ -3,6 +3,6 @@
 
 #include "struct.h"
 
-void norm(node_t* node, int *u, int *v);
+void norm(node_t* node);
 
 #endif

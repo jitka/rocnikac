@@ -104,19 +104,37 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #ifdef STATS
 	node->set_stats++;
 #endif //STATS
+	if (nodeHash(node) ==  2138471 ){
+			printf("chyceno\n");
+			printNode(node);
+			if ( ll2Empty( &node->parents) ){
+				printf("nejsou rodice\n");
+			}
+			node_t * parent = ll2FirstNode( &node->parents );
+			printNode(parent);
+			printChildren(node);
+	}
 	if (nodeValue(node) != UNKNOWN){
 #ifdef DEBUG
-		if (nodeProof(node) != 0 && nodeProof(node) != MAXPROOF)
-			perror("au");
+		if (!nodeTurnChack(node)){
+			printf("turn\n");
+			printNode(node);
+			printChildren(node);
+		}
+		if (nodeProof(node) != 0 && nodeProof(node) != MAXPROOF){
+			printf("au set maxproof %d\n",MAXPROOF);
+			nodeTurnChack(node);
+//			printNode(node);
+		}
 		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
-			perror("au");
+			printf("au set");
 #endif //DEBUG
 		return; //TODO tohle by slo odstanit, predek se nemusi updatovat tak mockrat
 	}
 	
 #ifdef DEBUG
 	if (!nodeExpanded(node)){
-		perror("neexpandove");
+		printf("neexpandove\n");
 	}
 #endif //DEBUG
 
@@ -137,14 +155,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				childrenN--;
 				continue;
 			}
-#ifdef DEBUG
-			/*					if ( nodeDisproof(child) + 1000 > MAXPROOF){
-								printf("to uz ma by false %d\n",MAXPROOF);
-								printNode(child);
-								printChildren(child);
-								}
-								*/
-#endif //DEBUG
 			min = MIN(min,nodeProof(child));
 #ifdef WEAK 			
 			max = MAX( max, nodeDisproof(child) );
@@ -216,13 +226,14 @@ static inline void setProofAndDisproofNubers(node_t* node){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-static inline int setValue(node_t* node, int i, int j){
-	//zjisti hodnotu hry a vrati kolik volnych K4 pouziva hranu ij
-	int freeK4;
+static inline void setValue(node_t* node){
+	//zjisti hodnotu hry a vrati kolik volnych K4 pouziva posledni hranu
+	int i = nodeLastEdgeI(node);
+	int j = nodeLastEdgeJ(node);
 	switch (nodeType(node)) {
 	case OR:	
 		//nevyhral prvni hrac?
-		if (testK4andFreeK4(node,i,j,0,&freeK4)){
+		if (testK4(node,i,j,0)){
 			setTrue(node);
 		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
 			setFalse(node);
@@ -232,7 +243,7 @@ static inline int setValue(node_t* node, int i, int j){
 		break;
 	case AND: 
 		//neprohral prvni hrac?
-		if (testK4andFreeK4(node,i,j,1,&freeK4)){
+		if (testK4(node,i,j,1)){
 			setFalse(node);
 		} else if ( nodeTurn(node) == (N*(N-1))/2 ){
 			setFalse(node);
@@ -241,10 +252,8 @@ static inline int setValue(node_t* node, int i, int j){
 		}
 		break;
 	}
-	return freeK4;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
-static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
+static inline node_t* createChild(node_t* node, int i, int j){
 	//vytvori potomka obarvenim hrany i,j
 	
 	//-----vytvorim vrchol
@@ -263,70 +272,96 @@ static inline node_t* createChild(node_t* node, int i, int j, int *freeK4){
 		nodeSetEdge(child,i,j,BLUE);
 		break;
 	}
+	nodeSetExpanded(node,false);
 	
 	//-----znormuju
-	norm(child,&i,&j);
-	//printf("po norm %d %d\n",i,j);
-	//printNode(child);
-
-
-	//-----je v cachy?
-	node_t* n = cacheFind(child);
-	if ( n != NULL ) { //je v cachy?
-		ll2AddNodeEnd( &n->parents, node);
-		nodeDelete(child);
-		return n;
-	} 
-
-	//-----doplnim value
-	*freeK4 = setValue(child,i,j);
-
-#ifdef STATS
-	statsNewNode(child,i,j);
-#endif //STATS
-
-
-	//-----pridam do hry
-	numberOfNodes++;
-	ll2AddNodeEnd( &child->parents, node);
-	cacheInsert(child);
+//	printNode(child);
+	norm(child);
+//	printNode(child);
+//	printf("-----------------------\n");
 	return child;
 
+}
+
+static inline void insertChild(node_t* node, node_t* child){
+	//zapoji vrchol do stromu
+
+	node_t* n = cacheFind(child);
+	if ( n != NULL ) { 
+		//je v cachy
+		ll2AddNodeEnd( &n->parents, node);
+		ll2AddNodeEnd( &node->children, n );
+		nodeDelete(child);
+	} else {
+		//neni v cachy	
+#ifdef STATS
+		statsNewNode(child);
+#endif //STATS
+		numberOfNodes++;
+		ll2AddNodeEnd( &child->parents, node);
+		ll2AddNodeEnd( &node->children, child );
+		cacheInsert(child);
+	if ( ll2Empty( &child->parents) ){
+			printf("nejsou rodice2\n");
+			printNode(node);
+		}
+
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void developNode(node_t* node){
 	//vytvori a ohodnoti potomky
 
+
 #ifdef DEBUG
 	if (nodeExpanded(node))
 		perror("uz je");
 #endif //DEBUG
 
+#ifdef NOFREEK4
 	bool possible = false;
+#endif //NOFREEK4
 #ifdef HEURISTIC1
-	node_t* childs[M];
-	int childsN = 0;
 	int free[M];
 #endif //HEURISTIC1
+
+
+	//vyroby deti a normalizuje
+	node_t* children[M];
+	int childrenN = 0;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
-			if ( ! nodeEdgeExist(node, i, j) ){ 
+			if ( ! nodeEdgeExist(node, i, j) ) 
 				//ij je hrana ktera jeste nema barvu
-				int freeK4 = 0; //kolik ruznych K4 sve barvy muze udelat s pouzitim (i,j)
-				node_t* child =  createChild(node,i,j,&freeK4);
-				if (freeK4 > 0)
-					possible = true;
+				children[childrenN++] = createChild(node,i,j);
+	
+	//vyhodnocuje deti	
+	for (int v = 0; v < childrenN; v++){
+/*	        //testuj K4 lepsi
+#if ((defined NOFREEK4) || (defined HEURISTIC1))	
+		int freeK4 = 1;
+//#else // ((defined NOFREEK4) || (defined HEURISTIC1))	
+/#endif // ((defined NOFREEK4) || (defined HEURISTIC1))	
+#ifdef NOFREEK4
+		if (freeK4 > 0)
+			possible = true;
+#endif //NOFREEK4
 #ifdef HEURISTIC1
-				childs[childsN]=child;
-				free[childsN]=freeK4;
-				childsN++;
-#else //HEURISTIC1
-				ll2AddNodeBegin( &node->children, child );
+		free[childsN]=freeK4;
 #endif //HEURISTIC1
-			}
+*/		setValue(children[v]);
 
+	}
+/*#ifdef NOFREEK4
+	if (possible == false && nodeType(node)==OR ){
+		//printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+		//printNode(node);
+		setFalse(node);
+	}
+#endif //NOFREEK4
 #ifdef HEURISTIC1
+	//tridi deti aby nejdriv byly ty s vyce moznostmi
 	for (int i = 0; i < childsN; i++){
 		for (int j = i+1; j < childsN; j++){
 			if (free[i] < free[j]){
@@ -335,19 +370,37 @@ static inline void developNode(node_t* node){
 			}
 		}	
 	}
-//	for (int v = 0; v < childsN; v++){ printf("%d ",free[v]);} printf("\n");
-	for (int v = 0; v < childsN; v++){ 
-		ll2AddNodeEnd( &node->children, childs[v] );
-	}
 #endif //HEURISTIC1
-	nodeSetExpanded(node,true);
-
-	if (possible == false && nodeType(node)==OR ){
-		//printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
-		//printNode(node);
-		//setFalse(node);
+*/
+	for (int v = 0; v < childrenN; v++){ 
+		insertChild(node,children[v]);
 	}
+	nodeSetExpanded(node,true);
+/*	printNode(node);
+	printChildren(node);
 
+	printf("potomci2 %d: \n",ll2Length(&node->children));
+	ll2FStart(&node->children); 
+	for (node_t* n; (n = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+		printNode(n);
+		if ( ll2Empty( &n->parents) ){
+			printf("nejsou rodice\n");
+			printNode(n);
+		}
+		if (nodeHash(children[v]) ==  2138471 ){
+			printf("chyceno develop %d\n",v);
+			printNode(node);
+			printChildren(node);
+		}
+		if (!nodeTurnChack(children[v])){
+			printf("vytvoren\n");
+			printNode(node);
+			//			printChildren(node);
+		}
+		
+	}
+	printf("konec\n");
+*/
 
 }
 
@@ -466,20 +519,16 @@ nodeValue_t proofNuberSearch(node_t* root){
 		interations_stats++;
 #endif //STATS
 
+//		printf("1\n");
 		selectMostProving();
 		node_t* mostProovingNode = ll2FirstNode(&currentPath);
-#ifdef UNLOOP1 
-		if (oldMostProovingNode == mostProovingNode){
-			printf("au cyklus\n");
-	ll2New(&currentPath);
-	ll2AddNodeBegin(&currentPath,root);
-		}
-		oldMostProovingNode = mostProovingNode;
-#endif
 		
+//		printf("2\n");
 		developNode(mostProovingNode);
 
+//		printf("3\n");
 		updateAncestors(); 
+//		printf("4\n");
 	
 #ifdef DEBUG
 		counter++;
@@ -488,7 +537,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 		if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u %u\n",nodeHash(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
-			printNode(mostProovingNode);
+			//printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChildren(mostProovingNode);

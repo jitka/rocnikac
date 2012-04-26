@@ -50,7 +50,7 @@ extern histogram_t selectStats;
 
 void printStats();
 void statsInit();
-void statsNewNode(node_t* node, int i, int j);
+void statsNewNode(node_t* node);
 void histogramAdd( histogram_t* h, int value );
 
 #endif //STATS

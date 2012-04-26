@@ -136,3 +136,12 @@ void ll2Delete( ll2_t* ll, node_t* node){
 #endif //DEBUG
 }
 
+int ll2Length( ll2_t* ll){
+	ll2FStart(ll);
+	int length = 0;
+	for (node_t* n; (n = ll2FGet(ll)) != NULL; ll2FNext(ll)){
+		length++;
+	}
+	return length;
+
+}
