@@ -324,13 +324,16 @@ static inline void developNode(node_t* node){
 			if ( ! nodeEdgeExist(node, i, j) ) 
 				//ij je hrana ktera jeste nema barvu
 				children[childrenN++] = createChild(node,i,j);
-	
+	//maze dvojcata	
+	if (nodeTurn(node) < TURNDDELETECHILDRENST) {
+	}
+
 	//vyhodnocuje deti	
 	for (int v = 0; v < childrenN; v++){
 		int freeK4;
 		bool fullK4; 
 		testK4andFreeK4(children[v], &freeK4, &fullK4);
-/* 6446
+/* 
 #ifdef NOFREEK4
 		if (freeK4 > 0)
 			possible = true;

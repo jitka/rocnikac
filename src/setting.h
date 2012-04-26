@@ -12,6 +12,7 @@
 #define NORM2
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
+#define TURNDDELETECHILDRENST 3 //do ktereho tahu se mazou vicenasobne deti
 
 #define CACHE_SIZE (1<<24)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 

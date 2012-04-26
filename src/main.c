@@ -11,11 +11,8 @@
 // vylepsovaky nahrat, cist
 // googlit klikovou hru
 // nemit vic stejnych deti
-// 	- prepinac DELETECHILDRENS
-// 	- prepinac TURNDDELETECHILDRENST //do kud se to maze
 // 	- trizeni deti v create podle hase
 // 	- zahozeni prebytecnich
-// otcu pri vypocitani statiskka
 // #define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic NEFUNGUJE
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // napsat df (ε trik)
