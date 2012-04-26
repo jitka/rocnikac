@@ -29,7 +29,7 @@ static inline int nodeDegree(node_t * node, int i, color c);
 
 static inline void nodeChangeNodes(node_t * node, int a, int b);
 static inline bool testK4(node_t * node, int i, int j, color color);
-static inline void testK4andFreeK4(node_t * node, int i, int j, color color, int * freeK4, bool * fullK4);
+static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4);
 static inline bool nodeThreat(node_t * node, int i, int j, color color);
 #ifdef DEBUG
 //static inline bool nodeSimetric(node_t * a);
@@ -289,14 +289,15 @@ static inline bool testK4(node_t * node, int i, int j, color color){
 	return false;
 }
 
-static inline void testK4andFreeK4(node_t * node, int i, int j, color color, int * freeK4, bool * fullK4){
+static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
 	//otestuje jestli po pridani hrany ij nevznikla K4
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
 
 	*freeK4=0;
-//	int i = nodeLastEdgeI(node_t *node);
-//	int j = nodeLastEdgeJ(node_t *node);
+	int i = nodeLastEdgeI(node);
+	int j = nodeLastEdgeJ(node);
+	color color = (nodeTurn(node) % 2 == 1) ? RED : BLUE; //kterou barvou byl nakreslet posledni tah
 	
 	//trojuhelniky kam nevede souperova hrana
 	tr = (~nodeNeighbour(node,i,otherColor(color))) & (~nodeNeighbour(node,j,otherColor(color))); 

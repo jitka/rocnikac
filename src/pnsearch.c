@@ -340,7 +340,6 @@ static inline void developNode(node_t* node){
 	for (int v = 0; v < childrenN; v++){
 		int freeK4;
 		bool fullK4;
-		color c = (nodeTurn(node) % 2 == 0) ? RED : BLUE;	
 //		testK4andFreeK4(children[v], i, j, c, &freeK4, &fullK4);
 /*
 #ifdef NOFREEK4
