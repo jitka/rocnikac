@@ -16,7 +16,7 @@
 // 	- zarazky
 // 	- nekonecno
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- hasovaci tabulka
+// 	- hasovaci tabulka misto stromu
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
@@ -54,7 +54,10 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
+// tema+co vsechno napsat
 // proc je update ancesor tak vysoke? proc nepomohlo mazani?
+// funguje df-PN na vice otcu odrekurzene?
+// klikova hra - preklad
 
 void printSetting(){
 
