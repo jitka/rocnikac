@@ -338,11 +338,11 @@ static inline void developNode(node_t* node){
 	
 	//vyhodnocuje deti	
 	for (int v = 0; v < childrenN; v++){
-/*	        //testuj K4 lepsi
-#if ((defined NOFREEK4) || (defined HEURISTIC1))	
-		int freeK4 = 1;
-//#else // ((defined NOFREEK4) || (defined HEURISTIC1))	
-/#endif // ((defined NOFREEK4) || (defined HEURISTIC1))	
+		int freeK4;
+		bool fullK4;
+		color c = (nodeTurn(node) % 2 == 0) ? RED : BLUE;	
+//		testK4andFreeK4(children[v], i, j, c, &freeK4, &fullK4);
+/*
 #ifdef NOFREEK4
 		if (freeK4 > 0)
 			possible = true;
@@ -376,31 +376,7 @@ static inline void developNode(node_t* node){
 		insertChild(node,children[v]);
 	}
 	nodeSetExpanded(node,true);
-/*	printNode(node);
-	printChildren(node);
 
-	printf("potomci2 %d: \n",ll2Length(&node->children));
-	ll2FStart(&node->children); 
-	for (node_t* n; (n = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
-		printNode(n);
-		if ( ll2Empty( &n->parents) ){
-			printf("nejsou rodice\n");
-			printNode(n);
-		}
-		if (nodeHash(children[v]) ==  2138471 ){
-			printf("chyceno develop %d\n",v);
-			printNode(node);
-			printChildren(node);
-		}
-		if (!nodeTurnChack(children[v])){
-			printf("vytvoren\n");
-			printNode(node);
-			//			printChildren(node);
-		}
-		
-	}
-	printf("konec\n");
-*/
 
 }
 

@@ -12,7 +12,6 @@
 // googlit klikovou hru
 // prepsani develop
 //      - zbytecne testK4
-//      - fuj graphfce
 // nemit vic stejnych deti
 // 	- prepinac DELETECHILDRENS
 // 	- prepinac TURNDDELETECHILDRENST //do kud se to maze
