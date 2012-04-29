@@ -8,28 +8,41 @@
 #include "stats.h"
 
 // TODO HNED
-// vylepsovaky nahrat, cist
-// googlit klikovou hru
-// #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
+// obsah
+// zeptat Pavel, stroje
+// existuje knihovna na zdilenou cache? google, Tom, Brum, Pavel
+// googlit klikovou hru clique game, hight symetri, low branching factor
+// oprofile
+// nekonecno !!!
 // napsat df (ε trik)
-// 	- nejdriv bez nasobnych deti
-// 	- zarazky
-// 	- nekonecno
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- hasovaci tabulka misto stromu
+// 	- selectMost..2
+// 	- zarazky
+// 	- df
+// 	- strom do pole
+// 	- graph do cache
+// 	- davat node tam kde rika hash
+// 	- pocitat s tim ze neni otec/syn
+// 	- nevyhazovat vrcholy z current path
+// 	- vyhazovat vrcholy kdyz dojde pole
+// 	- N 8
+// #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
+//
+//
+// TODO NEKDY
+// heuristika misto 1 1
+// node - mensi
+// updatete jednoho predka vickrat? 
+// 	- do vrcholu psat cislo update
+// 	- kolikrat v tom update tam bylo
+// 	- statistika
+// 	- na kazdem levelu vyhodit duplicity?
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
 // 	- velikost cache 
 // 	- velikost stomu 
 // 	- pocitat s sizeof
-// updatete jednoho predka vickrat? 
-// 	- do vrcholu psat cislo update
-// 	- kolikrat v tom update tam bylo
-// 	- statistika
-// node - mensi
-//
-// TODO NEKDY
 // hasovaci funkce z graph
 // testovat vsechny binarni veci
 // paralelizace 
@@ -39,7 +52,6 @@
 // absolutni norm = vyber reprezentanta, knihovna
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
 // pri vkladani co cache zkusit permutovat vrcholy se stejnou ohodnocovacich fci
-// oprofile
 // davat dohromady vysledky z ruznych pozic
 // cistejsi predavani stavu mezi haskelem a timhle
 //

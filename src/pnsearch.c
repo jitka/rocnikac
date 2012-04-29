@@ -10,7 +10,8 @@
 
 // or node... na tahu je prvni hrac
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
-ll2_t currentPath;
+node_t* currentPath[M];
+int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 
 void deleteChildren(node_t* node);
 
@@ -403,7 +404,7 @@ static inline void updateAncestors(){ //po hladinach
 
 	ll2_t ancestors;
        	ll2New(&ancestors);
-	ll2AddNodeEnd( &ancestors, ll2FirstNode(&currentPath));
+	ll2AddNodeEnd( &ancestors, currentPath[currentNode]);
 	while ( ! ll2Empty(&ancestors) ){
 
 #ifdef STATS
@@ -425,11 +426,7 @@ static inline void updateAncestors(){ //po hladinach
 		ll2AddNodesEnd( &ancestors, &node->parents);
 
 		//jit vzhuru po linii pokud nejsem na konci
-		node_t* previousNode = ll2FirstNode(&currentPath);
-		ll2DelFirst(&currentPath);
-		if ( ll2FirstNode(&currentPath) == NULL){
-			ll2AddNodeBegin(&currentPath,previousNode);
-		}
+		currentNode = MAX( 0, currentNode-1 );
 
 	}
 #ifdef STATS
@@ -439,7 +436,7 @@ static inline void updateAncestors(){ //po hladinach
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void selectMostProving(){
-	node_t * node = ll2FirstNode(&currentPath);
+	node_t * node = currentPath[currentNode];
 #ifdef STATS
 	int select = 0;
 #endif //STATS
@@ -484,7 +481,7 @@ static inline void selectMostProving(){
 			printChildren(node);
 		}
 #endif //DEBUG
-		ll2AddNodeBegin(&currentPath,node);
+		currentPath[++currentNode] = node;
 	}
 #ifdef STATS
 	histogramAdd( &selectStats, select);
@@ -495,8 +492,9 @@ static inline void selectMostProving(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 nodeValue_t proofNuberSearch(node_t* root){
 
-	ll2New(&currentPath);
-	ll2AddNodeBegin(&currentPath,root);
+	
+	currentPath[0] = root;
+	currentNode = 0;
 
 #ifdef DEBUG
 	int counter = 0;
@@ -511,7 +509,7 @@ nodeValue_t proofNuberSearch(node_t* root){
 
 //		printf("1\n");
 		selectMostProving();
-		node_t* mostProovingNode = ll2FirstNode(&currentPath);
+		node_t* mostProovingNode = currentPath[currentNode];
 		
 //		printf("2\n");
 		developNode(mostProovingNode);
