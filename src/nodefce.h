@@ -63,6 +63,9 @@ static inline u8 nodeLastEdgeJ(node_t *node);
 #ifdef UPDATE2
 static inline void nodeUpdate(node_t * node, u32 update);
 static inline bool nodeUpdated(node_t * node, u32 update);
+static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof);
+static inline u32 nodeThProof(node_t * node);
+static inline u32 nodeThDisproof(node_t * node);
 #endif //UPDATE2
 
 //-------------------------------------------------------------
@@ -169,6 +172,7 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 	node->disproof = MIN( disproof, MAXPROOF);
 }
 
+
 #ifdef UPDATE2
 static inline void nodeUpdate(node_t * node, u32 update){
 #ifdef DEBUG
@@ -177,10 +181,26 @@ static inline void nodeUpdate(node_t * node, u32 update){
 #endif //DEBUG
 	node->update = update;
 }
+
 static inline bool nodeUpdated(node_t * node, u32 update){
 	return node->update == update;
 }
+
+static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof){
+	node->thProof = thProof;
+	node->thDisproof = thDisproof;
+}
+
+static inline u32 nodeThProof(node_t * node){
+	return node->thProof;
+}
+
+static inline u32 nodeThDisproof(node_t * node){
+	return node->thDisproof;
+}
 #endif //UPDATE2
+
+
 //delete
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
 #ifdef DEBUG

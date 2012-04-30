@@ -52,6 +52,8 @@ struct node{
 
 #ifdef UPDATE2
 	u32 update;
+	u32 thProof; //zarazky
+	u32 thDisproof;
 #endif //UPDATE2
 	u64 graph[2];
 };
