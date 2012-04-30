@@ -60,6 +60,11 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof);
 static inline u8 nodeLastEdgeI(node_t *node);
 static inline u8 nodeLastEdgeJ(node_t *node);
 
+#ifdef UPDATE2
+static inline void nodeUpdate(node_t * node, u32 update);
+static inline bool nodeUpdated(node_t * node, u32 update);
+#endif //UPDATE2
+
 //-------------------------------------------------------------
 static inline u8 nodeLastEdgeI(node_t *node){
 #ifdef DEBUG
@@ -153,8 +158,6 @@ static inline u32 nodeProof(node_t * node){
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, u32 proof){
-#ifdef DEBUG
-#endif //DEBUG
 	node->proof2 = MIN( proof, MAXPROOF);
 }
 
@@ -166,6 +169,18 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 	node->disproof = MIN( disproof, MAXPROOF);
 }
 
+#ifdef UPDATE2
+static inline void nodeUpdate(node_t * node, u32 update){
+#ifdef DEBUG
+	if (update > MAXPROOF)
+		perror("moc update, pretece");
+#endif //DEBUG
+	node->update = update;
+}
+static inline bool nodeUpdated(node_t * node, u32 update){
+	return node->update == update;
+}
+#endif //UPDATE2
 //delete
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
 #ifdef DEBUG
@@ -190,6 +205,9 @@ static inline node_t* nodeNew(){
 #ifdef STATS
 	node->set_stats = 0;
 #endif //STATS
+#ifdef UPDATE2
+	node->update = 0;
+#endif //UPDATE2
 
 	nodeSetExpanded( node, false);
 	return node;

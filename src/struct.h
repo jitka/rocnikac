@@ -50,6 +50,9 @@ struct node{
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
 #endif //stats
 
+#ifdef UPDATE2
+	u32 update;
+#endif //UPDATE2
 	u64 graph[2];
 };
 

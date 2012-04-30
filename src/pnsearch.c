@@ -12,6 +12,7 @@
 int numberOfNodes = 1; //abych vedela kolik zeru pameti
 node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
+u32 updateN = 0; //kolikaty probehl update
 
 void deleteChildren(node_t* node);
 
@@ -399,19 +400,33 @@ static inline void developNode(node_t* node){
 static inline void updateAncestors(){ //po hladinach
 
 #ifdef STATS
-	int update = 0;
+	int updateS = 0;
 #endif //STATS
+#ifdef UPDATE2
+	updateN++; //kolikaty probyha update
+#endif //UPDATE2
 
 	ll2_t ancestors;
        	ll2New(&ancestors);
 	ll2AddNodeEnd( &ancestors, currentPath[currentNode]);
+//	printf("%d: ",nodeTurn(currentPath[currentNode]));
+
 	while ( ! ll2Empty(&ancestors) ){
 
-#ifdef STATS
-		update++;
-#endif //STATS
 		node_t* node = ll2FirstNode(&ancestors);
 		ll2DelFirst(&ancestors);
+#ifdef UPDATE2
+		if (nodeUpdated(node, updateN))
+			continue;
+		nodeUpdate(node, updateN);
+#endif //UPDATE2
+#ifdef STATS
+		updateS++;
+#endif //STATS
+
+		if ( compareGraph(node, currentPath[nodeTurn(node)]) ){
+			currentNode = MIN (currentNode, nodeTurn(node) );
+		}
 
 		u32 oldProof = nodeProof(node);
 		u32 oldDisproof = nodeDisproof(node);
@@ -425,12 +440,10 @@ static inline void updateAncestors(){ //po hladinach
 		//pridat vsechny predky co je potreba updatetovat
 		ll2AddNodesEnd( &ancestors, &node->parents);
 
-		//jit vzhuru po linii pokud nejsem na konci
-		currentNode = MAX( 0, currentNode-1 );
-
 	}
+//	printf("\n");
 #ifdef STATS
-	histogramAdd( &updateStats, update);
+	histogramAdd( &updateStats, updateS);
 //	printf("update %d\n",update);
 #endif //STATS
 }

@@ -47,8 +47,6 @@ void statsNewNode(node_t* node){
 	else
 		color = RED;
 	if (nodeThreat(node, i, j, color)){
-		if (nodeTurn(node) == 7)
-			printNode(node);
 		all_stats.threat++;
 		turn_stats[nodeTurn(node)].threat++;
 	}
@@ -97,7 +95,7 @@ void printStats(){
 	printf("interace %d\n",interations_stats);
 	//histogramPrint( &all_stats.setFin );
 	//histogramPrint( &all_stats.setDel );
-	//histogramPrint( &updateStats );
+	histogramPrint( &updateStats );
 	//histogramPrint( &selectStats );
 	//printf("\n");
 	printf("%llu, %d; %d; %d; %d;; %d; %d; %d;\n",
