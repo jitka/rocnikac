@@ -502,6 +502,63 @@ static inline void selectMostProving(){
 #endif //STATS
 }
 
+static inline node_t* selectMostProving2(node_t* node, u32* bestProof, u32* bestDisproof, u32* secondProof, u32* secondDisproof){
+	//vybere ze synu toho nevhodnejsiho 
+	
+#ifdef DEBUG
+	if ( !nodeExpanded(node) )
+		printf("au\n");
+	if (nodeValue(node)!=UNKNOWN){
+		printf("tady ne\n");
+		printNode(node);
+	}
+	if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
+		printf("tady nee\n");
+	}
+#endif //DEBUG
+
+	node_t* best;
+
+	switch (nodeType(node)) {
+	case OR: 
+		*bestProof = MAXPROOF;
+		*bestDisproof = 0;
+		*secondProof = MAXPROOF;
+		*secondDisproof = 0;
+		ll2FStart(&node->children); 
+		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+			if ( nodeProof(child) < *bestProof ){
+				*bestProof = nodeProof(child);
+				*bestDisproof = nodeDisproof(child);
+				best = child;
+			} else if ( nodeProof(child) < *secondProof ) {
+				*secondProof = nodeProof(child);
+				*secondDisproof = nodeDisproof(child);
+			}
+		}
+		break;
+	case AND: 
+		*bestProof = 0;
+		*bestDisproof = MAXPROOF;
+		*secondProof = 0;
+		*secondDisproof = MAXPROOF;
+		ll2FStart(&node->children); 
+		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+			if ( nodeDisproof(child) < *bestDisproof ){
+				*bestProof = nodeProof(child);
+				*bestDisproof = nodeDisproof(child);
+				best = child;
+			} else if ( nodeDisproof(child) < *secondDisproof ) {
+				*secondProof = nodeProof(child);
+				*secondDisproof = nodeDisproof(child);
+			}
+		}
+		break;
+	}
+
+	return best;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 nodeValue_t proofNuberSearch(node_t* root){
 

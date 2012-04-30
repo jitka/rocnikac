@@ -14,10 +14,8 @@
 // googlit klikovou hru clique game, hight symetri, low branching factor
 // oprofile
 // nekonecno !!!
-// updateAncesor bez nasobnosti
 // napsat df (ε trik)
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- selectMost..2
 // 	- zarazky
 // 	- df
 // 	- strom do pole
