@@ -146,6 +146,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	u32 max = 0;
 #else //WEAK
 	u32 sum = 0;
+	bool infinity = false;
 #endif //WEAK
 	switch (nodeType(node)) {
 	case OR:
@@ -162,17 +163,28 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			max = MAX( max, nodeDisproof(child) );
 #else //WEAK
 			sum += nodeDisproof(child);
+			if (nodeDisproof(child) == MAXPROOF)
+				infinity = true;
 #endif //WEAK
 			ll2FNext(&node->children);
 		}
 		nodeSetProof( node, min);
 #ifdef WEAK
-		if (childrenN == 0)
+		if (childrenN == 0){
 			nodeSetDisproof( node, 0);
-		else 
+		} else if (max == MAXPROOF) {
+			nodeSetDisproof( node, MAXPROOF);
+		} else { 
 			nodeSetDisproof( node, max + childrenN - 1);
+		}
 #else //WEAK
-		nodeSetDisproof( node, sum);
+		if (infinity) {
+			nodeSetDisproof( node, MAXPROOF);
+		} else if (sum >= MAXPROOF) {
+			printf("dosazeno nekonecna\n");
+		} else {
+			nodeSetDisproof( node, sum);
+		}
 #endif //WEAK
 #ifdef DEBUG
 		if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
@@ -195,18 +207,29 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			max = MAX(max,nodeProof(child));
 #else //WEAK
 			sum += nodeProof(child);
+			if (nodeDisproof(child) == MAXPROOF)
+				infinity = true;
 #endif //WEAK
 			min = MIN( min, nodeDisproof(child) );
 
 			ll2FNext(&node->children);
 		}
 #ifdef WEAK
-		if (childrenN == 0)
+		if (childrenN == 0){
 			nodeSetProof( node, 0 );
-		else 
+		} else if (max == MAXPROOF) {
+			nodeSetProof( node, MAXPROOF);
+		} else { 
 			nodeSetProof( node, max + childrenN - 1 );
+		}
 #else //WEAK
-		nodeSetProof( node, sum);
+		if (infinity) {
+			nodeSetProof( node, MAXPROOF);
+		} else if (sum >= MAXPROOF) {
+			printf("dosazeno nekonecna\n");
+		} else {
+			nodeSetProof( node, sum);
+		}
 #endif //WEAK
 		nodeSetDisproof( node, min);
 
@@ -647,7 +670,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 		if ( !nodeExpanded(node) )
 			developNode(node);
 		setProofAndDisproofNubers(node);
-		updateAncestors(node);
+//		updateAncestors(node);
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 			currentNode--;

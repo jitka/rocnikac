@@ -161,7 +161,11 @@ static inline u32 nodeProof(node_t * node){
 	return node->proof2;
 }
 static inline void nodeSetProof(node_t * node, u32 proof){
-	node->proof2 = MIN( proof, MAXPROOF);
+#ifdef DEBUG
+	if (proof > MAXPROOF)
+		perror("velky proof");
+#endif //DEBUG
+	node->proof2 = proof;
 }
 
 //disproof
@@ -169,7 +173,11 @@ static inline u32 nodeDisproof(node_t * node){
 	return node->disproof;
 }
 static inline void nodeSetDisproof(node_t * node, u32 disproof){
-	node->disproof = MIN( disproof, MAXPROOF);
+#ifdef DEBUG
+	if (disproof > MAXPROOF)
+		perror("velky disproof");
+#endif //DEBUG
+	node->disproof = disproof;
 }
 
 
