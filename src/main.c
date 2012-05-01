@@ -16,8 +16,6 @@
 // nekonecno !!!
 // napsat df (ε trik)
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- zarazky
-// 	- df
 // 	- strom do pole
 // 	- graph do cache
 // 	- davat node tam kde rika hash
@@ -25,6 +23,7 @@
 // 	- nevyhazovat vrcholy z current path
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8
+// 	- zkratit select2
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 //
 //
@@ -104,7 +103,7 @@ int main(){
 	printSetting();
 
 	node_t* root = getRoot();
-	nodeValue_t value = proofNuberSearch(root);
+	nodeValue_t value = proofNumberSearch(root);
 	printValue(value);
 
 /*

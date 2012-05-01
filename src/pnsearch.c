@@ -20,7 +20,7 @@ void deleteChildren(node_t* node);
 void deleteChild(node_t* node, node_t* child){
 	ll2Delete( &node->children, child );
 	ll2Delete( &child->parents, node);
-
+/*
 	if ( ll2Empty( &child->parents ) ){
 #ifdef STATS
 		histogramAdd ( &turn_stats[nodeTurn(child)].setDel, child->set_stats);
@@ -31,7 +31,7 @@ void deleteChild(node_t* node, node_t* child){
 		nodeDelete(child);
 		numberOfNodes--;
 	}
-
+*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -502,8 +502,10 @@ static inline void selectMostProving(){
 #endif //STATS
 }
 
-static inline node_t* selectMostProving2(node_t* node, u32* bestProof, u32* bestDisproof, u32* secondProof, u32* secondDisproof){
+static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* secondDisproof){
 	//vybere ze synu toho nevhodnejsiho 
+	node_t* best;
+	u32 bestProof; u32 bestDisproof; 
 	
 #ifdef DEBUG
 	if ( !nodeExpanded(node) )
@@ -515,22 +517,24 @@ static inline node_t* selectMostProving2(node_t* node, u32* bestProof, u32* best
 	if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
 		printf("tady nee\n");
 	}
+	if (ll2Empty(&node->children))
+		printf("nejou deti\n");
+	best = ll2FirstNode(&node->children);
 #endif //DEBUG
-
-	node_t* best;
 
 	switch (nodeType(node)) {
 	case OR: 
-		*bestProof = MAXPROOF;
-		*bestDisproof = 0;
+		bestProof = MAXPROOF;
+		bestDisproof = 0;
 		*secondProof = MAXPROOF;
 		*secondDisproof = 0;
 		ll2FStart(&node->children); 
 		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
-			if ( nodeProof(child) < *bestProof ){
-				*bestProof = nodeProof(child);
-				*bestDisproof = nodeDisproof(child);
+			if ( nodeProof(child) < bestProof ){
+				bestProof = nodeProof(child);
+				bestDisproof = nodeDisproof(child);
 				best = child;
+			} else if ( nodeProof(child) == bestProof ){
 			} else if ( nodeProof(child) < *secondProof ) {
 				*secondProof = nodeProof(child);
 				*secondDisproof = nodeDisproof(child);
@@ -538,16 +542,17 @@ static inline node_t* selectMostProving2(node_t* node, u32* bestProof, u32* best
 		}
 		break;
 	case AND: 
-		*bestProof = 0;
-		*bestDisproof = MAXPROOF;
+		bestProof = 0;
+		bestDisproof = MAXPROOF;
 		*secondProof = 0;
 		*secondDisproof = MAXPROOF;
 		ll2FStart(&node->children); 
 		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
-			if ( nodeDisproof(child) < *bestDisproof ){
-				*bestProof = nodeProof(child);
-				*bestDisproof = nodeDisproof(child);
+			if ( nodeDisproof(child) < bestDisproof ){
+				bestProof = nodeProof(child);
+				bestDisproof = nodeDisproof(child);
 				best = child;
+			} else if ( nodeDisproof(child) == bestDisproof ){
 			} else if ( nodeDisproof(child) < *secondDisproof ) {
 				*secondProof = nodeProof(child);
 				*secondDisproof = nodeDisproof(child);
@@ -560,7 +565,8 @@ static inline node_t* selectMostProving2(node_t* node, u32* bestProof, u32* best
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-nodeValue_t proofNuberSearch(node_t* root){
+#ifndef UPDATE2
+nodeValue_t proofNumberSearch(node_t* root){
 
 	
 	currentPath[0] = root;
@@ -613,3 +619,60 @@ nodeValue_t proofNuberSearch(node_t* root){
 	return nodeValue(root);
 }
 
+#else  //UPDATE2
+
+nodeValue_t proofNumberSearch(node_t* root){
+
+	
+	currentPath[0] = root;
+	currentNode = 0;
+
+	nodeSetTh(root,MAXPROOF,MAXPROOF);
+	
+
+	while (nodeValue(root) == UNKNOWN) {
+		node_t * node = currentPath[currentNode];
+#ifdef DEBUG
+		if (false){
+			printf("cN %d\n",currentNode);
+			printf("th %d %d p/d %d %d\n",nodeThProof(node),nodeThDisproof(node),nodeProof(node),nodeDisproof(node));
+			printNode(node);
+		}
+#endif //DEBUG
+		
+		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+			currentNode--;
+			continue;
+		}
+		if ( !nodeExpanded(node) )
+			developNode(node);
+		setProofAndDisproofNubers(node);
+		updateAncestors(node);
+
+		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+			currentNode--;
+			continue;
+		}
+	
+		u32 secondProof; u32 secondDisproof;
+		node_t * child = selectMostProving2(node,&secondProof,&secondDisproof);
+
+		if (nodeType(child) == OR){
+			nodeSetTh( 	child, 
+					nodeThProof(node) - nodeProof(node) + nodeProof(child),
+					MIN( nodeThDisproof(node), secondDisproof )
+				 );
+		} else {
+			nodeSetTh( 	child, 
+					MIN( nodeThProof(node), secondProof ),
+					nodeThDisproof(node) - nodeDisproof(node) + nodeDisproof(child)
+				 );
+		}
+		
+		currentNode++;
+		currentPath[currentNode] = child;
+	}
+
+	return nodeValue(root);
+}
+#endif  //UPDATE2

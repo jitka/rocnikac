@@ -3,6 +3,6 @@
 
 #include "struct.h"
 
-nodeValue_t proofNuberSearch(node_t* node);
+nodeValue_t proofNumberSearch(node_t* node);
 
 #endif
