@@ -17,14 +17,15 @@
 // oprofile
 // napsat df (ε trik)
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- strom do pole
-// 	- graph do cache
-// 	- davat node tam kde rika hash
+// 	- deti/otcove do pole ukazatel = struktura
+// 	- strom do pole, cache
 // 	- pocitat s tim ze neni otec/syn
-// 	- nevyhazovat vrcholy z current path
+// 	- nevyhazovat vrcholy z current path - nejaky indikacny bit
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8
 // 	- zkratit select2
+// 	- smazat ll2
+// 	- graph_t do node_t
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 //
 //

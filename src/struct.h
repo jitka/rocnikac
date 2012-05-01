@@ -26,6 +26,11 @@ typedef struct {
 	ll_t * current;
 } ll2_t;
 
+typedef struct {
+	u64 graph[2];
+	u32 hash;
+} graph_t;
+	
 struct node{
 	u32 proof2;
 	u32 disproof;
