@@ -51,6 +51,9 @@ struct node{
 	ll2_t parents;
 	ll2_t children;
 
+	u8 childrenN;
+	graph_t * children2;
+
 #ifdef STATS
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
 #endif //stats

@@ -14,8 +14,6 @@ node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
 
-void deleteChildren(node_t* node);
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void deleteChild(node_t* node, node_t* child){
 	ll2Delete( &node->children, child );
@@ -33,24 +31,11 @@ void deleteChild(node_t* node, node_t* child){
 	}
 */
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-void deleteChildren(node_t* node){
-	if (nodeExpanded(node)){	
-		while ( ! ll2Empty(&node->children) ){
-			node_t* child = ll2FirstNode(&node->children);
-			deleteChild( node, child);
-		}
-		nodeSetExpanded(node,false);
-	}
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node){
 	nodeSetValue(node, TRUE);
 	nodeSetProof(node,0);
 	nodeSetDisproof(node,MAXPROOF);
-	deleteChildren(node);
 #ifdef STATS
 	all_stats.finished++;
 	turn_stats[nodeTurn(node)].finished++;
@@ -60,12 +45,6 @@ static inline void setTrue(node_t* node){
 	histogramAdd ( &all_stats.setFin, s);
 	histogramAdd ( &turn_stats[nodeTurn(node)].setFin, s);
 #endif //STATS
-
-#ifdef DEBUG
-	if (nodeExpanded(node))
-		perror("au1");
-#endif //DEBUG
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +52,6 @@ static inline void setFalse(node_t* node){
 	nodeSetValue(node, FALSE);
 	nodeSetProof(node,MAXPROOF);
 	nodeSetDisproof(node,0);
-	deleteChildren(node);
 #ifdef STATS
 	int t = nodeTurn(node);
 	all_stats.finished++;
@@ -84,11 +62,6 @@ static inline void setFalse(node_t* node){
 	histogramAdd ( &all_stats.setFin, s);
 	histogramAdd ( &turn_stats[t].setFin, s);
 #endif //STATS
-
-#ifdef DEBUG
-	if (nodeExpanded(node))
-		perror("au2");
-#endif //DEBUG
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -414,6 +387,18 @@ static inline void developNode(node_t* node){
 	for (int v = 0; v < childrenN; v++){ 
 		insertChild(node,children[v]);
 	}
+	//TODO procovat uz rovnou s tim
+	graph_t * children2 = malloc( sizeof(graph_t) * M );
+#ifdef DEBUG
+	if (children2 == NULL)
+		perror("malloc");
+#endif //DEBUG
+	for (int i = 0; i < childrenN; i++){
+		children2[i].graph[0] = children[i]->graph[0];
+		children2[i].graph[1] = children[i]->graph[1];
+		children2[i].hash = children[i]->hash;
+	}
+	nodeInsertChildren(node,childrenN,children2);
 	nodeSetExpanded(node,true);
 
 

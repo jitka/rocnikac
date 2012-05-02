@@ -68,6 +68,7 @@ static inline u32 nodeThProof(node_t * node);
 static inline u32 nodeThDisproof(node_t * node);
 #endif //UPDATE2
 
+static inline void nodeInsertChildren(node_t * node, u32 childrenN, graph_t * children );
 //-------------------------------------------------------------
 static inline u8 nodeLastEdgeI(node_t *node){
 #ifdef DEBUG
@@ -237,10 +238,16 @@ static inline node_t* nodeNew(){
 	node->update = 0;
 #endif //UPDATE2
 
+	node->childrenN = 0;
 	nodeSetExpanded( node, false);
 	return node;
 }
 
+
+static inline void nodeInsertChildren(node_t * node, u32 childrenN, graph_t * children ){
+	node->childrenN = childrenN;
+	node->children2 = children;
+}
 
 static inline void nodeEmptyGraph(node_t * node){
 	node->graph[0] = 0ULL;
