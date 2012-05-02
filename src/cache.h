@@ -2,7 +2,7 @@
 #define CACHE_H
 
 #ifdef DEBUG
-int cacheMiss = 0;
+extern int cacheMiss;
 #endif //DEBUG
 node_t* cache[CACHE_SIZE];
 
@@ -12,7 +12,6 @@ static inline void cacheDelete(node_t* node);
 
 //--------------------------------------------------------------
 
-int tmp42 = 0;
 static inline void cacheInsert(node_t* node){
 #ifdef DEBUG
 /*	if (nodeTurn(node)==4){
@@ -40,12 +39,24 @@ static inline node_t* cacheFind(node_t* node){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
 			continue;
-		if ( compareGraph( cache[where], node) )
+		if ( compareGraph( cache[where], node) ){
 			return cache[where];
+		}
 	}
 	return NULL;
 }
 
+static inline node_t* cacheFind2(graph_t* graph){ 
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 where = ( graph->hash + i ) % CACHE_SIZE;
+		if (cache[where] == NULL)
+			continue;
+		if ( compareNodeGraph( cache[where], graph) )
+			return cache[where];
+	}
+	//printf("neni tam\n");
+	return NULL;
+}
 static inline void cacheDelete(node_t* node){
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;

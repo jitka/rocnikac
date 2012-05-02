@@ -49,7 +49,7 @@ struct node{
 	u32 hash;
 
 	ll2_t parents;
-	ll2_t children;
+//	ll2_t children;
 
 	u8 childrenN;
 	graph_t * children2;

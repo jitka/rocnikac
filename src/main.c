@@ -27,7 +27,7 @@
 // 	- smazat ll2
 // 	- graph_t do node_t
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
-//
+// zbavit se dvojek
 //
 // TODO NEKDY
 // heuristika misto 1 1
@@ -127,6 +127,7 @@ int main(){
 */
 
 #ifdef STATS
+	printf("---------------------------------------------------------\n");
 	printStats( );
 #endif //STATS
 	return 0;

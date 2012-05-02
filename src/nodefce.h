@@ -20,6 +20,7 @@ static inline void nodeDelete(node_t* node);
 static inline void nodeEmptyGraph(node_t * node);
 static inline void nodeCopyGraph(node_t * to, node_t * from);
 static inline bool compareGraph(node_t * a, node_t * b);
+static inline bool compareNodeGraph(node_t * a, graph_t * b);
 
 static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c);
 static inline bool nodeEdgeExist(node_t * node, int i, int j);
@@ -213,7 +214,7 @@ static inline u32 nodeThDisproof(node_t * node){
 //delete
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
 #ifdef DEBUG
-	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) || (!ll2Empty(&node->children)) ){
+	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) ){
 		printf("tohle by se nemelo mazat\n");
 		printNode(node);
 	}
@@ -229,7 +230,6 @@ static inline node_t* nodeNew(){
 		perror("malloc node");
 #endif //DEBUG
 	ll2New( &node->parents );
-	ll2New( &node->children );
 
 #ifdef STATS
 	node->set_stats = 0;
@@ -248,6 +248,12 @@ static inline void nodeInsertChildren(node_t * node, u32 childrenN, graph_t * ch
 	node->childrenN = childrenN;
 	node->children2 = children;
 }
+static inline u8 nodeChildrenN(node_t * node){
+	return node->childrenN;
+}
+static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
+	node->childrenN = childrenN;
+}
 
 static inline void nodeEmptyGraph(node_t * node){
 	node->graph[0] = 0ULL;
@@ -262,6 +268,9 @@ static inline void nodeCopyGraph(node_t * to, node_t * from){
 }
 
 static inline bool compareGraph(node_t * a, node_t * b){
+	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+}
+static inline bool compareNodeGraph(node_t * a, graph_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
 static inline u32 nodeNeighbour(node_t * node, int i, color color){

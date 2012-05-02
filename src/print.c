@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include "nodefce.h"
 #include "print.h"
+#include "cache.h"
 
 void printNode(node_t* node){
 
-	printf("turn %d, hash %d, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
+	if (node == NULL){
+		printf("(null)\n");
+		return;
+	}
+
+	printf("turn %d, hash %u, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
 	if (nodeExpanded(node))
 		printf("yes, value ");
 	else 
@@ -66,19 +72,18 @@ void printValue(nodeValue_t value){
 	}
 }
 
-
 void printChildren(node_t* node){
 
 	if (!nodeExpanded(node)){
-		printf("nejsou deti\n");
+		printf("2nejsou deti\n");
 		return;
 	}
-	printf("potomci:\n");
-	ll2FStart(&node->children); 
-	for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
-		printNode(child);
+	printf("2potomci %d:\n",nodeChildrenN(node));
+	for (int i = 0; i < nodeChildrenN(node); i++){
+		printf("hash %d\n",node->children2[i].hash);
+		printNode(cacheFind2(&node->children2[i]));
 	}
-	printf("potomci konec------------------------------------------------------------------\n");
+	printf("2potomci konec-------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);
 }
 

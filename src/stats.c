@@ -6,6 +6,7 @@
 stats_t all_stats;
 stats_t turn_stats[M+1];
 int interations_stats = 0;
+int cacheMiss = 0;
 
 histogram_t updateStats;
 histogram_t selectStats;

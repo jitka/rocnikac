@@ -16,7 +16,7 @@ u32 updateN = 0; //kolikaty probehl update
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void deleteChild(node_t* node, node_t* child){
-	ll2Delete( &node->children, child );
+//	ll2Delete( &node->children, child );
 	ll2Delete( &child->parents, node);
 /*
 	if ( ll2Empty( &child->parents ) ){
@@ -79,16 +79,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #ifdef STATS
 	node->set_stats++;
 #endif //STATS
-	if (nodeHash(node) ==  2138471 ){
-			printf("chyceno\n");
-			printNode(node);
-			if ( ll2Empty( &node->parents) ){
-				printf("nejsou rodice\n");
-			}
-			node_t * parent = ll2FirstNode( &node->parents );
-			printNode(parent);
-			printChildren(node);
-	}
+	
 	if (nodeValue(node) != UNKNOWN){
 #ifdef DEBUG
 		if (!nodeTurnChack(node)){
@@ -113,24 +104,40 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	}
 #endif //DEBUG
 
-	u32 min = MAXPROOF;
-	u32 childrenN = 0;
+	if (nodeType(node) == OR ) {
+		u32 min = MAXPROOF;
 #ifdef WEAK
-	u32 max = 0;
+		u32 max = 0;
 #else //WEAK
-	u32 sum = 0;
-	bool infinity = false;
+		u32 sum = 0;
+		bool infinity = false;
 #endif //WEAK
-	switch (nodeType(node)) {
-	case OR:
-		ll2FStart(&node->children); 
-		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
-			childrenN++;
+			
+		int to = 0;
+		for (int i = 0; i < nodeChildrenN(node); i++) {
+			node_t* child = cacheFind2(&node->children2[i]);
+#ifdef DEBUG
+			if (child == NULL){
+				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
+				printNode(node);
+				printChildren(node);
+			}
+#endif //DEBUG
+			//zahodim zbytecne
 			if ( nodeValue(child) == FALSE ){
 				deleteChild( node, child);
-				childrenN--;
 				continue;
+			} else {
+				node->children2[to] = node->children2[i];
+				to++;
 			}
+
+			//pokud se smazal syn
+			if ( cacheFind(child) == NULL){
+				printf("TODO neni dite");
+			}
+
+			//pocitam ze synu
 			min = MIN(min,nodeProof(child));
 #ifdef WEAK 			
 			max = MAX( max, nodeDisproof(child) );
@@ -139,16 +146,16 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			if (nodeDisproof(child) == MAXPROOF)
 				infinity = true;
 #endif //WEAK
-			ll2FNext(&node->children);
 		}
+		nodeSetChildrenN(node,to);
 		nodeSetProof( node, min);
 #ifdef WEAK
-		if (childrenN == 0){
+		if (nodeChildrenN(node) == 0){
 			nodeSetDisproof( node, 0);
 		} else if (max == MAXPROOF) {
 			nodeSetDisproof( node, MAXPROOF);
 		} else { 
-			nodeSetDisproof( node, max + childrenN - 1);
+			nodeSetDisproof( node, max + nodeChildrenN(node) - 1);
 		}
 #else //WEAK
 		if (infinity) {
@@ -166,16 +173,39 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			printChildren(node);
 		}
 #endif //DEBUG
-		break;
-	case AND:
-		ll2FStart(&node->children); 
-		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ){
-			childrenN++;
+	} else { //(nodeType(node) == OR)
+		u32 min = MAXPROOF;
+#ifdef WEAK
+		u32 max = 0;
+#else //WEAK
+		u32 sum = 0;
+		bool infinity = false;
+#endif //WEAK
+		int to = 0;
+		for (int i = 0; i < nodeChildrenN(node); i++) {
+			node_t* child = cacheFind2(&node->children2[i]);
+#ifdef DEBUG
+			if (child == NULL){
+				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
+				printNode(node);
+				printChildren(node);
+			}
+#endif //DEBUG
+			//zahodim zbytecne
 			if ( nodeValue(child) == TRUE ){
 				deleteChild( node, child);
-				childrenN--;
 				continue;
+			} else {
+				node->children2[to] = node->children2[i];
+				to++;
 			}
+
+			//pokud se smazal syn
+			if ( cacheFind(child) == NULL){
+				printf("TODO neni dite");
+			}
+
+			//pocitam ze synu
 #ifdef WEAK
 			max = MAX(max,nodeProof(child));
 #else //WEAK
@@ -184,16 +214,15 @@ static inline void setProofAndDisproofNubers(node_t* node){
 				infinity = true;
 #endif //WEAK
 			min = MIN( min, nodeDisproof(child) );
-
-			ll2FNext(&node->children);
 		}
+		nodeSetChildrenN(node,to);
 #ifdef WEAK
-		if (childrenN == 0){
+		if (nodeChildrenN(node) == 0){
 			nodeSetProof( node, 0 );
 		} else if (max == MAXPROOF) {
 			nodeSetProof( node, MAXPROOF);
 		} else { 
-			nodeSetProof( node, max + childrenN - 1 );
+			nodeSetProof( node, max + nodeChildrenN(node) - 1 );
 		}
 #else //WEAK
 		if (infinity) {
@@ -206,7 +235,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 		nodeSetDisproof( node, min);
 
-		break;
 	}
 	if (nodeProof(node) == 0){
 		setTrue(node);
@@ -277,7 +305,6 @@ static inline void insertChild(node_t* node, node_t* child){
 	if ( n != NULL ) { 
 		//je v cachy
 		ll2AddNodeEnd( &n->parents, node);
-		ll2AddNodeEnd( &node->children, n );
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
@@ -286,7 +313,6 @@ static inline void insertChild(node_t* node, node_t* child){
 #endif //STATS
 		numberOfNodes++;
 		ll2AddNodeEnd( &child->parents, node);
-		ll2AddNodeEnd( &node->children, child );
 		cacheInsert(child);
 	if ( ll2Empty( &child->parents) ){
 			printf("nejsou rodice2\n");
@@ -384,24 +410,32 @@ static inline void developNode(node_t* node){
 			printf("%d ",free[i]);
 		} printf("\n");*/
 #endif //HEURISTIC1
-	for (int v = 0; v < childrenN; v++){ 
-		insertChild(node,children[v]);
-	}
-	//TODO procovat uz rovnou s tim
+
+	//TODO procovat uz rovnou s tim, poradek
 	graph_t * children2 = malloc( sizeof(graph_t) * M );
 #ifdef DEBUG
 	if (children2 == NULL)
 		perror("malloc");
+	if (childrenN >= M)
+		perror("children");
+	for (int i = 0; i < childrenN; i++){
+		if (children[i] == NULL)
+			perror("au dite");
+	}
 #endif //DEBUG
 	for (int i = 0; i < childrenN; i++){
 		children2[i].graph[0] = children[i]->graph[0];
 		children2[i].graph[1] = children[i]->graph[1];
-		children2[i].hash = children[i]->hash;
+//		children2[i].hash = children[i]->hash;
+		children2[i].hash = nodeHash(children[i]);
+	}
+	for (int v = 0; v < childrenN; v++){ 
+		insertChild(node,children[v]);
 	}
 	nodeInsertChildren(node,childrenN,children2);
+
 	nodeSetExpanded(node,true);
-
-
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,8 +511,8 @@ static inline void selectMostProving(){
 #endif //DEBUG
 		switch (nodeType(node)) {
 		case OR: 
-			ll2FStart(&node->children); 
-			for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+			for (int i = 0; i < nodeChildrenN(node); i++) {
+				node_t* child = cacheFind2(&node->children2[i]);
 				if ( nodeProof(node) == nodeProof(child) ){
 					node = child;
 					break;
@@ -486,8 +520,8 @@ static inline void selectMostProving(){
 			}
 			break;
 		case AND: 
-			ll2FStart(&node->children); 
-			for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+			for (int i = 0; i < nodeChildrenN(node); i++) {
+				node_t* child = cacheFind2(&node->children2[i]);
 				if ( nodeDisproof(node) == nodeDisproof(child) ){
 					node = child;
 					break;
@@ -512,7 +546,7 @@ static inline void selectMostProving(){
 
 static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* secondDisproof){
 	//vybere ze synu toho nevhodnejsiho 
-	node_t* best;
+	node_t* best = NULL;
 	u32 bestProof; u32 bestDisproof; 
 	
 #ifdef DEBUG
@@ -525,9 +559,8 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 	if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
 		printf("tady nee\n");
 	}
-	if (ll2Empty(&node->children))
+	if (nodeChildrenN(node)==0)
 		printf("nejou deti\n");
-	best = ll2FirstNode(&node->children);
 #endif //DEBUG
 
 	switch (nodeType(node)) {
@@ -536,8 +569,8 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 		bestDisproof = 0;
 		*secondProof = MAXPROOF;
 		*secondDisproof = 0;
-		ll2FStart(&node->children); 
-		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+		for (int i = 0; i < nodeChildrenN(node); i++) {
+			node_t* child = cacheFind2(&node->children2[i]);
 			if ( nodeProof(child) < bestProof ){
 				bestProof = nodeProof(child);
 				bestDisproof = nodeDisproof(child);
@@ -554,8 +587,8 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 		bestDisproof = MAXPROOF;
 		*secondProof = 0;
 		*secondDisproof = MAXPROOF;
-		ll2FStart(&node->children); 
-		for (node_t* child; (child = ll2FGet(&node->children)) != NULL; ll2FNext(&node->children)){
+		for (int i = 0; i < nodeChildrenN(node); i++) {
+			node_t* child = cacheFind2(&node->children2[i]);
 			if ( nodeDisproof(child) < bestDisproof ){
 				bestProof = nodeProof(child);
 				bestDisproof = nodeDisproof(child);
@@ -640,6 +673,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 	while (nodeValue(root) == UNKNOWN) {
 		node_t * node = currentPath[currentNode];
+#ifdef STATS
+		interations_stats++;
+#endif //STATS
 #ifdef DEBUG
 		if (false){
 			printf("cN %d\n",currentNode);
@@ -680,6 +716,12 @@ nodeValue_t proofNumberSearch(node_t* root){
 		currentNode++;
 		currentPath[currentNode] = child;
 	}
+#ifdef DEBUG
+	printf("nodes %d\n",numberOfNodes);
+	printf("cache miss %d\n",cacheMiss);
+//	extern int TMP;	printf("norm %d\n",TMP);
+#endif //DEBUG
+
 
 	return nodeValue(root);
 }
