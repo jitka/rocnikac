@@ -17,9 +17,7 @@
 // oprofile
 // napsat df (ε trik)
 // 	- pri probublani bocnimy otci navrch zastavit
-// 	- deti/otcove do pole ukazatel = struktura
 // 	- strom do pole, cache
-// 	- pocitat s tim ze neni otec/syn
 // 	- nevyhazovat vrcholy z current path - nejaky indikacny bit
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8

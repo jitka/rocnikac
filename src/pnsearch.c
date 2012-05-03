@@ -13,6 +13,21 @@ int numberOfNodes = 1; //abych vedela kolik zeru pameti
 node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
+int parentMiss = 0;
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void setTrue(node_t* node);
+static inline void setFalse(node_t* node);
+static inline void setUnknown(node_t* node);
+static inline void setProofAndDisproofNubers(node_t* node);
+static inline void setValue(node_t* node, bool fullK4);
+static inline node_t* createChild(node_t* node, int i, int j);
+static inline void insertChild(node_t* node, node_t* child);
+static inline void developNode(node_t* node);
+static inline void updateAncestors();
+static inline void selectMostProving();
+static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* secondDisproof);
+nodeValue_t proofNumberSearch(node_t* root);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node){
@@ -65,8 +80,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	node->set_stats++;
 #endif //STATS
 	
-	if (nodeValue(node) != UNKNOWN){
 #ifdef DEBUG
+	if (nodeValue(node) != UNKNOWN){
 		if (!nodeTurnChack(node)){
 			printf("turn\n");
 			printNode(node);
@@ -79,15 +94,27 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		}
 		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
 			printf("au set");
-#endif //DEBUG
-		return; //TODO tohle by slo odstanit, predek se nemusi updatovat tak mockrat
+		printf("zbytecne\n");
+		return; 
 	}
-	
-#ifdef DEBUG
 	if (!nodeExpanded(node)){
 		printf("neexpandove\n");
 	}
-#endif //DEBUG
+#endif //DEBUG	
+
+	bool missing = false;	
+	for (int i = 0; i < nodeChildrenN(node); i++) {
+		node_t* child = cacheFind2(&node->children2[i]);
+		//pokud se smazal syn
+		if ( cacheFind(child) == NULL){
+			printf("TODO neni dite");
+			missing = true;
+		}
+	}
+
+	if (missing)
+		developNode(node);
+
 
 	if (nodeType(node) == OR ) {
 		u32 min = MAXPROOF;
@@ -102,6 +129,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		for (int i = 0; i < nodeChildrenN(node); i++) {
 			node_t* child = cacheFind2(&node->children2[i]);
 #ifdef DEBUG
+			//nepodarilo se vytvorit vsechny deti/navzajem se vyhazuji
 			if (child == NULL){
 				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
 				printNode(node);
@@ -114,11 +142,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			} else {
 				node->children2[to] = node->children2[i];
 				to++;
-			}
-
-			//pokud se smazal syn
-			if ( cacheFind(child) == NULL){
-				printf("TODO neni dite");
 			}
 
 			//pocitam ze synu
@@ -181,11 +204,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			} else {
 				node->children2[to] = node->children2[i];
 				to++;
-			}
-
-			//pokud se smazal syn
-			if ( cacheFind(child) == NULL){
-				printf("TODO neni dite");
 			}
 
 			//pocitam ze synu
@@ -466,8 +484,12 @@ static inline void updateAncestors(){ //po hladinach
 		//pridat vsechny predky co je potreba updatetovat
 		for (int i = 0; i < nodeParentsN(node); i++){
 			node_t * parent = cacheFind2(&node->parents2[i]);
-			if (parent == NULL)
+#ifdef DEBUG
+			if (parent == NULL){
 				perror("TODO neni rodic");
+				parentMiss++;
+			}
+#endif //DEBUG
 		}
 
 	}
@@ -707,6 +729,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 #ifdef DEBUG
 	printf("nodes %d\n",numberOfNodes);
 	printf("cache miss %d\n",cacheMiss);
+	printf("parent miss %d\n",parentMiss);
 //	extern int TMP;	printf("norm %d\n",TMP);
 #endif //DEBUG
 
