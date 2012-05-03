@@ -302,7 +302,7 @@ static inline u8 nodeParentsN(node_t * node){
 static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		if (node->parentsMAX > 70){
+		if (node->parentsMAX > 1000){
 			printf("par %d\n",node->parentsN);
 		}
 #endif //DEBUG

@@ -35,6 +35,7 @@ static inline void cacheInsert(node_t* node){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (nodeCurrent(cache[where]) || (nodeTurn(cache[where]) == nodeTurn(node)) )
 			continue;
+		free(cache[where]);
 		cache[where] = node;
 		return;
 	}

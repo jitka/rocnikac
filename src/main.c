@@ -96,6 +96,7 @@ int main(){
 
 	printSetting();
 
+//	printf("%d\n",sizeof(node_t));
 	node_t* root = getRoot();
 	nodeValue_t value = proofNumberSearch(root);
 	printValue(value);

@@ -315,18 +315,11 @@ static inline void insertChild(node_t* node, node_t* child){
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-static inline void developNode(node_t* node){
-	//vytvori a ohodnoti potomky
-
-
+static inline node_t** generateChildren(node_t* node, int *childrenN){
+	node_t** children = malloc(sizeof(node_t)*M);
 #ifdef DEBUG
-	if (nodeExpanded(node)){
-		//nektere deti se smazali
-		nodeSetChildrenN(node,0);
-	}
+	assert(children != NULL);
 #endif //DEBUG
-
 #ifdef NOFREEK4
 	bool possible = false;
 #endif //NOFREEK4
@@ -336,17 +329,16 @@ static inline void developNode(node_t* node){
 
 
 	//vyroby deti a normalizuje
-	node_t* children[M];
-	int childrenN = 0;
+	*childrenN = 0;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
 			if ( ! nodeEdgeExist(node, i, j) ) 
 				//ij je hrana ktera jeste nema barvu
-				children[childrenN++] = createChild(node,i,j);
+				children[(*childrenN)++] = createChild(node,i,j);
 	//maze dvojcata	
 	if (nodeTurn(node) < TURNDDELETECHILDRENST) {
-		for (int i = 0; i < childrenN; i++){
-			for (int j = i+1; j < childrenN; j++){
+		for (int i = 0; i < *childrenN; i++){
+			for (int j = i+1; j < *childrenN; j++){
 				if (nodeHash(children[i]) < nodeHash(children[j]) ){
 					node_t * tmp = children[i];
 					children[i] = children[j];
@@ -356,20 +348,20 @@ static inline void developNode(node_t* node){
 		}
 		u32 last = 0;
 		int where = 0;
-		for (int i = 0; i < childrenN; i++){
+		for (int i = 0; i < *childrenN; i++){
 			if (nodeHash(children[i]) != last){
 				children[where++]=children[i];
 				last = nodeHash(children[i]);
 			}
 		} 
-		childrenN = where;
+		*childrenN = where;
 /*		for (int i = 0; i < childrenN; i++){
 			printf("%d ",nodeHash(children[i]));
 		} printf("\n");*/
 	}
 
 	//vyhodnocuje deti	
-	for (int v = 0; v < childrenN; v++){
+	for (int v = 0; v < *childrenN; v++){
 		int freeK4;
 		bool fullK4; 
 		testK4andFreeK4(children[v], &freeK4, &fullK4);
@@ -393,7 +385,7 @@ static inline void developNode(node_t* node){
 #endif //NOFREEK4
 #ifdef HEURISTIC1
 	//tridi deti aby nejdriv byly ty s vyce moznostmi
-	for (int i = 0; i < childrenN; i++){
+	for (int i = 0; i < *childrenN; i++){
 		for (int j = i+1; j < childrenN; j++){
 			if (free[i] < free[j]){
 				{int tmp = free[i]; free[i] = free[j]; free[j] = tmp;}
@@ -406,12 +398,36 @@ static inline void developNode(node_t* node){
 		} printf("\n");*/
 #endif //HEURISTIC1
 
+
+	return children;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void developNode(node_t* node){
+
+	//vytvori a ohodnoti potomky
+	if (nodeExpanded(node)){
+		//nektere deti se smazali
+		nodeSetChildrenN(node,0);
+		for (int i = 0; i < nodeChildrenN(node); i++) {
+			node_t* child = cacheFind2(&node->children[i]);
+			if (child != NULL){
+				//				cacheDelete(child);
+				//smazat vztahy ne node 
+				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
+			}
+		}
+	}
+
+
+	int childrenN;
+	node_t** children = generateChildren(node,&childrenN);
 	for (int v = 0; v < childrenN; v++){ 
 		insertChild(node,children[v]);
 	}
+	free(children);
 
 	nodeSetExpanded(node,true);
-	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -715,15 +731,18 @@ nodeValue_t proofNumberSearch(node_t* root){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u \n",nodeHash(mostProovingNode),nodeTurn(mostProovingNode));
 			//printNode(mostProovingNode);
-			printf("nodes %d interace %d\n",numberOfNodes,counter);
+			printf("nodes %d ",numberOfNodes);
+			printf("cache miss %d ",cacheMiss);
+			printf("parent miss %d ",parentMiss);
+			printf("interace %d\n",counter);
 			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChildren(mostProovingNode);
 		}
 #endif //DEBUG
 	}
 #ifdef DEBUG
-	printf("nodes %d\n",numberOfNodes);
-	printf("cache miss %d\n",cacheMiss);
+	printf("nodes %d ",numberOfNodes);
+	printf("cache miss %d ",cacheMiss);
 	printf("parent miss %d\n",parentMiss);
 //	extern int TMP;	printf("norm %d\n",TMP);
 #endif //DEBUG
