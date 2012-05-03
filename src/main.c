@@ -19,7 +19,8 @@
 // 	- pri probublani bocnimy otci navrch zastavit
 // 	- strom do pole, cache
 // 	- vyhazovat vrcholy kdyz dojde pole
-// 	- N 8
+// 	- N 8 
+// 	- divne padani na cachesize 12
 // 	- zkratit select2
 // 	- smazat ll2
 // 	- graph_t do node_t
@@ -28,6 +29,7 @@
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // zbavit se dvojek
 // fce na pridani/ubirani otcu/deti, predelani pri dalsim develop
+// vypisy na zacatku
 //
 // TODO NEKDY
 // heuristika misto 1 1

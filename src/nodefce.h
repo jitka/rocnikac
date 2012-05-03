@@ -282,7 +282,16 @@ static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
 		node->parentsMAX *= 2;
 		graph_t * parents2 = malloc( sizeof(graph_t) * node->parentsMAX );
-		for (int i = 0; i <= node->parentsN; i++){
+	//graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
+#ifdef DEBUG
+		if (parents2 == NULL)
+			perror("malloc");
+		graph_t g;
+		g = parent;
+		parents2[0] = g;
+		parents2[0] = node->parents2[0];
+#endif //DEBUG
+		for (int i = 0; i < node->parentsN; i++){
 			parents2[i] = node->parents2[i];
 		}
 		free(node->parents2);
