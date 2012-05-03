@@ -20,7 +20,6 @@
 // 	- N 8 
 // 	- divne padani na cachesize 12
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
-// vypisy na zacatku
 //
 // TODO NEKDY
 // heuristika misto 1 1
@@ -67,23 +66,32 @@ void printSetting(){
 	printf("N %d M %d\n",N,M);
 	printf("CACHE_SIZE %d, CACHE_PATIENCE %d, MAXNODES %d\n", CACHE_SIZE, CACHE_PATIENCE, MAXNODES);
 #ifdef DEBUG 
-	printf("DEBUG\n");
+	printf("DEBUG ");
 #endif
 
 #ifdef WEAK 
-	printf("WEAK\n");
+	printf("WEAK ");
 #endif
 #ifdef STATS
-	printf("STATS\n");
+	printf("STATS ");
 #endif
 #ifdef HEURISTIC1
-	printf("HEURISTIC1\n");
+	printf("HEURISTIC1 ");
 #endif
 #ifdef NORM2
-	printf("NORM2\n");
+	printf("NORM2 ");
 #endif
-	printf("TURNDDELETECHILDRENST %d\n",TURNDDELETECHILDRENST);
-	printf("---------------------------------------------------------\n");
+	printf("TURNDDELETECHILDRENST %d ",TURNDDELETECHILDRENST);
+#ifdef DFPN
+	printf("DFPN ");
+#endif
+#ifdef NOFREEK4
+	printf("NOFREEK4 ");
+#endif
+#define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti
+
+
+	printf("\n---------------------------------------------------------\n");
 }
 
 int main(){
