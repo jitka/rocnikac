@@ -14,6 +14,7 @@
 // googlit klikovou hru clique game, hight symetri, low branching factor
 // oprofile
 // N 8 
+// jeden rodic vicekrat
 // divne padani na cachesize 12
 //
 // TODO NEKDY

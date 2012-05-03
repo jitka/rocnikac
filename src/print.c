@@ -86,3 +86,17 @@ void printChildren(node_t* node){
 //	int tmp; scanf("%d",&tmp);
 }
 
+void printParents(node_t* node){
+
+	if (!nodeExpanded(node)){
+		printf("nejsou rodice\n");
+		return;
+	}
+	printf("rodice %d:\n",nodeParentsN(node));
+	for (int i = 0; i < nodeParentsN(node); i++){
+		printNode(cacheFind2(&node->parents[i]));
+	}
+	printf("rodice konec-------------------------------------------------\n");
+//	int tmp; scanf("%d",&tmp);
+}
+

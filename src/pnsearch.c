@@ -23,6 +23,7 @@ static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
 static inline void insertChild(node_t* node, node_t* child);
+static inline void repairNode(node_t* node);
 static inline void developNode(node_t* node);
 static inline void updateAncestors();
 static inline void selectMostProving();
@@ -112,7 +113,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	}
 
 	if (missing)
-		developNode(node);
+		repairNode(node);
 
 
 	if (nodeType(node) == OR ) {
@@ -284,7 +285,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 		nodeSetEdge(child,i,j,BLUE);
 		break;
 	}
-	nodeSetExpanded(node,false);
+	nodeSetExpanded(child,false);
 	
 	//-----znormuju
 //	printNode(child);
@@ -301,7 +302,7 @@ static inline void insertChild(node_t* node, node_t* child){
 	if ( n != NULL ) { 
 		//je v cachy
 		nodeAddParent(n,nodeGraph(node));
-		nodeAddChildren(node,nodeGraph(n));
+		nodeAddChild(node,nodeGraph(n));
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
@@ -310,7 +311,7 @@ static inline void insertChild(node_t* node, node_t* child){
 #endif //STATS
 		numberOfNodes++;
 		nodeAddParent(child,nodeGraph(node));
-		nodeAddChildren(node,nodeGraph(child));
+		nodeAddChild(node,nodeGraph(child));
 		cacheInsert(child);
 	}
 }
@@ -402,23 +403,48 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	return children;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-static inline void developNode(node_t* node){
+static inline void repairNode(node_t* node){
+#ifdef DEBUG
+	assert(nodeExpanded(node));
+#endif //DEBUG
 
-	//vytvori a ohodnoti potomky
-	if (nodeExpanded(node)){
-		//nektere deti se smazali
-		nodeSetChildrenN(node,0);
-		for (int i = 0; i < nodeChildrenN(node); i++) {
-			node_t* child = cacheFind2(&node->children[i]);
-			if (child != NULL){
-				//				cacheDelete(child);
-				//smazat vztahy ne node 
-				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
+	//zahodim prazdne
+	int to = 0;
+	for (int i = 0; i < nodeChildrenN(node); i++) {
+		node_t* child = cacheFind2(&node->children[i]);
+		if (child == NULL){
+			continue;
+		} else {
+			node->children[to] = node->children[i];
+			to++;
+		}
+
+	}
+	nodeSetChildrenN(node,to);
+
+	//vytvorim znova
+	int childrenN;
+	node_t** children = generateChildren(node,&childrenN);
+
+	//pridam chybejici
+	for (int i = 0; i < childrenN; i++){
+		node_t* child = cacheFind(children[i]);
+		if ( child == NULL){
+			insertChild(node,children[i]);
+			if (children[i]->parentsN > 1){
+				printf("tu par %d\n",children[i]->parentsN);
 			}
 		}
 	}
+	free(children);
+}
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+static inline void developNode(node_t* node){
+
+#ifdef DEBUG
+	assert(!nodeExpanded(node));
+#endif //DEBUG
 
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
@@ -735,7 +761,6 @@ nodeValue_t proofNumberSearch(node_t* root){
 			printf("cache miss %d ",cacheMiss);
 			printf("parent miss %d ",parentMiss);
 			printf("interace %d\n",counter);
-			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
 			//printChildren(mostProovingNode);
 		}
 #endif //DEBUG

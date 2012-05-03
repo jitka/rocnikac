@@ -41,7 +41,7 @@ static inline bool nodeTurnChack(node_t * a);
 //-------------NODE---------------DATA------------------
 static inline u8 nodeChildrenN(node_t * node);
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN);
-static inline void nodeAddChildren(node_t * node, graph_t children);
+static inline void nodeAddChild(node_t * node, graph_t child);
 static inline u8 nodeParentsN(node_t * node);
 static inline void nodeAddParent(node_t * node, graph_t parent);
 
@@ -285,8 +285,8 @@ static inline u8 nodeChildrenN(node_t * node){
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
 }
-static inline void nodeAddChildren(node_t * node, graph_t children){
-	node->children[node->childrenN] = children;
+static inline void nodeAddChild(node_t * node, graph_t child){
+	node->children[node->childrenN] = child;
 	node->childrenN++;
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
@@ -302,8 +302,10 @@ static inline u8 nodeParentsN(node_t * node){
 static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		if (node->parentsMAX > 1000){
+		if (node->parentsMAX > 10){
 			printf("par %d\n",node->parentsN);
+			printNode(node);
+			printParents(node);
 		}
 #endif //DEBUG
 		node->parentsMAX *= 2;
