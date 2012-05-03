@@ -301,7 +301,7 @@ static inline void insertChild(node_t* node, node_t* child){
 	graph_t g;
 	g.graph[0] = node->graph.graph[0];
 	g.graph[1] = node->graph.graph[1];
-	g.hash = node->hash;
+	g.hash = node->graph.hash;
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 

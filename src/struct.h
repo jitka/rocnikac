@@ -32,8 +32,6 @@ typedef struct {
 } graph_t;
 	
 struct node{
-	u32 hash;
-
 	graph_t graph;
 	
 	u32 proof2;

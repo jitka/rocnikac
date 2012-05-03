@@ -171,7 +171,7 @@ static inline void nodeSetTurn(node_t * node, u32 turn){
 
 //hash
 static inline u32 nodeHash(node_t * node){
-	return node->hash;
+	return node->graph.hash;
 }
 
 //proof
@@ -306,13 +306,13 @@ static inline void nodeAddParent(node_t * node, graph_t parent){
 static inline void nodeEmptyGraph(node_t * node){
 	node->graph.graph[0] = 0ULL;
 	node->graph.graph[1] = 0ULL;
-	node->hash = 0;
+	node->graph.hash = 0;
 }
 
 static inline void nodeCopyGraph(node_t * to, node_t * from){
 	to->graph.graph[0] = from->graph.graph[0];
 	to->graph.graph[1] = from->graph.graph[1];
-	to->hash = from->hash;
+	to->graph.hash = from->graph.hash;
 }
 
 static inline bool compareGraph(node_t * a, node_t * b){
@@ -337,7 +337,7 @@ static inline bool nodeEdgeExist(node_t * node, int i, int j){
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
 	node->graph.graph[color] |= 1ULL<<(i*N+j);
 	node->graph.graph[color] |= 1ULL<<(j*N+i);
-	node->hash ^= hashNumbers[color][i][j];
+	node->graph.hash ^= hashNumbers[color][i][j];
 	node->last_i = i;
 	node->last_j = j;
 }
@@ -354,8 +354,8 @@ static inline int nodeDegree(node_t * node, int i, color c){
 static inline void nodeChangeNodes(node_t * node, int a, int b){
 	for (int c = 0; c < 2; c++){
 		//zahodim vahy starych hran
-		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
-		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
+		node->graph.hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
+		node->graph.hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 
 		//vezmu radky a b
 		u64 sa = ( node->graph.graph[c] & (N1s<<(a*N)) ); 
@@ -377,8 +377,8 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->graph.graph[c] =  node->graph.graph[c] ^ ((rb>>b)<<a); 
 
 		//pridam vahy hran
-		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
-		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
+		node->graph.hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
+		node->graph.hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 	}
 }
 
