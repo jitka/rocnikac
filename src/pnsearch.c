@@ -299,8 +299,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 static inline void insertChild(node_t* node, node_t* child){
 	//zapoji vrchol do stromu
 	graph_t g;
-	g.graph[0] = node->graph[0];
-	g.graph[1] = node->graph[1];
+	g.graph[0] = node->graph.graph[0];
+	g.graph[1] = node->graph.graph[1];
 	g.hash = node->hash;
 
 	node_t* n = cacheFind(child);
@@ -423,8 +423,8 @@ static inline void developNode(node_t* node){
 	}
 #endif //DEBUG
 	for (int i = 0; i < childrenN; i++){
-		children2[i].graph[0] = children[i]->graph[0];
-		children2[i].graph[1] = children[i]->graph[1];
+		children2[i].graph[0] = children[i]->graph.graph[0];
+		children2[i].graph[1] = children[i]->graph.graph[1];
 //		children2[i].hash = children[i]->hash;
 		children2[i].hash = nodeHash(children[i]);
 	}

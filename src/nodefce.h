@@ -304,30 +304,30 @@ static inline void nodeAddParent(node_t * node, graph_t parent){
 
 
 static inline void nodeEmptyGraph(node_t * node){
-	node->graph[0] = 0ULL;
-	node->graph[1] = 0ULL;
+	node->graph.graph[0] = 0ULL;
+	node->graph.graph[1] = 0ULL;
 	node->hash = 0;
 }
 
 static inline void nodeCopyGraph(node_t * to, node_t * from){
-	to->graph[0] = from->graph[0];
-	to->graph[1] = from->graph[1];
+	to->graph.graph[0] = from->graph.graph[0];
+	to->graph.graph[1] = from->graph.graph[1];
 	to->hash = from->hash;
 }
 
 static inline bool compareGraph(node_t * a, node_t * b){
-	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+	return a->graph.graph[0] == b->graph.graph[0] && a->graph.graph[1] == b->graph.graph[1];
 }
 static inline bool compareNodeGraph(node_t * a, graph_t * b){
-	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+	return a->graph.graph[0] == b->graph[0] && a->graph.graph[1] == b->graph[1];
 }
 static inline u32 nodeNeighbour(node_t * node, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
-	return (node->graph[color] >> (i*N)) & N1s; 
+	return (node->graph.graph[color] >> (i*N)) & N1s; 
 }
 
 static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c){
-	return (!!(node->graph[c] & (1ULL<<(i*N+j))));
+	return (!!(node->graph.graph[c] & (1ULL<<(i*N+j))));
 }
 
 static inline bool nodeEdgeExist(node_t * node, int i, int j){
@@ -335,8 +335,8 @@ static inline bool nodeEdgeExist(node_t * node, int i, int j){
 }
 
 static inline void nodeSetEdge(node_t * node, int i, int j, color color){
-	node->graph[color] |= 1ULL<<(i*N+j);
-	node->graph[color] |= 1ULL<<(j*N+i);
+	node->graph.graph[color] |= 1ULL<<(i*N+j);
+	node->graph.graph[color] |= 1ULL<<(j*N+i);
 	node->hash ^= hashNumbers[color][i][j];
 	node->last_i = i;
 	node->last_j = j;
@@ -358,23 +358,23 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 		node->hash ^= hashNumbers2[c][b][nodeNeighbour(node,b,c)];
 
 		//vezmu radky a b
-		u64 sa = ( node->graph[c] & (N1s<<(a*N)) ); 
-		u64 sb = ( node->graph[c] & (N1s<<(b*N)) ); 
+		u64 sa = ( node->graph.graph[c] & (N1s<<(a*N)) ); 
+		u64 sb = ( node->graph.graph[c] & (N1s<<(b*N)) ); 
 		//odstranim radky a b
-		node->graph[c] =  node->graph[c] ^ sa; 
-		node->graph[c] =  node->graph[c] ^ sb; 
+		node->graph.graph[c] =  node->graph.graph[c] ^ sa; 
+		node->graph.graph[c] =  node->graph.graph[c] ^ sb; 
 		//pridam radky prehozene
-		node->graph[c] =  node->graph[c] ^ ((sa>>(a*N))<<(b*N)); 
-		node->graph[c] =  node->graph[c] ^ ((sb>>(b*N))<<(a*N));
+		node->graph.graph[c] =  node->graph.graph[c] ^ ((sa>>(a*N))<<(b*N)); 
+		node->graph.graph[c] =  node->graph.graph[c] ^ ((sb>>(b*N))<<(a*N));
 		//vezmu sloupce a b
-		u64 ra = ( node->graph[c] & (R1s<<a) ); 
-		u64 rb = ( node->graph[c] & (R1s<<b) ); 
+		u64 ra = ( node->graph.graph[c] & (R1s<<a) ); 
+		u64 rb = ( node->graph.graph[c] & (R1s<<b) ); 
 		//odstranim sloupce a b
-		node->graph[c] =  node->graph[c] ^ ra; 
-		node->graph[c] =  node->graph[c] ^ rb; 
+		node->graph.graph[c] =  node->graph.graph[c] ^ ra; 
+		node->graph.graph[c] =  node->graph.graph[c] ^ rb; 
 		//pridam sloupce prehozene
-		node->graph[c] =  node->graph[c] ^ ((ra>>a)<<b); 
-		node->graph[c] =  node->graph[c] ^ ((rb>>b)<<a); 
+		node->graph.graph[c] =  node->graph.graph[c] ^ ((ra>>a)<<b); 
+		node->graph.graph[c] =  node->graph.graph[c] ^ ((rb>>b)<<a); 
 
 		//pridam vahy hran
 		node->hash ^= hashNumbers2[c][a][nodeNeighbour(node,a,c)];
@@ -493,7 +493,7 @@ static inline bool nodeSimetric(node_t * a){
 	for (int u = 0; u < N; u++){
 		for (int v = 0; v < N; v++){
 			for (int c = 0; c < 2; c++){
-				if ( (!!(a->graph[c] & (1ULL<<(u*N+v)))) != (!!(a->graph[c] & (1ULL<<(v*N+u)))) ){
+				if ( (!!(a->graph.graph[c] & (1ULL<<(u*N+v)))) != (!!(a->graph.graph[c] & (1ULL<<(v*N+u)))) ){
 //					printf("%d %d %d %llu %llu \n",u,v,c,a->graph[c] & (1ULL<<(u*N+v)), a->graph[c] & (1ULL<<(v*N+u)) );
 					return false;
 				}

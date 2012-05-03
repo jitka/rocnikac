@@ -32,6 +32,10 @@ typedef struct {
 } graph_t;
 	
 struct node{
+	u32 hash;
+
+	graph_t graph;
+	
 	u32 proof2;
 	u32 disproof;
 
@@ -47,7 +51,6 @@ struct node{
 
 	u8 turn; //kolikaty je to tah = kolik je prave obarveno hran
 
-	u32 hash;
 
 	u8 childrenN;
 	u8 parentsN;
@@ -64,7 +67,6 @@ struct node{
 	u32 thProof; //zarazky
 	u32 thDisproof;
 #endif //UPDATE2
-	u64 graph[2];
 };
 
 extern u32 hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
