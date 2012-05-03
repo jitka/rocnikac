@@ -8,11 +8,11 @@
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
-#define STATS
+//#define STATS
 #define NORM2
 #define DFPN
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE
-//#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
+#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE
 #define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti
 
 #define CACHE_SIZE (1<<20)

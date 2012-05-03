@@ -28,7 +28,9 @@ static inline void cacheInsert(node_t* node){
 		cache[where] = node;
 		return;
 	}
+#ifdef DEBUG
 	cacheMiss++;
+#endif //DEBUG
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (nodeCurrent(cache[where]) || (nodeTurn(cache[where]) == nodeTurn(node)) )
