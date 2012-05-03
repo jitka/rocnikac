@@ -324,7 +324,8 @@ static inline void developNode(node_t* node){
 #ifdef DEBUG
 	if (nodeExpanded(node)){
 		//nektere deti se smazali
-		free(node->children2);
+//		free(node->children2);
+		nodeSetChildrenN(node,0);
 	}
 #endif //DEBUG
 
@@ -407,23 +408,9 @@ static inline void developNode(node_t* node){
 		} printf("\n");*/
 #endif //HEURISTIC1
 
-	//TODO procovat uz rovnou s tim, poradek
-	graph_t * children2 = malloc( sizeof(graph_t) * M );
-#ifdef DEBUG
-	if (children2 == NULL)
-		perror("malloc");
-	if (childrenN >= M)
-		perror("children");
-	for (int i = 0; i < childrenN; i++){
-		if (children[i] == NULL)
-			perror("au dite");
-	}
-#endif //DEBUG
-	node->children2 = children2;
 	for (int v = 0; v < childrenN; v++){ 
 		insertChild(node,children[v]);
 	}
-//	nodeInsertChildren(node,childrenN,children2);
 
 	nodeSetExpanded(node,true);
 	
