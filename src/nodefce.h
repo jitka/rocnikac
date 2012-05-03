@@ -13,7 +13,7 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-static inline node_t* nodeNew();
+static inline node_t* nodeNew(u8 turn);
 static inline void nodeDelete(node_t* node);
 
 //-------------NODE---------------GRAPH------------------
@@ -243,7 +243,7 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 }
 
 //new
-static inline node_t* nodeNew(){
+static inline node_t* nodeNew(u8 turn){
 	node_t* node = malloc(sizeof(node_t));
 	graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
 	graph_t * children2 = malloc( sizeof(graph_t) * M );
@@ -265,6 +265,7 @@ static inline node_t* nodeNew(){
 	node->parents2 = parents2;
 	node->children2 = children2;
 	node->current = false;
+	node->turn = turn;
 
 	nodeSetExpanded( node, false);
 	return node;

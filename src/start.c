@@ -5,13 +5,12 @@
 #include "linkedlist.h"
 
 node_t* getRoot(){
-	node_t* node = nodeNew();
+	node_t* node = nodeNew(0);
 
 	nodeEmptyGraph(node);
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
-	nodeSetTurn( node, 0);
 	nodeSetType( node, OR);
 	nodeSetValue( node, UNKNOWN);
 	
@@ -19,7 +18,7 @@ node_t* getRoot(){
 }
 
 node_t* readNode(){
-	node_t* node = nodeNew();
+	node_t* node = nodeNew(0);
 	
 	nodeEmptyGraph(node);
 	

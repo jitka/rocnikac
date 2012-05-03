@@ -270,9 +270,8 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	//vytvori potomka obarvenim hrany i,j
 	
 	//-----vytvorim vrchol
-	node_t* child = nodeNew();
+	node_t* child = nodeNew(nodeTurn(node)+1);
 
-	nodeSetTurn(child, nodeTurn(node)+1 );
 	nodeCopyGraph(child,node);
 
 	switch (nodeType(node)) {
