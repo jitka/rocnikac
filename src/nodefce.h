@@ -2,6 +2,7 @@
 #define NODEFCE_H
 
 #include <stdlib.h>
+#include <assert.h>
 #include "struct.h"
 #include "linkedlist.h"
 #include "tabs.h"
@@ -300,17 +301,17 @@ static inline u8 nodeParentsN(node_t * node){
 }
 static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
-		node->parentsMAX *= 2;
-		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX );
 #ifdef DEBUG
-		if (parents == NULL)
-			perror("malloc");
-		graph_t g;
-		g = parent;
-		parents[0] = g;
-		parents[0] = node->parents[0];
+		if (node->parentsMAX > 70){
+			printf("par %d\n",node->parentsN);
+		}
 #endif //DEBUG
-		for (int i = 0; i < node->parentsN; i++){
+		node->parentsMAX *= 2;
+		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX);
+#ifdef DEBUG
+		assert(parents != NULL);
+#endif //DEBUG
+		for (u32 i = 0; i < node->parentsN; i++){
 			parents[i] = node->parents[i];
 		}
 		free(node->parents);

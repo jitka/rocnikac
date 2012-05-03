@@ -8,7 +8,7 @@
 #define DEBUG
 #define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
-//#define STATS
+#define STATS
 #define NORM2
 #define DFPN
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE

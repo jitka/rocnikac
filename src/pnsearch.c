@@ -679,7 +679,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 		if ( !nodeExpanded(node) )
 			developNode(node);
 		setProofAndDisproofNubers(node);
-//		updateAncestors(node);
+		updateAncestors(node);
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 			nodeUnsetCurrent(node);

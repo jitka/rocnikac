@@ -51,8 +51,8 @@ struct node{
 
 
 	u8 childrenN;
-	u8 parentsN;
-	u8 parentsMAX;
+	u32 parentsN;
+	u32 parentsMAX;
 	graph_t * children;
 	graph_t * parents;
 

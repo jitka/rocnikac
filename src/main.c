@@ -13,12 +13,8 @@
 // existuje knihovna na zdilenou cache? google, Tom, Brum, Pavel
 // googlit klikovou hru clique game, hight symetri, low branching factor
 // oprofile
-// napsat df (ε trik)
-// 	- pri probublani bocnimy otci navrch zastavit
-// 	- strom do pole, cache
-// 	- vyhazovat vrcholy kdyz dojde pole
-// 	- N 8 
-// 	- divne padani na cachesize 12
+// N 8 
+// divne padani na cachesize 12
 //
 // TODO NEKDY
 // heuristika misto 1 1
@@ -55,10 +51,8 @@
 // jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
 //
 // DOTAZY
-// tema+co vsechno napsat
-// proc je update ancesor tak vysoke? proc nepomohlo mazani?
-// funguje df-PN na vice otcu odrekurzene?
-// klikova hra - preklad
+// proc udpte ancesor vubec nepomuze?
+// co se slepimi cesty?
 
 void printSetting(){
 
