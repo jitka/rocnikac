@@ -20,7 +20,6 @@
 // 	- N 8 
 // 	- divne padani na cachesize 12
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
-// fce na pridani/ubirani otcu/deti, predelani pri dalsim develop
 // vypisy na zacatku
 //
 // TODO NEKDY

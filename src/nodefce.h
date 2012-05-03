@@ -38,6 +38,12 @@ static inline bool nodeTurnChack(node_t * a);
 #endif //DEBUG
 
 //-------------NODE---------------DATA------------------
+static inline u8 nodeChildrenN(node_t * node);
+static inline void nodeSetChildrenN(node_t * node, u8 childrenN);
+static inline void nodeAddChildren(node_t * node, graph_t children);
+static inline u8 nodeParentsN(node_t * node);
+static inline void nodeAddParent(node_t * node, graph_t parent);
+
 static inline bool nodeExpanded(node_t * node);
 static inline void nodeSetExpanded(node_t * node, u32 expanded);
 
