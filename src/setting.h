@@ -19,6 +19,8 @@
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 
+#define MAXCHILD(TURN) (M-TURN)
+
 #define bool int
 #define u8 unsigned char
 #define u32 unsigned int

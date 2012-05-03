@@ -22,7 +22,6 @@
 // 	- N 8 
 // 	- divne padani na cachesize 12
 // 	- smazat ll2
-// 	- sikovne dlouhe pole deti (podle skutecneho maxima)
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // zbavit se dvojek
 // fce na pridani/ubirani otcu/deti, predelani pri dalsim develop

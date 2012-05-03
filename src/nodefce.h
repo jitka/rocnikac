@@ -246,7 +246,7 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 static inline node_t* nodeNew(u8 turn){
 	node_t* node = malloc(sizeof(node_t));
 	graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
-	graph_t * children2 = malloc( sizeof(graph_t) * M );
+	graph_t * children2 = malloc( sizeof(graph_t) * MAXCHILD(turn) );
 #ifdef DEBUG
 	if (node == NULL || parents2 == NULL || children2 == NULL)
 		perror("malloc node");
@@ -282,8 +282,11 @@ static inline void nodeAddChildren(node_t * node, graph_t children){
 	node->children2[node->childrenN] = children;
 	node->childrenN++;
 #ifdef DEBUG
-	if (node->childrenN >= M)
-		perror("moc deti\n");
+	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
+		printf("moc deti %d %d %d\n",
+			node->childrenN,
+			nodeTurn(node),
+			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
 }
 static inline u8 nodeParentsN(node_t * node){
@@ -293,7 +296,6 @@ static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
 		node->parentsMAX *= 2;
 		graph_t * parents2 = malloc( sizeof(graph_t) * node->parentsMAX );
-	//graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
 #ifdef DEBUG
 		if (parents2 == NULL)
 			perror("malloc");
