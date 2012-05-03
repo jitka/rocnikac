@@ -48,7 +48,7 @@ struct node{
 
 	u32 hash;
 
-	ll2_t parents;
+//	ll2_t parents;
 //	ll2_t children;
 
 	u8 childrenN;

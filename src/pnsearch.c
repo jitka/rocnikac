@@ -15,23 +15,6 @@ int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void deleteChild(node_t* node, node_t* child){
-//	ll2Delete( &node->children, child );
-	ll2Delete( &child->parents, node);
-/*
-	if ( ll2Empty( &child->parents ) ){
-#ifdef STATS
-		histogramAdd ( &turn_stats[nodeTurn(child)].setDel, child->set_stats);
-		histogramAdd ( &all_stats.setDel, child->set_stats);
-#endif //STATS
-		deleteChildren(child);
-		cacheDelete(child);
-		nodeDelete(child);
-		numberOfNodes--;
-	}
-*/
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node){
 	nodeSetValue(node, TRUE);
 	nodeSetProof(node,0);
@@ -127,7 +110,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //DEBUG
 			//zahodim zbytecne
 			if ( nodeValue(child) == FALSE ){
-				deleteChild( node, child);
 				continue;
 			} else {
 				node->children2[to] = node->children2[i];
@@ -195,7 +177,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //DEBUG
 			//zahodim zbytecne
 			if ( nodeValue(child) == TRUE ){
-				deleteChild( node, child);
 				continue;
 			} else {
 				node->children2[to] = node->children2[i];
@@ -310,7 +291,6 @@ static inline void insertChild(node_t* node, node_t* child){
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 
 		//je v cachy
-		ll2AddNodeEnd( &n->parents, node);
 		n->parents2[nodeParentsN(n)] = g;
 		nodePlusParentsN(n);
 		nodeDelete(child);
@@ -320,7 +300,6 @@ static inline void insertChild(node_t* node, node_t* child){
 		statsNewNode(child);
 #endif //STATS
 		numberOfNodes++;
-		ll2AddNodeEnd( &child->parents, node);
 		child->parents2[nodeParentsN(child)] = g;
 		nodePlusParentsN(child);
 		cacheInsert(child);
@@ -485,7 +464,6 @@ static inline void updateAncestors(){ //po hladinach
 			continue;
 
 		//pridat vsechny predky co je potreba updatetovat
-		ll2AddNodesEnd( &ancestors, &node->parents);
 		for (int i = 0; i < nodeParentsN(node); i++){
 			node_t * parent = cacheFind2(&node->parents2[i]);
 			if (parent == NULL)

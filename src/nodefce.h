@@ -214,7 +214,7 @@ static inline u32 nodeThDisproof(node_t * node){
 //delete
 static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
 #ifdef DEBUG
-	if ( nodeExpanded(node) || (!ll2Empty(&node->parents)) ){
+	if ( nodeExpanded(node) ){
 		printf("tohle by se nemelo mazat\n");
 		printNode(node);
 	}
@@ -230,7 +230,6 @@ static inline node_t* nodeNew(){
 	if (node == NULL || parents2 == NULL)
 		perror("malloc node");
 #endif //DEBUG
-	ll2New( &node->parents );
 
 #ifdef STATS
 	node->set_stats = 0;
