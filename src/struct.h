@@ -40,6 +40,7 @@ struct node{
 		   // 1 type
 		   // 2,3 value
 //	u8 expanded:1;	u8 type:1;	u8 value:2;
+	u8 current:1;
 
 	u8 last_i;
         u8 last_j;
@@ -47,9 +48,6 @@ struct node{
 	u8 turn; //kolikaty je to tah = kolik je prave obarveno hran
 
 	u32 hash;
-
-//	ll2_t parents;
-//	ll2_t children;
 
 	u8 childrenN;
 	u8 parentsN;

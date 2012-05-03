@@ -18,7 +18,6 @@
 // napsat df (ε trik)
 // 	- pri probublani bocnimy otci navrch zastavit
 // 	- strom do pole, cache
-// 	- nevyhazovat vrcholy z current path - nejaky indikacny bit
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8
 // 	- zkratit select2
@@ -28,6 +27,7 @@
 // 	- pole deti delat v new_node
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // zbavit se dvojek
+// fce na pridani/ubirani otcu/deti
 //
 // TODO NEKDY
 // heuristika misto 1 1

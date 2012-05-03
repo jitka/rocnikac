@@ -69,8 +69,24 @@ static inline u32 nodeThProof(node_t * node);
 static inline u32 nodeThDisproof(node_t * node);
 #endif //UPDATE2
 
+static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current path, ktere nemohou byt smazane
+static inline void nodeUnsetCurrent(node_t *node);
+static inline u8 nodeCurrent(node_t *node); 
+
 static inline void nodeInsertChildren(node_t * node, u32 childrenN, graph_t * children );
 //-------------------------------------------------------------
+
+static inline void nodeSetCurrent(node_t *node){
+	node->current = true;
+}
+static inline void nodeUnsetCurrent(node_t *node){
+	node->current = false;
+}
+static inline u8 nodeCurrent(node_t *node){ 
+	return node->current;
+}
+
+
 static inline u8 nodeLastEdgeI(node_t *node){
 #ifdef DEBUG
 	if( nodeTurn(node) == 0 )
@@ -242,6 +258,7 @@ static inline node_t* nodeNew(){
 	node->parentsN = 0;
 	node->parentsMAX = 4;
 	node->parents2 = parents2;
+	node->current = false;
 
 	nodeSetExpanded( node, false);
 	return node;

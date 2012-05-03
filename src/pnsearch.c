@@ -695,6 +695,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 #endif //DEBUG
 		
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+			nodeUnsetCurrent(node);
 			currentNode--;
 			continue;
 		}
@@ -704,6 +705,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 //		updateAncestors(node);
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+			nodeUnsetCurrent(node);
 			currentNode--;
 			continue;
 		}
@@ -725,6 +727,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 		
 		currentNode++;
 		currentPath[currentNode] = child;
+		nodeSetCurrent(child);
 	}
 #ifdef DEBUG
 	printf("nodes %d\n",numberOfNodes);
