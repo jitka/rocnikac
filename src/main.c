@@ -27,7 +27,7 @@
 // 	- pole deti delat v new_node
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // zbavit se dvojek
-// fce na pridani/ubirani otcu/deti
+// fce na pridani/ubirani otcu/deti, predelani pri dalsim develop
 //
 // TODO NEKDY
 // heuristika misto 1 1

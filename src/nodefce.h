@@ -278,8 +278,8 @@ static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 static inline u8 nodeParentsN(node_t * node){
 	return node->parentsN;
 }
-static inline void nodePlusParentsN(node_t * node){
-	if (node->parentsN+1 >= node->parentsMAX){
+static inline void nodeAddParent(node_t * node, graph_t parent){
+	if (node->parentsN >= node->parentsMAX){
 		node->parentsMAX *= 2;
 		graph_t * parents2 = malloc( sizeof(graph_t) * node->parentsMAX );
 		for (int i = 0; i <= node->parentsN; i++){
@@ -288,8 +288,11 @@ static inline void nodePlusParentsN(node_t * node){
 		free(node->parents2);
 		node->parents2 = parents2;
 	}
+
+	node->parents2[node->parentsN] = parent;
 	node->parentsN++;
 }
+
 
 static inline void nodeEmptyGraph(node_t * node){
 	node->graph[0] = 0ULL;

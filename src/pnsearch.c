@@ -106,8 +106,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	for (int i = 0; i < nodeChildrenN(node); i++) {
 		node_t* child = cacheFind2(&node->children2[i]);
 		//pokud se smazal syn
-		if ( cacheFind(child) == NULL){
-			printf("TODO neni dite");
+		if ( child == NULL){
 			missing = true;
 		}
 	}
@@ -132,8 +131,6 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			//nepodarilo se vytvorit vsechny deti/navzajem se vyhazuji
 			if (child == NULL){
 				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
-				printNode(node);
-				printChildren(node);
 			}
 #endif //DEBUG
 			//zahodim zbytecne
@@ -309,8 +306,7 @@ static inline void insertChild(node_t* node, node_t* child){
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 
 		//je v cachy
-		n->parents2[nodeParentsN(n)] = g;
-		nodePlusParentsN(n);
+		nodeAddParent(n,g);
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
@@ -318,8 +314,7 @@ static inline void insertChild(node_t* node, node_t* child){
 		statsNewNode(child);
 #endif //STATS
 		numberOfNodes++;
-		child->parents2[nodeParentsN(child)] = g;
-		nodePlusParentsN(child);
+		nodeAddParent(child,g);
 		cacheInsert(child);
 	}
 }
@@ -330,8 +325,10 @@ static inline void developNode(node_t* node){
 
 
 #ifdef DEBUG
-	if (nodeExpanded(node))
-		perror("uz je");
+	if (nodeExpanded(node)){
+		//nektere deti se smazali
+		free(node->children2);
+	}
 #endif //DEBUG
 
 #ifdef NOFREEK4
@@ -679,6 +676,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 	currentNode = 0;
 
 	nodeSetTh(root,MAXPROOF,MAXPROOF);
+#ifdef DEBUG
+	int counter = 0;
+#endif //DEBUG
 	
 
 	while (nodeValue(root) == UNKNOWN) {
@@ -728,6 +728,21 @@ nodeValue_t proofNumberSearch(node_t* root){
 		currentNode++;
 		currentPath[currentNode] = child;
 		nodeSetCurrent(child);
+
+#ifdef DEBUG
+		counter++;
+		node_t * mostProovingNode = currentPath[currentNode];
+		if (counter % 100000 == 0){
+		//if (true){
+		//if (false){
+			//printNode(mostProovingNode);
+			printf("hotov node (%u) %u \n",nodeHash(mostProovingNode),nodeTurn(mostProovingNode));
+			//printNode(mostProovingNode);
+			printf("nodes %d interace %d\n",numberOfNodes,counter);
+			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
+			//printChildren(mostProovingNode);
+		}
+#endif //DEBUG
 	}
 #ifdef DEBUG
 	printf("nodes %d\n",numberOfNodes);

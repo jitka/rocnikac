@@ -28,8 +28,16 @@ static inline void cacheInsert(node_t* node){
 		cache[where] = node;
 		return;
 	}
-#ifdef DEBUG
 	cacheMiss++;
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (nodeCurrent(cache[where]) || (nodeTurn(cache[where]) == nodeTurn(node)) )
+			continue;
+		cache[where] = node;
+		return;
+	}
+
+#ifdef DEBUG
 	printf("neni kam dat %d\n",nodeHash(node));
 #endif //DEBUG
 }

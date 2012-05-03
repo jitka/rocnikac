@@ -15,7 +15,7 @@
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 #define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti
 
-#define CACHE_SIZE (1<<26)
+#define CACHE_SIZE (1<<20)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 
