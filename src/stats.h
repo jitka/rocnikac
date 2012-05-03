@@ -14,6 +14,7 @@
 #define SELECT_STATS_MAX 15
 #define UPDATE_STATS_MAX 46
 #define SET_STATS_MAX 10
+#define PAR_STATS_MAX 10
 #define STATS_MAX  MAX( SET_STATS_MAX, MAX( UPDATE_STATS_MAX, SET_STATS_MAX ) )
 
 
@@ -39,6 +40,8 @@ struct stats_T {
 
 	histogram_t setFin;
 	histogram_t setDel;
+	histogram_t parFin;
+	histogram_t parDel;
 };
 
 

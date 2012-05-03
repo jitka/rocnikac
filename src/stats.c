@@ -20,11 +20,20 @@ void statsInit(){
 	all_stats.setFin.name = "setPD-NumbersHotove";
 	all_stats.setDel.maxVal = SET_STATS_MAX;
 	all_stats.setDel.name = "setPD-NumbersSmazane";
+	all_stats.parFin.maxVal = PAR_STATS_MAX;
+	all_stats.parFin.name = "parentsHotove";
+	all_stats.parDel.maxVal = PAR_STATS_MAX;
+	all_stats.parDel.name = "parentsSmazane";
+
 	for (int t = 0; t <= M; t++){
 		turn_stats[t].setFin.maxVal = SET_STATS_MAX;
 		turn_stats[t].setFin.name = "setPD-NumbersHotove";
 		turn_stats[t].setDel.maxVal = SET_STATS_MAX;
 		turn_stats[t].setDel.name = "setPD-NumbersSmazane";
+		turn_stats[t].parFin.maxVal = PAR_STATS_MAX;
+		turn_stats[t].parFin.name = "parentsHotove";
+		turn_stats[t].parDel.maxVal = PAR_STATS_MAX;
+		turn_stats[t].parDel.name = "parentsSmazane";
 	}
 }
 
@@ -95,6 +104,7 @@ void printStats(){
 
 	printf("interace %d\n",interations_stats);
 	//histogramPrint( &all_stats.setFin );
+	histogramPrint( &all_stats.parFin );
 	//histogramPrint( &all_stats.setDel );
 	//histogramPrint( &updateStats );
 	//histogramPrint( &selectStats );
@@ -124,6 +134,7 @@ void printStats(){
 				turn_stats[turn].finished_false
 		       );
 //		histogramPrint( &turn_stats[turn].setFin );
+//		histogramPrint( &turn_stats[turn].parFin );
 //		histogramPrint( &turn_stats[turn].setDel );
 //		printf("\n");
 	}

@@ -26,6 +26,8 @@
 // 	- zkratit select2
 // 	- smazat ll2
 // 	- graph_t do node_t
+// 	- sikovne dlouhe pole deti (podle skutecneho maxima)
+// 	- pole deti delat v new_node
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 // zbavit se dvojek
 //

@@ -52,7 +52,10 @@ struct node{
 //	ll2_t children;
 
 	u8 childrenN;
+	u8 parentsN;
+	u8 parentsMAX;
 	graph_t * children2;
+	graph_t * parents2;
 
 #ifdef STATS
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers

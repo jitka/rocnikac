@@ -225,8 +225,9 @@ static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodi
 //new
 static inline node_t* nodeNew(){
 	node_t* node = malloc(sizeof(node_t));
+	graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
 #ifdef DEBUG
-	if (node == NULL)
+	if (node == NULL || parents2 == NULL)
 		perror("malloc node");
 #endif //DEBUG
 	ll2New( &node->parents );
@@ -239,6 +240,10 @@ static inline node_t* nodeNew(){
 #endif //UPDATE2
 
 	node->childrenN = 0;
+	node->parentsN = 0;
+	node->parentsMAX = 4;
+	node->parents2 = parents2;
+
 	nodeSetExpanded( node, false);
 	return node;
 }
@@ -253,6 +258,21 @@ static inline u8 nodeChildrenN(node_t * node){
 }
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
+}
+static inline u8 nodeParentsN(node_t * node){
+	return node->parentsN;
+}
+static inline void nodePlusParentsN(node_t * node){
+	if (node->parentsN+1 >= node->parentsMAX){
+		node->parentsMAX *= 2;
+		graph_t * parents2 = malloc( sizeof(graph_t) * node->parentsMAX );
+		for (int i = 0; i <= node->parentsN; i++){
+			parents2[i] = node->parents2[i];
+		}
+		free(node->parents2);
+		node->parents2 = parents2;
+	}
+	node->parentsN++;
 }
 
 static inline void nodeEmptyGraph(node_t * node){

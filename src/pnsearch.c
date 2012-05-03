@@ -41,9 +41,10 @@ static inline void setTrue(node_t* node){
 	turn_stats[nodeTurn(node)].finished++;
 	all_stats.finished_true++;
 	turn_stats[nodeTurn(node)].finished_true++;
-	int s = node->set_stats;
-	histogramAdd ( &all_stats.setFin, s);
-	histogramAdd ( &turn_stats[nodeTurn(node)].setFin, s);
+	histogramAdd ( &all_stats.setFin, node->set_stats);
+	histogramAdd ( &turn_stats[nodeTurn(node)].setFin, node->set_stats);
+	histogramAdd ( &all_stats.parFin, nodeParentsN(node));
+	histogramAdd ( &turn_stats[nodeTurn(node)].parFin, nodeParentsN(node));
 #endif //STATS
 }
 
@@ -58,9 +59,10 @@ static inline void setFalse(node_t* node){
 	turn_stats[t].finished++;
 	all_stats.finished_false++;
 	turn_stats[t].finished_false++;
-	int s = node->set_stats;
-	histogramAdd ( &all_stats.setFin, s);
-	histogramAdd ( &turn_stats[t].setFin, s);
+	histogramAdd ( &all_stats.setFin, node->set_stats);
+	histogramAdd ( &turn_stats[nodeTurn(node)].setFin, node->set_stats);
+	histogramAdd ( &all_stats.parFin, nodeParentsN(node));
+	histogramAdd ( &turn_stats[nodeTurn(node)].parFin, nodeParentsN(node));
 #endif //STATS
 }
 
@@ -300,11 +302,17 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 static inline void insertChild(node_t* node, node_t* child){
 	//zapoji vrchol do stromu
+	graph_t g;
+	g.graph[0] = node->graph[0];
+	g.graph[1] = node->graph[1];
+	g.hash = node->hash;
 
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 
 		//je v cachy
 		ll2AddNodeEnd( &n->parents, node);
+		n->parents2[nodeParentsN(n)] = g;
+		nodePlusParentsN(n);
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
@@ -313,12 +321,9 @@ static inline void insertChild(node_t* node, node_t* child){
 #endif //STATS
 		numberOfNodes++;
 		ll2AddNodeEnd( &child->parents, node);
+		child->parents2[nodeParentsN(child)] = g;
+		nodePlusParentsN(child);
 		cacheInsert(child);
-	if ( ll2Empty( &child->parents) ){
-			printf("nejsou rodice2\n");
-			printNode(node);
-		}
-
 	}
 }
 
@@ -481,6 +486,11 @@ static inline void updateAncestors(){ //po hladinach
 
 		//pridat vsechny predky co je potreba updatetovat
 		ll2AddNodesEnd( &ancestors, &node->parents);
+		for (int i = 0; i < nodeParentsN(node); i++){
+			node_t * parent = cacheFind2(&node->parents2[i]);
+			if (parent == NULL)
+				perror("TODO neni rodic");
+		}
 
 	}
 //	printf("\n");
