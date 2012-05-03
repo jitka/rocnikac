@@ -10,7 +10,7 @@
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE
 #define STATS
 #define NORM2
-#define UPDATE2
+#define DF-PN
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
 #define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti

@@ -421,9 +421,9 @@ static inline void updateAncestors(){ //po hladinach
 #ifdef STATS
 	int updateS = 0;
 #endif //STATS
-#ifdef UPDATE2
+#ifdef DF-PN
 	updateN++; //kolikaty probyha update
-#endif //UPDATE2
+#endif //DF-PN
 
 	ll2_t ancestors;
        	ll2New(&ancestors);
@@ -434,11 +434,11 @@ static inline void updateAncestors(){ //po hladinach
 
 		node_t* node = ll2FirstNode(&ancestors);
 		ll2DelFirst(&ancestors);
-#ifdef UPDATE2
+#ifdef DF-PN
 		if (nodeUpdated(node, updateN))
 			continue;
 		nodeUpdate(node, updateN);
-#endif //UPDATE2
+#endif //DF-PN
 #ifdef STATS
 		updateS++;
 #endif //STATS
@@ -591,7 +591,7 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef UPDATE2
+#ifndef DF-PN
 nodeValue_t proofNumberSearch(node_t* root){
 
 	
@@ -645,7 +645,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 	return nodeValue(root);
 }
 
-#else  //UPDATE2
+#else  //DF-PN
 
 nodeValue_t proofNumberSearch(node_t* root){
 
@@ -732,4 +732,4 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 	return nodeValue(root);
 }
-#endif  //UPDATE2
+#endif  //DF-PN

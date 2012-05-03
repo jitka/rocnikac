@@ -61,13 +61,13 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof);
 static inline u8 nodeLastEdgeI(node_t *node);
 static inline u8 nodeLastEdgeJ(node_t *node);
 
-#ifdef UPDATE2
+#ifdef DF-PN
 static inline void nodeUpdate(node_t * node, u32 update);
 static inline bool nodeUpdated(node_t * node, u32 update);
 static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof);
 static inline u32 nodeThProof(node_t * node);
 static inline u32 nodeThDisproof(node_t * node);
-#endif //UPDATE2
+#endif //DF-PN
 
 static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current path, ktere nemohou byt smazane
 static inline void nodeUnsetCurrent(node_t *node);
@@ -203,7 +203,7 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 }
 
 
-#ifdef UPDATE2
+#ifdef DF-PN
 static inline void nodeUpdate(node_t * node, u32 update){
 #ifdef DEBUG
 	if (update > MAXPROOF)
@@ -228,7 +228,7 @@ static inline u32 nodeThProof(node_t * node){
 static inline u32 nodeThDisproof(node_t * node){
 	return node->thDisproof;
 }
-#endif //UPDATE2
+#endif //DF-PN
 
 
 //delete
@@ -255,9 +255,9 @@ static inline node_t* nodeNew(u8 turn){
 #ifdef STATS
 	node->set_stats = 0;
 #endif //STATS
-#ifdef UPDATE2
+#ifdef DF-PN
 	node->update = 0;
-#endif //UPDATE2
+#endif //DF-PN
 
 	node->childrenN = 0;
 	node->parentsN = 0;

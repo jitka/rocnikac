@@ -10,7 +10,6 @@
 // TODO HNED
 // obsah
 // zeptat Pavel, stroje
-// UPDATE2->DF
 // resit delete
 // existuje knihovna na zdilenou cache? google, Tom, Brum, Pavel
 // googlit klikovou hru clique game, hight symetri, low branching factor

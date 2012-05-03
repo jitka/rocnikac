@@ -60,11 +60,11 @@ struct node{
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
 #endif //stats
 
-#ifdef UPDATE2
+#ifdef DF-PN
 	u32 update;
 	u32 thProof; //zarazky
 	u32 thDisproof;
-#endif //UPDATE2
+#endif //DF-PN
 };
 
 extern u32 hashNumbers[2][N][N]; //pro kazdou parvu a hranuo
