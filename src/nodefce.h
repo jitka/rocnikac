@@ -73,8 +73,13 @@ static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current pa
 static inline void nodeUnsetCurrent(node_t *node);
 static inline u8 nodeCurrent(node_t *node); 
 
+static inline graph_t nodeGraph(node_t *node);
 static inline void nodeInsertChildren(node_t * node, u32 childrenN, graph_t * children );
 //-------------------------------------------------------------
+
+static inline graph_t nodeGraph(node_t *node){
+	return node->graph;
+}
 
 static inline void nodeSetCurrent(node_t *node){
 	node->current = true;
@@ -274,6 +279,14 @@ static inline u8 nodeChildrenN(node_t * node){
 }
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
+}
+static inline void nodeAddChildren(node_t * node, graph_t children){
+	node->children2[node->childrenN] = children;
+	node->childrenN++;
+#ifdef DEBUG
+	if (node->childrenN >= M)
+		perror("moc deti\n");
+#endif //DEBUG
 }
 static inline u8 nodeParentsN(node_t * node){
 	return node->parentsN;

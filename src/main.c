@@ -21,9 +21,7 @@
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8 
 // 	- divne padani na cachesize 12
-// 	- zkratit select2
 // 	- smazat ll2
-// 	- graph_t do node_t
 // 	- sikovne dlouhe pole deti (podle skutecneho maxima)
 // 	- pole deti delat v new_node
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE

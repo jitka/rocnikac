@@ -298,15 +298,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 static inline void insertChild(node_t* node, node_t* child){
 	//zapoji vrchol do stromu
-	graph_t g;
-	g.graph[0] = node->graph.graph[0];
-	g.graph[1] = node->graph.graph[1];
-	g.hash = node->graph.hash;
-
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 
 		//je v cachy
-		nodeAddParent(n,g);
+		nodeAddParent(n,nodeGraph(node));
+		nodeAddChildren(node,nodeGraph(n));
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
@@ -314,7 +310,8 @@ static inline void insertChild(node_t* node, node_t* child){
 		statsNewNode(child);
 #endif //STATS
 		numberOfNodes++;
-		nodeAddParent(child,g);
+		nodeAddParent(child,nodeGraph(node));
+		nodeAddChildren(node,nodeGraph(child));
 		cacheInsert(child);
 	}
 }
@@ -422,16 +419,11 @@ static inline void developNode(node_t* node){
 			perror("au dite");
 	}
 #endif //DEBUG
-	for (int i = 0; i < childrenN; i++){
-		children2[i].graph[0] = children[i]->graph.graph[0];
-		children2[i].graph[1] = children[i]->graph.graph[1];
-//		children2[i].hash = children[i]->hash;
-		children2[i].hash = nodeHash(children[i]);
-	}
+	node->children2 = children2;
 	for (int v = 0; v < childrenN; v++){ 
 		insertChild(node,children[v]);
 	}
-	nodeInsertChildren(node,childrenN,children2);
+//	nodeInsertChildren(node,childrenN,children2);
 
 	nodeSetExpanded(node,true);
 	
