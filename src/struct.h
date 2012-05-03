@@ -34,7 +34,7 @@ typedef struct {
 struct node{
 	graph_t graph;
 	
-	u32 proof2;
+	u32 proof;
 	u32 disproof;
 
 	u8 data;// bity:
@@ -53,18 +53,18 @@ struct node{
 	u8 childrenN;
 	u8 parentsN;
 	u8 parentsMAX;
-	graph_t * children2;
-	graph_t * parents2;
+	graph_t * children;
+	graph_t * parents;
 
 #ifdef STATS
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
 #endif //stats
 
-#ifdef DF-PN
+#ifdef DFPN
 	u32 update;
 	u32 thProof; //zarazky
 	u32 thDisproof;
-#endif //DF-PN
+#endif //DFPN
 };
 
 extern u32 hashNumbers[2][N][N]; //pro kazdou parvu a hranuo

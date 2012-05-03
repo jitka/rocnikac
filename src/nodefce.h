@@ -61,13 +61,13 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof);
 static inline u8 nodeLastEdgeI(node_t *node);
 static inline u8 nodeLastEdgeJ(node_t *node);
 
-#ifdef DF-PN
+#ifdef DFPN
 static inline void nodeUpdate(node_t * node, u32 update);
 static inline bool nodeUpdated(node_t * node, u32 update);
 static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof);
 static inline u32 nodeThProof(node_t * node);
 static inline u32 nodeThDisproof(node_t * node);
-#endif //DF-PN
+#endif //DFPN
 
 static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current path, ktere nemohou byt smazane
 static inline void nodeUnsetCurrent(node_t *node);
@@ -180,14 +180,14 @@ static inline u32 nodeHash(node_t * node){
 
 //proof
 static inline u32 nodeProof(node_t * node){
-	return node->proof2;
+	return node->proof;
 }
 static inline void nodeSetProof(node_t * node, u32 proof){
 #ifdef DEBUG
 	if (proof > MAXPROOF)
 		perror("velky proof");
 #endif //DEBUG
-	node->proof2 = proof;
+	node->proof = proof;
 }
 
 //disproof
@@ -203,7 +203,7 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 }
 
 
-#ifdef DF-PN
+#ifdef DFPN
 static inline void nodeUpdate(node_t * node, u32 update){
 #ifdef DEBUG
 	if (update > MAXPROOF)
@@ -228,7 +228,7 @@ static inline u32 nodeThProof(node_t * node){
 static inline u32 nodeThDisproof(node_t * node){
 	return node->thDisproof;
 }
-#endif //DF-PN
+#endif //DFPN
 
 
 //delete
@@ -255,15 +255,15 @@ static inline node_t* nodeNew(u8 turn){
 #ifdef STATS
 	node->set_stats = 0;
 #endif //STATS
-#ifdef DF-PN
+#ifdef DFPN
 	node->update = 0;
-#endif //DF-PN
+#endif //DFPN
 
 	node->childrenN = 0;
 	node->parentsN = 0;
 	node->parentsMAX = 4;
-	node->parents2 = parents2;
-	node->children2 = children2;
+	node->parents = parents2;
+	node->children = children2;
 	node->current = false;
 	node->turn = turn;
 
@@ -279,7 +279,7 @@ static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
 }
 static inline void nodeAddChildren(node_t * node, graph_t children){
-	node->children2[node->childrenN] = children;
+	node->children[node->childrenN] = children;
 	node->childrenN++;
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
@@ -295,23 +295,23 @@ static inline u8 nodeParentsN(node_t * node){
 static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){
 		node->parentsMAX *= 2;
-		graph_t * parents2 = malloc( sizeof(graph_t) * node->parentsMAX );
+		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX );
 #ifdef DEBUG
-		if (parents2 == NULL)
+		if (parents == NULL)
 			perror("malloc");
 		graph_t g;
 		g = parent;
-		parents2[0] = g;
-		parents2[0] = node->parents2[0];
+		parents[0] = g;
+		parents[0] = node->parents[0];
 #endif //DEBUG
 		for (int i = 0; i < node->parentsN; i++){
-			parents2[i] = node->parents2[i];
+			parents[i] = node->parents[i];
 		}
-		free(node->parents2);
-		node->parents2 = parents2;
+		free(node->parents);
+		node->parents = parents;
 	}
 
-	node->parents2[node->parentsN] = parent;
+	node->parents[node->parentsN] = parent;
 	node->parentsN++;
 }
 

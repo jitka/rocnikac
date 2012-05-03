@@ -75,15 +75,14 @@ void printValue(nodeValue_t value){
 void printChildren(node_t* node){
 
 	if (!nodeExpanded(node)){
-		printf("2nejsou deti\n");
+		printf("nejsou deti\n");
 		return;
 	}
-	printf("2potomci %d:\n",nodeChildrenN(node));
+	printf("potomci %d:\n",nodeChildrenN(node));
 	for (int i = 0; i < nodeChildrenN(node); i++){
-		printf("hash %d\n",node->children2[i].hash);
-		printNode(cacheFind2(&node->children2[i]));
+		printNode(cacheFind2(&node->children[i]));
 	}
-	printf("2potomci konec-------------------------------------------------\n");
+	printf("potomci konec-------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);
 }
 

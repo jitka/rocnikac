@@ -10,7 +10,6 @@
 // TODO HNED
 // obsah
 // zeptat Pavel, stroje
-// resit delete
 // existuje knihovna na zdilenou cache? google, Tom, Brum, Pavel
 // googlit klikovou hru clique game, hight symetri, low branching factor
 // oprofile
@@ -20,9 +19,7 @@
 // 	- vyhazovat vrcholy kdyz dojde pole
 // 	- N 8 
 // 	- divne padani na cachesize 12
-// 	- smazat ll2
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE, NENI HOTOVE
-// zbavit se dvojek
 // fce na pridani/ubirani otcu/deti, predelani pri dalsim develop
 // vypisy na zacatku
 //
@@ -43,10 +40,8 @@
 // hasovaci funkce z graph
 // testovat vsechny binarni veci
 // paralelizace 
-// radit listy podle heuristik
 // norm-rychlejsi hasovanani
 // norm-lepsi fce, vic fci
-// absolutni norm = vyber reprezentanta, knihovna
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
 // pri vkladani co cache zkusit permutovat vrcholy se stejnou ohodnocovacich fci
 // davat dohromady vysledky z ruznych pozic
