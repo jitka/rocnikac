@@ -8,6 +8,7 @@ node_t* cache[CACHE_SIZE];
 
 static inline void cacheInsert(node_t* node);
 static inline node_t* cacheFind(node_t* node); //vrati ukazatel na stejny graf nebo NULL pokud tam neni
+static inline node_t* cacheFind2(graph_t* graph); 
 static inline void cacheDelete(node_t* node);
 
 //--------------------------------------------------------------
@@ -35,7 +36,23 @@ static inline void cacheInsert(node_t* node){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (nodeCurrent(cache[where]) || (nodeTurn(cache[where]) == nodeTurn(node)) )
 			continue;
-		free(cache[where]);
+		//TODO jeho detem ho odebrat za rodice
+		node_t* old = cache[where];
+		for (int i = 0; i < nodeChildrenN(old); i++){
+			node_t* child = cacheFind2(&old->children[i]);
+			where = 0;
+			for(int j = 0; j < nodeParentsN(child); j++){
+				if ( compareNodeGraph( old, &child->parents[i]) ){
+					continue;
+				} else {
+					child->parents[where] = child->parents[i];
+					where++;
+				}
+
+			}
+			nodeSetParentN(node,where);
+		}
+		free(old);
 		cache[where] = node;
 		return;
 	}

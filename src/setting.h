@@ -13,9 +13,9 @@
 #define DFPN
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE
 #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE
-#define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti
+#define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti
 
-#define CACHE_SIZE (1<<20)
+#define CACHE_SIZE (1<<12)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 

@@ -115,6 +115,18 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	if (missing)
 		repairNode(node);
 
+	missing = false;	
+	for (int i = 0; i < nodeChildrenN(node); i++) {
+		node_t* child = cacheFind2(&node->children[i]);
+		//pokud se smazal syn
+		if ( child == NULL){
+			missing = true;
+		}
+	}
+
+	if (missing)
+		printf("TODO tohle nechci resit\n");
+
 
 	if (nodeType(node) == OR ) {
 		u32 min = MAXPROOF;

@@ -43,6 +43,7 @@ static inline u8 nodeChildrenN(node_t * node);
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN);
 static inline void nodeAddChild(node_t * node, graph_t child);
 static inline u8 nodeParentsN(node_t * node);
+static inline void nodeSetParentN(node_t * node, u32 parentsN);
 static inline void nodeAddParent(node_t * node, graph_t parent);
 
 static inline bool nodeExpanded(node_t * node);
@@ -298,6 +299,9 @@ static inline void nodeAddChild(node_t * node, graph_t child){
 }
 static inline u8 nodeParentsN(node_t * node){
 	return node->parentsN;
+}
+static inline void nodeSetParentN(node_t * node, u32 parentsN){
+	node->parentsN = parentsN;
 }
 static inline void nodeAddParent(node_t * node, graph_t parent){
 	if (node->parentsN >= node->parentsMAX){

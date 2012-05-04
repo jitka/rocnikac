@@ -82,8 +82,6 @@ void printSetting(){
 #ifdef NOFREEK4
 	printf("NOFREEK4 ");
 #endif
-#define TURNDDELETECHILDRENST 1 //do ktereho tahu se mazou vicenasobne deti
-
 
 	printf("\n---------------------------------------------------------\n");
 }
