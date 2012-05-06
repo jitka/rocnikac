@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "struct.h"
 #include "linkedlist.h"
 #include "tabs.h"
@@ -298,6 +299,7 @@ static inline node_t* nodeNew(u8 turn){
 	node->current = false;
 	node->currentChild = false;
 	node->turn = turn;
+	node->exist = true;
 	graphEmpty(&node->graph);
 
 	nodeSetExpanded( node, false);
@@ -311,11 +313,10 @@ static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
 }
 static inline void nodeAddChild(node_t * node, graph_t * child){
-	
-	node->children[node->childrenN].hash = child->hash;
-	node->children[node->childrenN].graph[0] = child->graph[0];
-	node->children[node->childrenN].graph[1] = child->graph[1];
-	node->childrenN++;
+
+//	printf("add\n");
+//	printGraph(child);
+	graphCopy( &node->children[node->childrenN++], child );
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
 		printf("moc deti %d %d %d\n",
@@ -381,9 +382,10 @@ static inline void graphEmpty(graph_t * graph){
 }
 
 static inline void graphCopy(graph_t * to, graph_t * from){
-	to->graph[0] = from->graph[0];
-	to->graph[1] = from->graph[1];
-	to->hash = from->hash;
+	memcpy(to,from,sizeof(graph_t));
+//	to->graph[0] = from->graph[0];
+//	to->graph[1] = from->graph[1];
+//	to->hash = from->hash;
 }
 
 static inline u32 graphHash(graph_t * graph){

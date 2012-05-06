@@ -307,7 +307,10 @@ static inline node_t* createChild(node_t* node, int i, int j){
 static inline void insertChild(node_t* node, node_t* child, int kdo){
 	//zapoji vrchol do stromu
 	node_t* n = cacheFind(nodeGraph(child));
+//	printf("insert\n");
+//	printChildren(node);
 	if ( n != NULL ) { 
+//		printf("je tam\n");
 		//je v cachy
 		assert(kdo == 0);
 		nodeAddParent(n,nodeGraph(node));
@@ -319,26 +322,31 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 #ifdef STATS
 		statsNewNode(child);
 #endif //STATS
-		if ( kdo==2 ){
+/*		if ( kdo==2 ){
 			printf("pn ins pred %d\n",kdo);
 			printNode(node);
 			printNode(child);
 			printParents(child);
 		}
-		numberOfNodes++;
+*/		numberOfNodes++;
 //		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-		cacheInsert(child);
+//		printf("neni tam\n");
+//		printGraph(nodeGraph(child));
 		nodeAddChild(node,nodeGraph(child));
 		nodeAddParent(child,nodeGraph(node));
-		if ( kdo==2 ){
+		cacheInsert(child);
+//	node_t* n2 = cacheFind(nodeGraph(child));
+//	printNode(n2);
+/*		if ( kdo==2 ){
 			printf("pn ins po %d\n",kdo);
 			printNode(node);
 			printNode(child);
 			printParents(child);
 		}
-		assert( nodeParentsN(child) == 1);
+*/		assert( nodeParentsN(child) == 1);
 		assert( kdo == 0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 	}
+//	printf("insert\n");
 }
 
 static inline node_t** generateChildren(node_t* node, int *childrenN){
@@ -478,7 +486,6 @@ static inline void repairNode(node_t* node){
 	//			printf("pred\n");
 	//			insertChild(node,children[i],2);
 	//		} else 
-			insertChild(node,children[i],1);
 			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 			if (children[i]->parentsN > 1){
 				printf("tu par %d %d\n",children[i]->parentsN,i);
@@ -487,7 +494,9 @@ static inline void repairNode(node_t* node){
 				printParents(children[i]);
 			}
 			nodeSetCurrentChild(children[i]);
+			insertChild(node,children[i],1);
 		}
+		free(children[i]);
 	}
 	free(children);
 
@@ -517,14 +526,24 @@ static inline void developNode(node_t* node){
 	assert(!nodeExpanded(node));
 #endif //DEBUG
 
+//		printf("develop\n");
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
 	for (int v = 0; v < childrenN; v++){ 
+//		printNode(children[v]);
 		insertChild(node,children[v],0);
+//		printf("child\n");
+//		printGraph(&node->children[v]);
+//		printNode( cacheFind( &node->children[v] ) );
+		assert(children[v]!=NULL);
+//		free(children[v]);
 	}
 	free(children);
 
 	nodeSetExpanded(node,true);
+//	printNode(node);
+//	printChildren(node);
+//		printf("develop\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -761,6 +780,8 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 nodeValue_t proofNumberSearch(node_t* root){
 
+//	cacheInsert(root);
+//	printNode(cacheFind(nodeGraph(root)));
 	
 	currentPath[0] = root;
 	currentNode = 0;
@@ -773,6 +794,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 	while (nodeValue(root) == UNKNOWN) {
 		node_t * node = currentPath[currentNode];
+//		printf("1\n");
 #ifdef STATS
 		interations_stats++;
 #endif //STATS
@@ -789,16 +811,24 @@ nodeValue_t proofNumberSearch(node_t* root){
 			currentNode--;
 			continue;
 		}
+//		printf("2\n");
+//		printNode(node);
+//		printChildren(node);
 		if ( !nodeExpanded(node) )
 			developNode(node);
+//		printf("3\n");
+//		printNode(node);
+//		printChildren(node);
 		setProofAndDisproofNubers(node);
 		updateAncestors(node);
+//		printf("4\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 			nodeUnsetCurrent(node);
 			currentNode--;
 			continue;
 		}
+//		printf("5\n");
 	
 		u32 secondProof; u32 secondDisproof;
 		node_t * child = selectMostProving2(node,&secondProof,&secondDisproof);

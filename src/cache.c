@@ -2,12 +2,17 @@
 #include "print.h"
 #include "nodefce.h"
 
+node_t cache[CACHE_SIZE];
+
 void cacheInsert(node_t* node){
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (cache[position] != NULL)
+		if ( cache[position].exist )
 			continue;
-		cache[position] = node;
+		memcpy(&cache[position],node,sizeof(node_t));
+//		graphCopy(nodeGraph(&cache[position]),nodeGraph(node));
+//		printNode(&cache[position]);
+//		printf("pozice puv %d skut %d\n",( nodeHash(node)  ) % CACHE_SIZE, position);
 		return;
 	}
 #ifdef DEBUG
@@ -15,11 +20,11 @@ void cacheInsert(node_t* node){
 #endif //DEBUG
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (nodeCurrent(cache[position]) || nodeCurrentChild(cache[position]) || (nodeTurn(cache[position]) == nodeTurn(node)) )
+		if (nodeCurrent(&cache[position]) || nodeCurrentChild(&cache[position]) || (nodeTurn(&cache[position]) == nodeTurn(node)) )
 			continue;
 		//jeho detem ho odebrat za rodice
 		//TODO testovat rodice
-		node_t* old = cache[position];
+		node_t* old = &cache[position];
 		assert(old!=NULL);
 		for (int i = 0; i < nodeChildrenN(old); i++){
 			node_t* child = cacheFind(&old->children[i]);
@@ -38,8 +43,7 @@ void cacheInsert(node_t* node){
 			}
 			nodeSetParentN(child,where);
 		}
-		free(old);
-		cache[position] = node;
+		memcpy(&cache[position],node,sizeof(node_t));
 		return;
 	}
 
@@ -49,28 +53,14 @@ void cacheInsert(node_t* node){
 }
 
 node_t* cacheFind(graph_t* graph){ 
+//	printf("cache: hledam\n");
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 where = ( graphHash(graph) + i ) % CACHE_SIZE;
-		if (cache[where] == NULL)
-			continue;
-		if ( graphCompare( nodeGraph(cache[where]), graph) )
-			return cache[where];
+		if ( graphCompare( nodeGraph(&cache[where]), graph) )
+			return &cache[where];
+		//printf("pozice puv %d skut %d\n",( graphHash(graph)  ) % CACHE_SIZE, where);
 	}
-	//printf("neni tam\n");
+//	printf("cache: neni tam\n");
 	return NULL;
 }
 
-void cacheDelete(node_t* node){
-	for (u32 i = 0; i < CACHE_PATIENCE; i++){
-		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (cache[where] == NULL)
-			continue;
-		if ( graphCompare( nodeGraph(cache[where]), nodeGraph(node)) ){
-			cache[where] = NULL;
-			return;
-		}
-	}
-#ifdef DEBUG
-	perror("neni v cachy");
-#endif //DEBUG
-}

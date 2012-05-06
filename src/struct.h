@@ -44,6 +44,7 @@ struct node{
 //	u8 expanded:1;	u8 type:1;	u8 value:2;
 	u8 current:1;
 	u8 currentChild:1;
+	u8 exist:1; //prazne policko v cachy ma defoultne 0 pri vytvoreni vzihkne 1
 
 	u8 last_i;
         u8 last_j;

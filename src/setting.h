@@ -16,7 +16,7 @@
 #define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti
 
 #define CACHE_SIZE (1<<20)
-#define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
+#define CACHE_PATIENCE 10 //kolik pozic za mistem kam patri se jeste muze nalezat 
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 
 #define MAXCHILD(TURN) (M-TURN)
