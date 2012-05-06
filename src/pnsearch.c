@@ -22,7 +22,7 @@ static inline void setUnknown(node_t* node);
 static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
-//static inline void insertChild(node_t* node, node_t* child);
+///static inline void insertChild(node_t* node, node_t* child);
 static inline void insertChild(node_t* node, node_t* child, int kdo); //TODO smazat
 static inline void repairNode(node_t* node);
 static inline void developNode(node_t* node);
@@ -328,7 +328,7 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 			printNode(child);
 			printParents(child);
 		}
-*/		numberOfNodes++;
+*/		
 //		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
 //		printf("neni tam\n");
 //		printGraph(nodeGraph(child));
@@ -386,8 +386,11 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 			if (nodeHash(children[i]) != last){
 				children[where++]=children[i];
 				last = nodeHash(children[i]);
+			} else {
+				numberOfNodes--;
+				free(children[i]);
 			}
-		} 
+		}
 		*childrenN = where;
 /*		for (int i = 0; i < childrenN; i++){
 			printf("%d ",nodeHash(children[i]));
@@ -496,6 +499,7 @@ static inline void repairNode(node_t* node){
 			nodeSetCurrentChild(children[i]);
 			insertChild(node,children[i],1);
 		}
+		numberOfNodes--;
 		free(children[i]);
 	}
 	free(children);
@@ -536,6 +540,7 @@ static inline void developNode(node_t* node){
 //		printGraph(&node->children[v]);
 //		printNode( cacheFind( &node->children[v] ) );
 		assert(children[v]!=NULL);
+		numberOfNodes--;
 		free(children[v]);
 		//children[v] == NULL;
 	}

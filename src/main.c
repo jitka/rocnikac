@@ -13,16 +13,17 @@
 // zeptat Pavel, stroje
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// kde trci pamet?
+// skutecne mazat prebytecne otce, deti
+// kde trci pamet
+// uklid?
 // grepnout TODO
 // N 8 
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
 // heuristika misto 1 1
 // heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
-// obsah bakalarky
-// probublani bokem
-// moje programovici cast
+// psat - probublani bokem
+// psat - moje programovici cast
 //
 //
 // TODO NEKDY

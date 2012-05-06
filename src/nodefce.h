@@ -263,9 +263,11 @@ static inline u32 nodeThDisproof(node_t * node){
 
 
 //new
+extern int numberOfNodes; //abych vedela kolik zeru pameti
 static inline node_t* nodeNew(u8 turn){
 	node_t* node = malloc(sizeof(node_t));
-	graph_t * parents2 = malloc( sizeof(graph_t) * 4 );
+	numberOfNodes++;
+	graph_t * parents2 = malloc( sizeof(graph_t) * 2 );
 	graph_t * children2 = malloc( sizeof(graph_t) * MAXCHILD(turn) );
 #ifdef DEBUG
 	if (node == NULL || parents2 == NULL || children2 == NULL)
@@ -281,7 +283,7 @@ static inline node_t* nodeNew(u8 turn){
 
 	node->childrenN = 0;
 	node->parentsN = 0;
-	node->parentsMAX = 4;
+	node->parentsMAX = 2;
 	node->parents = parents2;
 	node->children = children2;
 	node->current = false;
@@ -337,7 +339,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		if (node->parentsMAX > 100){
+		if (node->parentsMAX > 20){
 			printf("par %d\n",node->parentsN);
 			printNode(node);
 			printParents(node);
