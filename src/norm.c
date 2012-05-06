@@ -91,7 +91,7 @@ void norm(node_t* node){
 	nodeCopyGraph(nodeGraph(node),&newGraph);
 
 	//prohodi souradnice posledni hrany
-	nodeLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
+	nodeSetLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
 #endif
 
 #ifdef DEBUG

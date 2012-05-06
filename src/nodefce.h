@@ -24,11 +24,9 @@ static inline void nodeCopyGraph(graph_t * to, graph_t * from);
 static inline bool compareGraph(graph_t * a, graph_t * b);
 static inline bool compareNodeGraph(node_t * a, graph_t * b); //TODO smazat
 
-static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c);
-static inline bool nodeEdgeExist(node_t * node, int i, int j);
+static inline bool nodeColorEdgeExist(node_t * graph, int i, int j, color c);
+static inline bool nodeEdgeExist(node_t * graph, int i, int j);
 static inline void nodeSetEdge(graph_t * graph, int i, int j, color color);
-static inline void nodeSetLastEdge(node_t * node, int i, int j);
-static inline void nodeLastEdge(node_t * node, int i, int j); //prehodily se souradnice posledni hrany
 static inline int nodeDegree(node_t * node, int i, color c);
 
 //static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
@@ -68,6 +66,7 @@ static inline void nodeSetProof(node_t * node, u32 proof);
 static inline u32 nodeDisproof(node_t * node);
 static inline void nodeSetDisproof(node_t * node, u32 disproof);
 
+static inline void nodeSetLastEdge(node_t * node, int i, int j); //prehodily se souradnice posledni hrany
 static inline u8 nodeLastEdgeI(node_t *node);
 static inline u8 nodeLastEdgeJ(node_t *node);
 
