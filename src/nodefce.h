@@ -28,14 +28,12 @@ static inline bool nodeEdgeExist(graph_t * graph, int i, int j);
 static inline void nodeSetEdge(graph_t * graph, int i, int j, color color);
 static inline int nodeDegree(graph_t * graph, int i, color c);
 
-//static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
 static inline bool testK4(graph_t * graph, int i, int j, color color);
-static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4);
-static inline bool nodeThreat(node_t * node, int i, int j, color color);
-#ifdef DEBUG
+static inline void testK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4);
+static inline bool nodeThreat(graph_t * graph, int i, int j, color color);
+//static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
 //static inline bool nodeSimetric(node_t * a);
 //static inline bool nodeTurnChack(node_t * a);
-#endif //DEBUG
 
 //-------------NODE---------------DATA------------------
 static inline u8 nodeChildrenN(node_t * node);
@@ -466,16 +464,12 @@ static inline bool testK4(graph_t * graph, int i, int j, color color){
 	return false;
 }
 
-static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
+static inline void testK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4){
 	//otestuje jestli po pridani hrany ij nevznikla K4
-	graph_t * graph = nodeGraph(node);
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
 
 	*freeK4=0;
-	int i = nodeLastEdgeI(node);
-	int j = nodeLastEdgeJ(node);
-	color color = (nodeTurn(node) % 2 == 1) ? RED : BLUE; //kterou barvou byl nakreslet posledni tah
 	
 	//trojuhelniky kam nevede souperova hrana
 	tr = (~nodeNeighbour(graph,i,otherColor(color))) & (~nodeNeighbour(graph,j,otherColor(color))); 
@@ -484,14 +478,10 @@ static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
 			for (int t = s+1; t < N; t++)
 				if ((tr & (1<<t)) && t != i && t !=j ){
 					//staci overit jestli mezi s a t nevede souperova hrana
-					if ( !nodeColorEdgeExist( nodeGraph(node), s, t, otherColor(color)) ){
-//						printf("hrana %d %d\n", s, t);
+					if ( !nodeColorEdgeExist( graph, s, t, otherColor(color)) ){
 						(*freeK4)++;
 					}
 				}
-//		printf("%d %d %d\n",i,j,*freeK4);
-//		printNode(node);
-
 
 	//trojuhelniky kam vedou moje hrany
 	tr = nodeNeighbour(graph,i,color) & nodeNeighbour(graph,j,color);
@@ -500,7 +490,7 @@ static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
 			for (int t = s+1; t < N; t++)
 				if ((tr & (1<<t)) && t != i && t !=j ){
 					//staci overit jestli mezi s a t vede hrana
-					if ( nodeColorEdgeExist( nodeGraph(node), s, t, color) ){
+					if ( nodeColorEdgeExist( graph, s, t, color) ){
 						*fullK4 = true;
 						return;
 					}
@@ -511,9 +501,8 @@ static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
 
 }
 
-static inline bool nodeThreat(node_t * node, int i, int j, color color){
+static inline bool nodeThreat(graph_t * graph, int i, int j, color color){
 	//otestuje jestli po pridani hrany ij nevznikla hrozba
-	graph_t * graph = nodeGraph(node);
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
 	tr = nodeNeighbour(graph,i,color) & nodeNeighbour(graph,j,color);
@@ -524,7 +513,7 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 			for (int t = s+1; t < N; t++)
 				if (tr & (1<<t)){
 					// i, j, t jsou troj
-					if ( !nodeEdgeExist( nodeGraph(node), s, t) ){
+					if ( !nodeEdgeExist( graph, s, t) ){
 						//s t je hrozba
 						return true;
 					}
@@ -538,7 +527,7 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 			for (int t = s+1; t < N; t++)
 				if ((tr2 & (1<<t)) && (t != j)){
 					//i,s,t jsou trojhulenik
-					if ( !nodeEdgeExist( nodeGraph(node), j, t) ){
+					if ( !nodeEdgeExist( graph, j, t) ){
 						//j t je hrozba
 						return true;
 					}
@@ -547,7 +536,7 @@ static inline bool nodeThreat(node_t * node, int i, int j, color color){
 			for (int t = 0; t < N; t++)
 				if ((tr3 & (1<<t)) && (t != i)){
 					//j,s,t jsou trojhulenik
-					if ( !nodeEdgeExist( nodeGraph(node), i, t) ){
+					if ( !nodeEdgeExist( graph, i, t) ){
 						//i t je hrozba
 						return true;
 					}

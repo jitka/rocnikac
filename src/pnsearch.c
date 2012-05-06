@@ -393,7 +393,10 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	for (int v = 0; v < *childrenN; v++){
 		int freeK4;
 		bool fullK4; 
-		testK4andFreeK4(children[v], &freeK4, &fullK4);
+		testK4andFreeK4(nodeGraph(children[v]), 
+				nodeLastEdgeI(children[v]),nodeLastEdgeJ(children[v]),
+				(nodeTurn(children[v]) % 2 == 1) ? RED : BLUE, //kterou barvou byl nakreslet posledni tah
+				&freeK4, &fullK4);
  
 #ifdef NOFREEK4
 		if (freeK4 > 0)
