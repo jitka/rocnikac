@@ -78,19 +78,17 @@ void norm(node_t* node){
 //	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
 //	printNode(node);	printf("--------------------------------------\n");
 
-	node_t* newNode = malloc(sizeof(node_t)); nodeEmptyGraph(nodeGraph(newNode)); //TODO jen graph
+	graph_t newGraph; 	nodeEmptyGraph(&newGraph);
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
 			for (int c = 0; c < 2; c++){
 				if (nodeColorEdgeExist(node,i,j,c)) {
-					nodeSetEdge(nodeGraph(newNode),nodes2[i],nodes2[j],c);
+					nodeSetEdge(&newGraph,nodes2[i],nodes2[j],c);
 				}
 			}
 		}
 	}
-
-	nodeCopyGraph(nodeGraph(node),nodeGraph(newNode));
-	free(newNode);
+	nodeCopyGraph(nodeGraph(node),&newGraph);
 
 	//prohodi souradnice posledni hrany
 	nodeLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
