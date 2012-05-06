@@ -5,7 +5,7 @@
 
 void printGraph(graph_t* graph){
 	printf("hash %u\n",graphHash(graph));
-
+/*
 	printf(" | ");
 	for (int j = 0; j < N; j++){
 		printf("%d ",j);
@@ -33,6 +33,7 @@ void printGraph(graph_t* graph){
 		printf("|\n");
 	}
 	printf("\n");
+	*/
 }
 
 void printNode(node_t* node){
@@ -41,7 +42,7 @@ void printNode(node_t* node){
 		printf("(null)\n");
 		return;
 	}
-
+/*
 	printf("turn %d, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeProof(node),nodeDisproof(node));
 	if (nodeExpanded(node))
 		printf("yes, value ");
@@ -58,7 +59,7 @@ void printNode(node_t* node){
 		printf("OR, ");
 	else 
 		printf("AND, ");
-
+*/
 	printGraph(nodeGraph(node));	
 }
 

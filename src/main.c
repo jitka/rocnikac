@@ -19,6 +19,7 @@
 // grepnout TODO
 // jen cachefind2
 // nevyhazovat z cache vypoctene
+// prepinac na zahozovani otcu -- zpomaluje
 //
 // TODO NEKDY
 // heuristika misto 1 1
