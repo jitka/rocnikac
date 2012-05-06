@@ -2,7 +2,7 @@
 #define SETTING_H
 
 //pozor spojuju hrany -> pn search se muze zacyklit
-#define N 7 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define N 8 //funguje pro N 5..8 aby sla matice sousedu ulozit 
 #define M ((N*(N-1))/2+1) 
 #define MAXPROOF (INT_MAX/M)
 #define DEBUG
@@ -15,7 +15,7 @@
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 #define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti
 
-#define CACHE_SIZE (1<<28)
+#define CACHE_SIZE (1<<23)
 #define CACHE_PATIENCE 100 //kolik pozic za mistem kam patri se jeste muze nalezat 
 #define MAXNODES 6000000 //kolik node se vleze do pameti
 
