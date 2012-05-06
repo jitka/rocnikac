@@ -22,7 +22,8 @@ static inline void setUnknown(node_t* node);
 static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
-static inline void insertChild(node_t* node, node_t* child);
+//static inline void insertChild(node_t* node, node_t* child);
+static inline void insertChild(node_t* node, node_t* child, int kdo);
 static inline void repairNode(node_t* node);
 static inline void developNode(node_t* node);
 static inline void updateAncestors();
@@ -285,18 +286,19 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	//-----vytvorim vrchol
 	node_t* child = nodeNew(nodeTurn(node)+1);
 
-	nodeCopyGraph(child,node);
+	nodeCopyGraph(nodeGraph(child),nodeGraph(node));
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
 		nodeSetType(child, AND);
-		nodeSetEdge(child,i,j,RED);
+		nodeSetEdge(nodeGraph(child),i,j,RED);
 		break;
 	case AND: //hraje druhy
 		nodeSetType(child, OR);
-		nodeSetEdge(child,i,j,BLUE);
+		nodeSetEdge(nodeGraph(child),i,j,BLUE);
 		break;
 	}
+	nodeSetLastEdge(child,i,j);
 	nodeSetExpanded(child,false);
 	
 	//-----znormuju
@@ -308,23 +310,43 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 }
 
-static inline void insertChild(node_t* node, node_t* child){
+static inline void insertChild(node_t* node, node_t* child, int kdo){
 	//zapoji vrchol do stromu
 	node_t* n = cacheFind(child);
 	if ( n != NULL ) { 
 		//je v cachy
+		assert(kdo == 0);
 		nodeAddParent(n,nodeGraph(node));
 		nodeAddChild(node,nodeGraph(n));
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
+		assert( kdo==0 || cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
 #ifdef STATS
 		statsNewNode(child);
 #endif //STATS
+		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
+			printf("pred %d\n",kdo);
+			printNode(node);
+			printNode(child);
+		}
 		numberOfNodes++;
-		nodeAddParent(child,nodeGraph(node));
-		nodeAddChild(node,nodeGraph(child));
+		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
+			cacheInserti2(child);
+		} else 
 		cacheInsert(child);
+		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
+			nodeAddChild2(node,nodeGraph(child));
+		} else 
+			nodeAddChild(node,nodeGraph(child));
+		nodeAddParent(child,nodeGraph(node));
+		if ( kdo==1 && cacheFind2(&node->children[nodeChildrenN(node)-1]) == NULL){
+			printf("po %d\n",nodeChildrenN(node)-1);
+			printf("ctvrte %d \n",node->children[nodeChildrenN(node)-1].hash);
+			printNode(node);
+			printChildren(node);
+		}
+		assert( kdo==0 || cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
 	}
 }
 
@@ -428,11 +450,25 @@ static inline void repairNode(node_t* node){
 			continue;
 		} else {
 			node->children[to] = node->children[i];
+			nodeSetCurrentChild(child);
 			to++;
 		}
 
 	}
 	nodeSetChildrenN(node,to);
+
+	bool missing = false;	
+	for (int i = 0; i < nodeChildrenN(node); i++) {
+		node_t* child = cacheFind2(&node->children[i]);
+		//pokud se smazal syn
+		if ( child == NULL){
+			missing = true;
+		}
+	}
+
+	if (missing)
+		printf("TODO1 tohle nechci resit\n");
+
 
 	//vytvorim znova
 	int childrenN;
@@ -442,13 +478,35 @@ static inline void repairNode(node_t* node){
 	for (int i = 0; i < childrenN; i++){
 		node_t* child = cacheFind(children[i]);
 		if ( child == NULL){
-			insertChild(node,children[i]);
+			assert(children[i] !=NULL);
+			assert(cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+			insertChild(node,children[i],1);
+			assert(cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+			nodeSetCurrentChild(children[i]);
 			if (children[i]->parentsN > 1){
 				printf("tu par %d\n",children[i]->parentsN);
 			}
 		}
 	}
 	free(children);
+
+	missing = false;	
+	for (int i = 0; i < nodeChildrenN(node); i++) {
+		node_t* child = cacheFind2(&node->children[i]);
+		//pokud se smazal syn
+		if ( child == NULL){
+			missing = true;
+			printf("TODO2 neni\n");
+			printNode(node);
+			printChildren(node);
+		}
+		nodeUnsetCurrentChild(child);
+	}
+
+	if (missing)
+		printf("TODO2 tohle nechci resit\n");
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -461,7 +519,7 @@ static inline void developNode(node_t* node){
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
 	for (int v = 0; v < childrenN; v++){ 
-		insertChild(node,children[v]);
+		insertChild(node,children[v],0);
 	}
 	free(children);
 
@@ -496,7 +554,7 @@ static inline void updateAncestors(){ //po hladinach
 		updateS++;
 #endif //STATS
 
-		if ( compareGraph(node, currentPath[nodeTurn(node)]) ){
+		if ( compareGraph(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
 			currentNode = MIN (currentNode, nodeTurn(node) );
 		}
 

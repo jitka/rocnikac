@@ -16,6 +16,8 @@
 // N 8 
 // jeden rodic vicekrat
 // divne padani na cachesize 12
+// grepnout TODO
+// jen cachefind2
 //
 // TODO NEKDY
 // heuristika misto 1 1

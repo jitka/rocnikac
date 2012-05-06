@@ -17,34 +17,36 @@
 static inline node_t* nodeNew(u8 turn);
 static inline void nodeDelete(node_t* node);
 
-//-------------NODE---------------GRAPH------------------
-static inline void nodeEmptyGraph(node_t * node);
-static inline void nodeCopyGraph(node_t * to, node_t * from);
-static inline bool compareGraph(node_t * a, node_t * b);
-static inline bool compareNodeGraph(node_t * a, graph_t * b);
+//-------------NODE---------------GRAPH------------------ 
+////TODO odfelit graph node
+static inline void nodeEmptyGraph(graph_t * graph);
+static inline void nodeCopyGraph(graph_t * to, graph_t * from);
+static inline bool compareGraph(graph_t * a, graph_t * b);
+static inline bool compareNodeGraph(node_t * a, graph_t * b); //TODO smazat
 
 static inline bool nodeColorEdgeExist(node_t * node, int i, int j, color c);
 static inline bool nodeEdgeExist(node_t * node, int i, int j);
-static inline void nodeSetEdge(node_t * node, int i, int j, color color);
+static inline void nodeSetEdge(graph_t * graph, int i, int j, color color);
+static inline void nodeSetLastEdge(node_t * node, int i, int j);
 static inline void nodeLastEdge(node_t * node, int i, int j); //prehodily se souradnice posledni hrany
 static inline int nodeDegree(node_t * node, int i, color c);
 
-static inline void nodeChangeNodes(node_t * node, int a, int b);
+//static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
 static inline bool testK4(node_t * node, int i, int j, color color);
 static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4);
 static inline bool nodeThreat(node_t * node, int i, int j, color color);
 #ifdef DEBUG
 //static inline bool nodeSimetric(node_t * a);
-static inline bool nodeTurnChack(node_t * a);
+//static inline bool nodeTurnChack(node_t * a);
 #endif //DEBUG
 
 //-------------NODE---------------DATA------------------
 static inline u8 nodeChildrenN(node_t * node);
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN);
-static inline void nodeAddChild(node_t * node, graph_t child);
+static inline void nodeAddChild(node_t * node, graph_t * child);
 static inline u8 nodeParentsN(node_t * node);
 static inline void nodeSetParentN(node_t * node, u32 parentsN);
-static inline void nodeAddParent(node_t * node, graph_t parent);
+static inline void nodeAddParent(node_t * node, graph_t * parent);
 
 static inline bool nodeExpanded(node_t * node);
 static inline void nodeSetExpanded(node_t * node, u32 expanded);
@@ -79,13 +81,17 @@ static inline u32 nodeThDisproof(node_t * node);
 
 static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current path, ktere nemohou byt smazane
 static inline void nodeUnsetCurrent(node_t *node);
-static inline u8 nodeCurrent(node_t *node); 
+static inline bool nodeCurrent(node_t *node); 
 
-static inline graph_t nodeGraph(node_t *node);
+static inline void nodeSetCurrentChild(node_t *node); //oznacuje syny ktere se nemuzou smazat kvuli repair
+static inline void nodeUnsetCurrentChild(node_t *node);
+static inline void nodeSetCurrentChild(node_t *node);
+
+static inline graph_t* nodeGraph(node_t *node);
 //-------------------------------------------------------------
 
-static inline graph_t nodeGraph(node_t *node){
-	return node->graph;
+static inline graph_t* nodeGraph(node_t *node){
+	return &(node->graph);
 }
 
 static inline void nodeSetCurrent(node_t *node){
@@ -94,11 +100,20 @@ static inline void nodeSetCurrent(node_t *node){
 static inline void nodeUnsetCurrent(node_t *node){
 	node->current = false;
 }
-static inline u8 nodeCurrent(node_t *node){ 
+static inline bool nodeCurrent(node_t *node){ 
 	return node->current;
 }
 
-
+static inline void nodeSetCurrentChild(node_t *node){
+	node->currentChild = true;
+}
+static inline void nodeUnsetCurrentChild(node_t *node){
+	assert(node != NULL);
+	node->currentChild = false;
+}
+static inline bool nodeCurrentChild(node_t *node){ 
+	return node->currentChild;
+}
 static inline u8 nodeLastEdgeI(node_t *node){
 #ifdef DEBUG
 	if( nodeTurn(node) == 0 )
@@ -273,6 +288,7 @@ static inline node_t* nodeNew(u8 turn){
 	node->parents = parents2;
 	node->children = children2;
 	node->current = false;
+	node->currentChild = false;
 	node->turn = turn;
 
 	nodeSetExpanded( node, false);
@@ -286,8 +302,11 @@ static inline u8 nodeChildrenN(node_t * node){
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
 }
-static inline void nodeAddChild(node_t * node, graph_t child){
-	node->children[node->childrenN] = child;
+static inline void nodeAddChild(node_t * node, graph_t * child){
+	
+	node->children[node->childrenN].hash = child->hash;
+	node->children[node->childrenN].graph[0] = child->graph[0];
+	node->children[node->childrenN].graph[1] = child->graph[1];
 	node->childrenN++;
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
@@ -297,13 +316,36 @@ static inline void nodeAddChild(node_t * node, graph_t child){
 			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
 }
+static inline void nodeAddChild2(node_t * node, graph_t * child){
+	
+			printf("add %d\n",MAXCHILD(nodeTurn(node)));
+			if (child == NULL){
+			printf("add au %d\n",MAXCHILD(nodeTurn(node)));
+			}
+			printNode(node);
+			printChildren(node);
+	node->children[node->childrenN].hash = child->hash;
+	node->children[node->childrenN].graph[0] = child->graph[0];
+	node->children[node->childrenN].graph[1] = child->graph[1];
+	node->childrenN++;
+#ifdef DEBUG
+	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
+		printf("moc deti %d %d %d\n",
+			node->childrenN,
+			nodeTurn(node),
+			MAXCHILD(nodeTurn(node)));
+#endif //DEBUG
+			printf("treti %d \n",node->children[2].hash);
+			printf("ctvrte %d \n",node->children[3].hash);
+}
+
 static inline u8 nodeParentsN(node_t * node){
 	return node->parentsN;
 }
 static inline void nodeSetParentN(node_t * node, u32 parentsN){
 	node->parentsN = parentsN;
 }
-static inline void nodeAddParent(node_t * node, graph_t parent){
+static inline void nodeAddParent(node_t * node, graph_t * parent){
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
 		if (node->parentsMAX > 10){
@@ -324,25 +366,27 @@ static inline void nodeAddParent(node_t * node, graph_t parent){
 		node->parents = parents;
 	}
 
-	node->parents[node->parentsN] = parent;
+	node->parents[node->parentsN].hash = parent->hash;
+	node->parents[node->parentsN].graph[0] = parent->graph[0];
+	node->parents[node->parentsN].graph[1] = parent->graph[1];
 	node->parentsN++;
 }
 
 
-static inline void nodeEmptyGraph(node_t * node){
-	node->graph.graph[0] = 0ULL;
-	node->graph.graph[1] = 0ULL;
-	node->graph.hash = 0;
+static inline void nodeEmptyGraph(graph_t * graph){
+	graph->graph[0] = 0ULL;
+	graph->graph[1] = 0ULL;
+	graph->hash = 0;
 }
 
-static inline void nodeCopyGraph(node_t * to, node_t * from){
-	to->graph.graph[0] = from->graph.graph[0];
-	to->graph.graph[1] = from->graph.graph[1];
-	to->graph.hash = from->graph.hash;
+static inline void nodeCopyGraph(graph_t * to, graph_t * from){
+	to->graph[0] = from->graph[0];
+	to->graph[1] = from->graph[1];
+	to->hash = from->hash;
 }
 
-static inline bool compareGraph(node_t * a, node_t * b){
-	return a->graph.graph[0] == b->graph.graph[0] && a->graph.graph[1] == b->graph.graph[1];
+static inline bool compareGraph(graph_t * a, graph_t * b){
+	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
 static inline bool compareNodeGraph(node_t * a, graph_t * b){
 	return a->graph.graph[0] == b->graph[0] && a->graph.graph[1] == b->graph[1];
@@ -360,10 +404,12 @@ static inline bool nodeEdgeExist(node_t * node, int i, int j){
 	return nodeColorEdgeExist(node,i,j,RED) || nodeColorEdgeExist(node,i,j,BLUE);
 }
 
-static inline void nodeSetEdge(node_t * node, int i, int j, color color){
-	node->graph.graph[color] |= 1ULL<<(i*N+j);
-	node->graph.graph[color] |= 1ULL<<(j*N+i);
-	node->graph.hash ^= hashNumbers[color][i][j];
+static inline void nodeSetEdge(graph_t * graph, int i, int j, color color){
+	graph->graph[color] |= 1ULL<<(i*N+j);
+	graph->graph[color] |= 1ULL<<(j*N+i);
+	graph->hash ^= hashNumbers[color][i][j];
+}
+static inline void nodeSetLastEdge(node_t * node, int i, int j){
 	node->last_i = i;
 	node->last_j = j;
 }

@@ -7,7 +7,7 @@
 node_t* getRoot(){
 	node_t* node = nodeNew(0);
 
-	nodeEmptyGraph(node);
+	nodeEmptyGraph(nodeGraph(node));
 
 	nodeSetProof( node, 1);
 	nodeSetDisproof( node, 1);
@@ -20,17 +20,17 @@ node_t* getRoot(){
 node_t* readNode(){
 	node_t* node = nodeNew(0);
 	
-	nodeEmptyGraph(node);
+	nodeEmptyGraph(nodeGraph(node));
 	
 	int u,v,turn=0;
 	scanf("([");
 	while (scanf("(%d,%d),",&u,&v)){
-		nodeSetEdge(node,u,v,0);
+		nodeSetEdge(nodeGraph(node),u,v,0);
 		turn++;
 	}
 	scanf("],[");
 	while (scanf("(%d,%d),",&u,&v)){
-		nodeSetEdge(node,u,v,1);
+		nodeSetEdge(nodeGraph(node),u,v,1);
 		turn++;
 	}
 	scanf("])");
