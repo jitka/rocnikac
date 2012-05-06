@@ -280,16 +280,16 @@ static inline node_t* createChild(node_t* node, int i, int j){
 	//-----vytvorim vrchol
 	node_t* child = nodeNew(nodeTurn(node)+1);
 
-	nodeCopyGraph(nodeGraph(child),nodeGraph(node));
+	graphCopy(nodeGraph(child),nodeGraph(node));
 
 	switch (nodeType(node)) {
 	case OR: //hraje prvni hrac
 		nodeSetType(child, AND);
-		nodeSetEdge(nodeGraph(child),i,j,RED);
+		graphSetEdge(nodeGraph(child),i,j,RED);
 		break;
 	case AND: //hraje druhy
 		nodeSetType(child, OR);
-		nodeSetEdge(nodeGraph(child),i,j,BLUE);
+		graphSetEdge(nodeGraph(child),i,j,BLUE);
 		break;
 	}
 	nodeSetLastEdge(child,i,j);
@@ -361,7 +361,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	*childrenN = 0;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
-			if ( ! nodeEdgeExist(nodeGraph(node), i, j) ) 
+			if ( ! graphEdgeExist(nodeGraph(node), i, j) ) 
 				//ij je hrana ktera jeste nema barvu
 				children[(*childrenN)++] = createChild(node,i,j);
 	//maze dvojcata	
@@ -551,7 +551,7 @@ static inline void updateAncestors(){ //po hladinach
 		updateS++;
 #endif //STATS
 
-		if ( compareGraph(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
+		if ( graphCompare(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
 			currentNode = MIN (currentNode, nodeTurn(node) );
 		}
 

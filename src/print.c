@@ -43,7 +43,7 @@ void printNode(node_t* node){
 		for (int j = 0; j < N; j++){
 			bool print = false;
 			for (int c = 0; c < 2; c++){
-				if ( nodeColorEdgeExist(nodeGraph(node),i,j,c)){
+				if ( graphColorEdgeExist(nodeGraph(node),i,j,c)){
 					printf("%d ",c);
 					print = true;
 				}

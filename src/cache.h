@@ -43,7 +43,7 @@ static inline void cacheInsert(node_t* node){
 			node_t* child = cacheFind2(&old->children[i]);
 			where = 0;
 			for(int j = 0; j < nodeParentsN(child); j++){
-				if ( compareGraph( nodeGraph(old), &child->parents[i]) ){
+				if ( graphCompare( nodeGraph(old), &child->parents[i]) ){
 					continue;
 				} else {
 					child->parents[where] = child->parents[i];
@@ -94,7 +94,7 @@ static inline void cacheInserti2(node_t* node){
 			node_t* child = cacheFind2(&old->children[i]);
 			where = 0;
 			for(int j = 0; j < nodeParentsN(child); j++){
-				if ( compareGraph( nodeGraph(old), &child->parents[i]) ){
+				if ( graphCompare( nodeGraph(old), &child->parents[i]) ){
 					continue;
 				} else {
 					child->parents[where] = child->parents[i];
@@ -118,7 +118,7 @@ static inline node_t* cacheFind(node_t* node){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
 			continue;
-		if ( compareGraph( nodeGraph(cache[where]), nodeGraph(node)) ){
+		if ( graphCompare( nodeGraph(cache[where]), nodeGraph(node)) ){
 			return cache[where];
 		}
 	}
@@ -130,7 +130,7 @@ static inline node_t* cacheFind2(graph_t* graph){
 		u32 where = ( graph->hash + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
 			continue;
-		if ( compareGraph( nodeGraph(cache[where]), graph) )
+		if ( graphCompare( nodeGraph(cache[where]), graph) )
 			return cache[where];
 	}
 	//printf("neni tam\n");
@@ -141,7 +141,7 @@ static inline void cacheDelete(node_t* node){
 		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
 			continue;
-		if ( compareGraph( nodeGraph(cache[where]), nodeGraph(node)) ){
+		if ( graphCompare( nodeGraph(cache[where]), nodeGraph(node)) ){
 			cache[where] = NULL;
 			return;
 		}

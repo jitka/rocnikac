@@ -57,7 +57,7 @@ void statsNewNode(node_t* node){
 		color = BLUE;
 	else
 		color = RED;
-	if (nodeThreat(nodeGraph(node), i, j, color)){
+	if (graphThreat(nodeGraph(node), i, j, color)){
 		all_stats.threat++;
 		turn_stats[nodeTurn(node)].threat++;
 	}

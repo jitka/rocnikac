@@ -11,7 +11,7 @@ void norm(node_t* node){
 	int fce[N];
 	int nodes[N];
 	for (int v = 0; v < N; v++){
-		fce[v] = 100000*nodeDegree(graph,v,0) + 100*nodeDegree(graph,v,1);
+		fce[v] = 100000*graphDegree(graph,v,0) + 100*graphDegree(graph,v,1);
 		nodes[v] = v;
 	}
 #ifdef NORM2
@@ -21,11 +21,11 @@ void norm(node_t* node){
 	}
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
-			if (nodeColorEdgeExist(graph,i,j,0)) {
+			if (graphColorEdgeExist(graph,i,j,0)) {
 				fce2[i] += fce[j]/10;
 				fce2[j] += fce[i]/10;
 			}
-			if (nodeColorEdgeExist(graph,i,j,1)) {
+			if (graphColorEdgeExist(graph,i,j,1)) {
 				fce2[i] += fce[j]/100;
 				fce2[j] += fce[i]/100;
 			}
@@ -44,6 +44,7 @@ void norm(node_t* node){
 //	printNode(node);
 #ifdef NOVECHANGE //NEFUNGUJE JE POTREBA MENIT HASH I PRO SLOUPCE
  //TOHLE BY MELO BYT RYCHLEJSI
+ /*
 	for (int i = 0; i < N; i++){
 		int min = i;
 		for (int j = i+1; j < N; j++){
@@ -55,6 +56,7 @@ void norm(node_t* node){
 			nodeChangeNodes(graph, i, min);
 		}
 	}
+	*/
 #else
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
@@ -79,17 +81,17 @@ void norm(node_t* node){
 //	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf("\n");
 //	printNode(node);	printf("--------------------------------------\n");
 
-	graph_t newGraph; 	nodeEmptyGraph(&newGraph);
+	graph_t newGraph; 	graphEmpty(&newGraph);
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
 			for (int c = 0; c < 2; c++){
-				if (nodeColorEdgeExist(graph,i,j,c)) {
-					nodeSetEdge(&newGraph,nodes2[i],nodes2[j],c);
+				if (graphColorEdgeExist(graph,i,j,c)) {
+					graphSetEdge(&newGraph,nodes2[i],nodes2[j],c);
 				}
 			}
 		}
 	}
-	nodeCopyGraph(graph,&newGraph);
+	graphCopy(graph,&newGraph);
 
 	//prohodi souradnice posledni hrany
 	nodeSetLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
