@@ -349,7 +349,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		if (node->parentsMAX > 10){
+		if (node->parentsMAX > 100){
 			printf("par %d\n",node->parentsN);
 			printNode(node);
 			printParents(node);

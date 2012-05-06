@@ -536,7 +536,7 @@ static inline void developNode(node_t* node){
 //		printGraph(&node->children[v]);
 //		printNode( cacheFind( &node->children[v] ) );
 		assert(children[v]!=NULL);
-//		free(children[v]);
+		free(children[v]);
 	}
 	free(children);
 
