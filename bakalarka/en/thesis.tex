@@ -1,29 +1,31 @@
 %%% Hlavní soubor. Zde se definují základní parametry a odkazuje se na ostatní části. %%%
+% TODO
+% mozna kapitola paralelizace, nefunguje predpocitani tah, spolecna cache, postupny update
 
 %% Verze pro jednostranný tisk:
 % Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
 % (ale pozor, LaTeX si sám přidává 1in)
-\documentclass[12pt,a4paper]{report}
-\setlength\textwidth{145mm}
-\setlength\textheight{247mm}
-\setlength\oddsidemargin{15mm}
-\setlength\evensidemargin{15mm}
-\setlength\topmargin{0mm}
-\setlength\headsep{0mm}
-\setlength\headheight{0mm}
-% \openright zařídí, aby následující text začínal na pravé straně knihy
-\let\openright=\clearpage
-
-%% Pokud tiskneme oboustranně:
-% \documentclass[12pt,a4paper,twoside,openright]{report}
+% \documentclass[12pt,a4paper]{report}
 % \setlength\textwidth{145mm}
 % \setlength\textheight{247mm}
 % \setlength\oddsidemargin{15mm}
-% \setlength\evensidemargin{0mm}
+% \setlength\evensidemargin{15mm}
 % \setlength\topmargin{0mm}
 % \setlength\headsep{0mm}
 % \setlength\headheight{0mm}
-% \let\openright=\cleardoublepage
+% \openright zařídí, aby následující text začínal na pravé straně knihy
+% \let\openright=\clearpage
+
+%% Pokud tiskneme oboustranně:
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\setlength\textwidth{145mm}
+\setlength\textheight{247mm}
+\setlength\oddsidemargin{15mm}
+\setlength\evensidemargin{0mm}
+\setlength\topmargin{0mm}
+\setlength\headsep{0mm}
+\setlength\headheight{0mm}
+\let\openright=\cleardoublepage
 
 %% Použité kódování znaků: obvykle latin2, cp1250 nebo utf8:
 \usepackage[utf8]{inputenc}
@@ -31,13 +33,15 @@
 %% Ostatní balíčky
 \usepackage{graphicx}
 \usepackage{amsthm}
+\usepackage{color}
+
 
 %% Balíček hyperref, kterým jdou vyrábět klikací odkazy v PDF,
 %% ale hlavně ho používáme k uložení metadat do PDF (včetně obsahu).
 %% POZOR, nezapomeňte vyplnit jméno práce a autora.
 \usepackage[ps2pdf,unicode]{hyperref}   % Musí být za všemi ostatními balíčky
-\hypersetup{pdftitle=Název práce}
-\hypersetup{pdfauthor=Jméno Příjmení}
+\hypersetup{pdftitle=: Algorithms for solving strong positional games with high symmetry}
+\hypersetup{pdfauthor= Jitka Novotná}
 
 %%% Drobné úpravy stylu
 
@@ -62,6 +66,11 @@
 \def\chapwithtoc#1{
 \chapter*{#1}
 \addcontentsline{toc}{chapter}{#1}
+}
+
+% Toto makro slouží k poznámkám, text se zobrazi červeně TODO
+\def\TODO#1{
+\textcolor{red}{#1}
 }
 
 \begin{document}
@@ -94,34 +103,33 @@ Faculty of Mathematics and Physics
 \vfill
 \vspace{5mm}
 
-{\LARGE First and last name of the author}
+{\LARGE Jitka Novotná}
 
 \vspace{15mm}
 
 % Název práce přesně podle zadání
-{\LARGE\bfseries Title of the thesis}
+{\LARGE\bfseries Algorithms for solving strong positional games with high symmetry}
 
 \vfill
 
 % Název katedry nebo ústavu, kde byla práce oficiálně zadána
 % (dle Organizační struktury MFF UK)
-Name of the department or institute
-
+Computer Science Institute of Charles University
 \vfill
 
 \begin{tabular}{rl}
 
-Supervisor of the bachelor thesis: & First and last name \\
+Supervisor of the bachelor thesis: & Tomáš Valla \\
 \noalign{\vspace{2mm}}
-Study programme: & programme \\
+Study programme: & Informatika \\
 \noalign{\vspace{2mm}}
-Specialization: & specialization \\
+Specialization: & Obecná informatika \\
 \end{tabular}
 
 \vfill
 
 % Zde doplňte rok
-Prague YEAR
+Prague 2012
 
 \end{center}
 
@@ -137,6 +145,8 @@ Prague YEAR
 
 \noindent
 Dedication.
+\TODO{ Tom, rodiče, Roman - laděni, Tom - vše, Honza - podpora +?angličtina, 
+Paulie -předvyber článku, Pavel to s Cachy, Brum - chytre rady}
 
 \newpage
 
@@ -159,7 +169,7 @@ work as a school work pursuant to Section 60 paragraph 1 of the Copyright Act.
 \hbox{\hbox to 0.5\hsize{%
 In ........ date ............
 \hss}\hbox to 0.5\hsize{%
-signature of the author
+signature of the author \TODO{ Tady prijde jen rucni nebo i vytiskly podpis? }
 \hss}}
 
 \vspace{20mm}
@@ -172,48 +182,55 @@ signature of the author
 \setlength\parskip{5mm}
 
 Název práce:
-Název práce
+Algorithms for solving strong positional games with high symmetry
 % přesně dle zadání
 
 Autor:
-Jméno a příjmení autora
+Jitka Novotná
 
 Katedra:  % Případně Ústav:
-Název katedry či ústavu, kde byla práce oficiálně zadána
+% Název katedry či ústavu, kde byla práce oficiálně zadána
+Informatický ústav Univerzity Karlovy
 % dle Organizační struktury MFF UK
 
 Vedoucí bakalářské práce:
-Jméno a příjmení s tituly, pracoviště
+RNDr. Tomáš Valla, Informatický ústav Univerzity Karlovy \TODO{je to pracoviste dobře?}
+% Jméno a příjmení s tituly, pracoviště
 % dle Organizační struktury MFF UK, případně plný název pracoviště mimo MFF UK
 
 Abstrakt:
 % abstrakt v rozsahu 80-200 slov; nejedná se však o opis zadání bakalářské práce
+\TODO{TODO + zkontrolovat jestli sedi s anglictinou}
 
 Klíčová slova:
 % 3 až 5 klíčových slov
+\TODO{TODO PN-search, silné poziční hry, kliková hra, vysoká hra, vylepšení PN-searche}
 
 \vss}\nobreak\vbox to 0.49\vsize{
 \setlength\parindent{0mm}
 \setlength\parskip{5mm}
 
 Title:
+Algorithms for solving strong positional games with high symmetry
 % přesný překlad názvu práce v angličtině
 
 Author:
-Jméno a příjmení autora
+Jitka Novotná
 
 Department:
-Název katedry či ústavu, kde byla práce oficiálně zadána
+Computer Science Institute of Charles University
+% Název katedry či ústavu, kde byla práce oficiálně zadána
 % dle Organizační struktury MFF UK v angličtině
 
 Supervisor:
-Jméno a příjmení s tituly, pracoviště
+RNDr. Tomáš Valla, Informatický ústav Univerzity Karlovy 
 % dle Organizační struktury MFF UK, případně plný název pracoviště
 % mimo MFF UK v angličtině
 
 Abstract:
 % abstrakt v rozsahu 80-200 slov v angličtině; nejedná se však o překlad
 % zadání bakalářské práce
+\TODO{TODO}
 
 Keywords:
 % 3 až 5 klíčových slov v angličtině
@@ -245,15 +262,15 @@ Keywords:
 \include{bibliography}
 
 %%% Tabulky v bakalářské práci, existují-li.
-\chapwithtoc{List of Tables}
+%\chapwithtoc{List of Tables}
 
 %%% Použité zkratky v bakalářské práci, existují-li, včetně jejich vysvětlení.
-\chapwithtoc{List of Abbreviations}
+%\chapwithtoc{List of Abbreviations}
 
 %%% Přílohy k bakalářské práci, existují-li (různé dodatky jako výpisy programů,
 %%% diagramy apod.). Každá příloha musí být alespoň jednou odkazována z vlastního
 %%% textu práce. Přílohy se číslují.
-\chapwithtoc{Attachments}
+%\chapwithtoc{Attachments}
 
 \openright
 \end{document}

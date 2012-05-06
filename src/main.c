@@ -10,25 +10,22 @@
 // TODO HNED
 // obsah
 // zeptat Pavel, stroje
-// existuje knihovna na zdilenou cache? google, Tom, Brum, Pavel
-// googlit klikovou hru clique game, hight symetri, low branching factor
+// googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// N 8 
-// jeden rodic vicekrat
-// divne padani na cachesize 12
+// kde trci pamet?
 // grepnout TODO
-// jen cachefind2
-// nevyhazovat z cache vypoctene
+// N 8 
+// nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
+// heuristika misto 1 1
+// heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
+// obsah bakalarky
+// probublani bokem
+// moje programovici cast
+//
 //
 // TODO NEKDY
-// heuristika misto 1 1
 // node - mensi
-// updatete jednoho predka vickrat? 
-// 	- do vrcholu psat cislo update
-// 	- kolikrat v tom update tam bylo
-// 	- statistika
-// 	- na kazdem levelu vyhodit duplicity?
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
@@ -37,7 +34,6 @@
 // 	- pocitat s sizeof
 // hasovaci funkce z graph
 // testovat vsechny binarni veci
-// paralelizace 
 // norm-rychlejsi hasovanani
 // norm-lepsi fce, vic fci
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
