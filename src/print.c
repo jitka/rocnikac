@@ -84,7 +84,7 @@ void printChildren(node_t* node){
 	}
 	printf("potomci %d:\n",nodeChildrenN(node));
 	for (int i = 0; i < nodeChildrenN(node); i++){
-		printNode(cacheFind2(&node->children[i]));
+		printNode(cacheFind(&node->children[i]));
 	}
 	printf("potomci konec-------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);
@@ -98,7 +98,7 @@ void printParents(node_t* node){
 	}
 	printf("rodice %d:\n",nodeParentsN(node));
 	for (int i = 0; i < nodeParentsN(node); i++){
-		printNode(cacheFind2(&node->parents[i]));
+		printNode(cacheFind(&node->parents[i]));
 	}
 	printf("rodice konec-------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);

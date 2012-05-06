@@ -100,7 +100,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 
 	bool missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
-		node_t* child = cacheFind2(&node->children[i]);
+		node_t* child = cacheFind(&node->children[i]);
 		//pokud se smazal syn
 		if ( child == NULL){
 			missing = true;
@@ -112,7 +112,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 
 	missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
-		node_t* child = cacheFind2(&node->children[i]);
+		node_t* child = cacheFind(&node->children[i]);
 		//pokud se smazal syn
 		if ( child == NULL){
 			missing = true;
@@ -134,7 +134,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			
 		int to = 0;
 		for (int i = 0; i < nodeChildrenN(node); i++) {
-			node_t* child = cacheFind2(&node->children[i]);
+			node_t* child = cacheFind(&node->children[i]);
 #ifdef DEBUG
 			//nepodarilo se vytvorit vsechny deti/navzajem se vyhazuji
 			if (child == NULL){
@@ -195,7 +195,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 		int to = 0;
 		for (int i = 0; i < nodeChildrenN(node); i++) {
-			node_t* child = cacheFind2(&node->children[i]);
+			node_t* child = cacheFind(&node->children[i]);
 #ifdef DEBUG
 			if (child == NULL){
 				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
@@ -306,7 +306,7 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 static inline void insertChild(node_t* node, node_t* child, int kdo){
 	//zapoji vrchol do stromu
-	node_t* n = cacheFind(child);
+	node_t* n = cacheFind(nodeGraph(child));
 	if ( n != NULL ) { 
 		//je v cachy
 		assert(kdo == 0);
@@ -315,19 +315,19 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 		nodeDelete(child);
 	} else {
 		//neni v cachy	
-		assert( kdo==0 || cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+		assert( kdo==0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 #ifdef STATS
 		statsNewNode(child);
 #endif //STATS
 		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-			printf("pred %d\n",kdo);
-			printNode(node);
-			printGraph(nodeGraph(node));
-			printNode(child);
+			printf("pn pred %d\n",kdo);
+//			printNode(node);
+//			printGraph(nodeGraph(node));
+//			printNode(child);
 		}
 		numberOfNodes++;
 		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-			cacheInserti2(child);
+			cacheInsert(child);
 		} else 
 		cacheInsert(child);
 		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
@@ -335,13 +335,13 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 		} else 
 			nodeAddChild(node,nodeGraph(child));
 		nodeAddParent(child,nodeGraph(node));
-		if ( kdo==1 && cacheFind2(&node->children[nodeChildrenN(node)-1]) == NULL){
-			printf("po %d\n",nodeChildrenN(node)-1);
+		if ( kdo==1 && cacheFind(&node->children[nodeChildrenN(node)-1]) == NULL){
+			printf("pn po %d\n",nodeChildrenN(node)-1);
 			printf("ctvrte %d \n",node->children[nodeChildrenN(node)-1].hash);
 			printNode(node);
 			printChildren(node);
 		}
-		assert( kdo==0 || cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+		assert( kdo==0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 	}
 }
 
@@ -443,7 +443,7 @@ static inline void repairNode(node_t* node){
 	//zahodim prazdne
 	int to = 0;
 	for (int i = 0; i < nodeChildrenN(node); i++) {
-		node_t* child = cacheFind2(&node->children[i]);
+		node_t* child = cacheFind(&node->children[i]);
 		if (child == NULL){
 			continue;
 		} else {
@@ -457,7 +457,7 @@ static inline void repairNode(node_t* node){
 
 	bool missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
-		node_t* child = cacheFind2(&node->children[i]);
+		node_t* child = cacheFind(&node->children[i]);
 		//pokud se smazal syn
 		if ( child == NULL){
 			missing = true;
@@ -474,12 +474,12 @@ static inline void repairNode(node_t* node){
 
 	//pridam chybejici
 	for (int i = 0; i < childrenN; i++){
-		node_t* child = cacheFind(children[i]);
+		node_t* child = cacheFind(nodeGraph(children[i]));
 		if ( child == NULL){
 			assert(children[i] !=NULL);
-			assert(cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 			insertChild(node,children[i],1);
-			assert(cacheFind2(&node->children[nodeChildrenN(node)-1]) != NULL);
+			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 			nodeSetCurrentChild(children[i]);
 			if (children[i]->parentsN > 1){
 				printf("tu par %d\n",children[i]->parentsN);
@@ -490,7 +490,7 @@ static inline void repairNode(node_t* node){
 
 	missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
-		node_t* child = cacheFind2(&node->children[i]);
+		node_t* child = cacheFind(&node->children[i]);
 		//pokud se smazal syn
 		if ( child == NULL){
 			missing = true;
@@ -567,7 +567,7 @@ static inline void updateAncestors(){ //po hladinach
 
 		//pridat vsechny predky co je potreba updatetovat
 		for (int i = 0; i < nodeParentsN(node); i++){
-			node_t * parent = cacheFind2(&node->parents[i]);
+			node_t * parent = cacheFind(&node->parents[i]);
 #ifdef DEBUG
 			if (parent == NULL){
 				perror("TODO neni rodic");
@@ -606,7 +606,7 @@ static inline void selectMostProving(){
 		switch (nodeType(node)) {
 		case OR: 
 			for (int i = 0; i < nodeChildrenN(node); i++) {
-				node_t* child = cacheFind2(&node->children[i]);
+				node_t* child = cacheFind(&node->children[i]);
 				if ( nodeProof(node) == nodeProof(child) ){
 					node = child;
 					break;
@@ -615,7 +615,7 @@ static inline void selectMostProving(){
 			break;
 		case AND: 
 			for (int i = 0; i < nodeChildrenN(node); i++) {
-				node_t* child = cacheFind2(&node->children[i]);
+				node_t* child = cacheFind(&node->children[i]);
 				if ( nodeDisproof(node) == nodeDisproof(child) ){
 					node = child;
 					break;
@@ -664,7 +664,7 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 		*secondProof = MAXPROOF;
 		*secondDisproof = 0;
 		for (int i = 0; i < nodeChildrenN(node); i++) {
-			node_t* child = cacheFind2(&node->children[i]);
+			node_t* child = cacheFind(&node->children[i]);
 			if ( nodeProof(child) < bestProof ){
 				bestProof = nodeProof(child);
 				bestDisproof = nodeDisproof(child);
@@ -682,7 +682,7 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 		*secondProof = 0;
 		*secondDisproof = MAXPROOF;
 		for (int i = 0; i < nodeChildrenN(node); i++) {
-			node_t* child = cacheFind2(&node->children[i]);
+			node_t* child = cacheFind(&node->children[i]);
 			if ( nodeDisproof(child) < bestDisproof ){
 				bestProof = nodeProof(child);
 				bestDisproof = nodeDisproof(child);
