@@ -8,6 +8,7 @@
 #include "tabs.h"
 
 #ifdef DEBUG
+#include <stdio.h>
 #include "print.h"
 #endif //DEBUG
 
@@ -22,6 +23,7 @@ static inline void nodeDelete(node_t* node);
 static inline void graphEmpty(graph_t * graph);
 static inline void graphCopy(graph_t * to, graph_t * from);
 static inline bool graphCompare(graph_t * a, graph_t * b);
+static inline u32 graphHash(graph_t * graph);
 
 static inline bool graphColorEdgeExist(graph_t * graph, int i, int j, color c);
 static inline bool graphEdgeExist(graph_t * graph, int i, int j);
@@ -86,9 +88,19 @@ static inline void nodeSetCurrentChild(node_t *node);
 static inline graph_t* nodeGraph(node_t *node);
 //-------------------------------------------------------------
 
-static inline graph_t* nodeGraph(node_t *node){
-	return &(node->graph);
-}
+
+#ifdef DEBUG
+extern int cacheMiss;
+#endif //DEBUG
+node_t* cache[CACHE_SIZE];
+
+static inline void cacheInsert(node_t* node);
+static inline node_t* cacheFind(graph_t* graph); //vrati ukazatel na stejny graf nebo NULL pokud tam neni
+static inline void cacheDelete(node_t* node);
+
+//--------------------------------------------------------------
+// samotne fce bordel
+//--------------------------------------------------------------
 
 static inline void nodeSetCurrent(node_t *node){
 	node->current = true;
@@ -109,6 +121,10 @@ static inline void nodeUnsetCurrentChild(node_t *node){
 }
 static inline bool nodeCurrentChild(node_t *node){ 
 	return node->currentChild;
+}
+
+static inline graph_t* nodeGraph(node_t *node){
+	return &(node->graph);
 }
 static inline void nodeSetLastEdge(node_t * node, int i, int j){
 	node->last_i = i;
@@ -290,9 +306,84 @@ static inline node_t* nodeNew(u8 turn){
 	node->current = false;
 	node->currentChild = false;
 	node->turn = turn;
+	graphEmpty(&node->graph);
 
 	nodeSetExpanded( node, false);
 	return node;
+}
+
+static inline void cacheInsert(node_t* node){
+#ifdef DEBUG
+#endif //DEBUG
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (cache[position] != NULL)
+			continue;
+		cache[position] = node;
+		return;
+	}
+#ifdef DEBUG
+	cacheMiss++;
+#endif //DEBUG
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (nodeCurrent(cache[position]) || nodeCurrentChild(cache[position]) || (nodeTurn(cache[position]) == nodeTurn(node)) )
+			continue;
+		//jeho detem ho odebrat za rodice
+		//TODO testovat rodice
+		node_t* old = cache[position];
+		assert(old!=NULL);
+		for (int i = 0; i < nodeChildrenN(old); i++){
+			node_t* child = cacheFind(&old->children[i]);
+			if (child == NULL)
+				continue;
+			int where = 0;
+			for(int j = 0; j < nodeParentsN(child); j++){
+				assert(&child->parents[j]!=NULL);
+				if ( graphCompare( nodeGraph(old), &child->parents[j]) ){
+					continue;
+				} else {
+					child->parents[where] = child->parents[j];
+					where++;
+				}
+
+			}
+			nodeSetParentN(child,where);
+		}
+		free(old);
+		cache[position] = node;
+		return;
+	}
+
+#ifdef DEBUG
+	printf("neni kam dat %d\n",nodeHash(node));
+#endif //DEBUG
+}
+
+static inline node_t* cacheFind(graph_t* graph){ 
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 where = ( graphHash(graph) + i ) % CACHE_SIZE;
+		if (cache[where] == NULL)
+			continue;
+		if ( graphCompare( nodeGraph(cache[where]), graph) )
+			return cache[where];
+	}
+	//printf("neni tam\n");
+	return NULL;
+}
+static inline void cacheDelete(node_t* node){
+	for (u32 i = 0; i < CACHE_PATIENCE; i++){
+		u32 where = ( nodeHash(node) + i ) % CACHE_SIZE;
+		if (cache[where] == NULL)
+			continue;
+		if ( graphCompare( nodeGraph(cache[where]), nodeGraph(node)) ){
+			cache[where] = NULL;
+			return;
+		}
+	}
+#ifdef DEBUG
+	perror("neni v cachy");
+#endif //DEBUG
 }
 
 
@@ -316,28 +407,6 @@ static inline void nodeAddChild(node_t * node, graph_t * child){
 			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
 }
-static inline void nodeAddChild2(node_t * node, graph_t * child){
-	
-			printf("add %d\n",MAXCHILD(nodeTurn(node)));
-			if (child == NULL){
-			printf("add au %d\n",MAXCHILD(nodeTurn(node)));
-			}
-			printNode(node);
-			printChildren(node);
-	node->children[node->childrenN].hash = child->hash;
-	node->children[node->childrenN].graph[0] = child->graph[0];
-	node->children[node->childrenN].graph[1] = child->graph[1];
-	node->childrenN++;
-#ifdef DEBUG
-	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
-		printf("moc deti %d %d %d\n",
-			node->childrenN,
-			nodeTurn(node),
-			MAXCHILD(nodeTurn(node)));
-#endif //DEBUG
-			printf("treti %d \n",node->children[2].hash);
-			printf("ctvrte %d \n",node->children[3].hash);
-}
 
 static inline u8 nodeParentsN(node_t * node){
 	return node->parentsN;
@@ -346,6 +415,19 @@ static inline void nodeSetParentN(node_t * node, u32 parentsN){
 	node->parentsN = parentsN;
 }
 static inline void nodeAddParent(node_t * node, graph_t * parent){
+	//smrsknu
+	int where=0; 
+	bool exist = false;
+	for (u32 i = 0; i < node->parentsN; i++){
+		if ( cacheFind(&node->parents[i]) == NULL ) 
+			continue;
+		if ( graphCompare(nodeGraph(cacheFind(&node->parents[i])), parent) ) 
+			exist = true;
+		node->parents[where++] = node->parents[i];
+	}
+	if (exist)
+		return;
+	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
 		if (node->parentsMAX > 10){
@@ -366,6 +448,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 		node->parents = parents;
 	}
 
+	//pridam
 	node->parents[node->parentsN].hash = parent->hash;
 	node->parents[node->parentsN].graph[0] = parent->graph[0];
 	node->parents[node->parentsN].graph[1] = parent->graph[1];
@@ -390,7 +473,10 @@ static inline u32 graphHash(graph_t * graph){
 }
 
 static inline bool graphCompare(graph_t * a, graph_t * b){
-	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
+#ifdef DEBUG
+	assert( (a!=NULL) && (b!=NULL) );
+#endif //DEBUG
+	return ((a->graph[0] == b->graph[0]) && (a->graph[1] == b->graph[1]));
 }
 
 static inline u32 graphNeighbour(graph_t * graph, int i, color color){

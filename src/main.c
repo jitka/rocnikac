@@ -18,6 +18,7 @@
 // divne padani na cachesize 12
 // grepnout TODO
 // jen cachefind2
+// nevyhazovat z cache vypoctene
 //
 // TODO NEKDY
 // heuristika misto 1 1

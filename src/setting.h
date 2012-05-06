@@ -12,7 +12,7 @@
 #define NORM2
 #define DFPN
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE
-#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE
+//#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 #define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti
 
 #define CACHE_SIZE (1<<20)
@@ -21,7 +21,7 @@
 
 #define MAXCHILD(TURN) (M-TURN)
 
-#define bool int
+#define bool unsigned int
 #define u8 unsigned char
 #define u32 unsigned int
 #define u64 unsigned long long int

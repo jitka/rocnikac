@@ -23,7 +23,7 @@ static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
 //static inline void insertChild(node_t* node, node_t* child);
-static inline void insertChild(node_t* node, node_t* child, int kdo);
+static inline void insertChild(node_t* node, node_t* child, int kdo); //TODO smazat
 static inline void repairNode(node_t* node);
 static inline void developNode(node_t* node);
 static inline void updateAncestors();
@@ -319,29 +319,25 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 #ifdef STATS
 		statsNewNode(child);
 #endif //STATS
-		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-			printf("pn pred %d\n",kdo);
-//			printNode(node);
-//			printGraph(nodeGraph(node));
-//			printNode(child);
+		if ( kdo==2 ){
+			printf("pn ins pred %d\n",kdo);
+			printNode(node);
+			printNode(child);
+			printParents(child);
 		}
 		numberOfNodes++;
-		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-			cacheInsert(child);
-		} else 
+//		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
 		cacheInsert(child);
-		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
-			nodeAddChild2(node,nodeGraph(child));
-		} else 
-			nodeAddChild(node,nodeGraph(child));
+		nodeAddChild(node,nodeGraph(child));
 		nodeAddParent(child,nodeGraph(node));
-		if ( kdo==1 && cacheFind(&node->children[nodeChildrenN(node)-1]) == NULL){
-			printf("pn po %d\n",nodeChildrenN(node)-1);
-			printf("ctvrte %d \n",node->children[nodeChildrenN(node)-1].hash);
+		if ( kdo==2 ){
+			printf("pn ins po %d\n",kdo);
 			printNode(node);
-			printChildren(node);
+			printNode(child);
+			printParents(child);
 		}
-		assert( kdo==0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
+		assert( nodeParentsN(child) == 1);
+		assert( kdo == 0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 	}
 }
 
@@ -476,14 +472,21 @@ static inline void repairNode(node_t* node){
 	for (int i = 0; i < childrenN; i++){
 		node_t* child = cacheFind(nodeGraph(children[i]));
 		if ( child == NULL){
-			assert(children[i] !=NULL);
-			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
+			assert(children[i] !=NULL); //ma deti
+			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL); //posledni dite existuje
+	//		if ( nodeTurn(children[i]) == 11 && nodeHash(children[i]) == 174){
+	//			printf("pred\n");
+	//			insertChild(node,children[i],2);
+	//		} else 
 			insertChild(node,children[i],1);
 			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
-			nodeSetCurrentChild(children[i]);
 			if (children[i]->parentsN > 1){
-				printf("tu par %d\n",children[i]->parentsN);
+				printf("tu par %d %d\n",children[i]->parentsN,i);
+				printNode(node);
+				printNode(children[i]);
+				printParents(children[i]);
 			}
+			nodeSetCurrentChild(children[i]);
 		}
 	}
 	free(children);

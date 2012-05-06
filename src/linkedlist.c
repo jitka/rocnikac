@@ -12,7 +12,7 @@ void ll2New( ll2_t* ll){
 	ll->last = NULL;
 }
 
-int ll2Empty( ll2_t* ll){
+bool ll2Empty( ll2_t* ll){
 	return (ll->first == NULL);
 }
 
