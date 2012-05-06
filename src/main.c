@@ -6,6 +6,7 @@
 #include "norm.h"
 #include "tabs.h"
 #include "stats.h"
+#include "cache.h"
 
 // TODO HNED
 // obsah
@@ -92,6 +93,8 @@ int main(){
 	statsInit();
 #endif //STATS
 	tabsInit();
+
+	cacheInit();
 
 	printSetting();
 

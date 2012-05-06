@@ -2,7 +2,7 @@
 #define SETTING_H
 
 //pozor spojuju hrany -> pn search se muze zacyklit
-#define N 8 //funguje pro N 5..8 aby sla matice sousedu ulozit 
+#define N 7 //funguje pro N 5..8 aby sla matice sousedu ulozit 
 #define M ((N*(N-1))/2+1) 
 #define MAXPROOF (INT_MAX/M)
 #define DEBUG

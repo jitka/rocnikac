@@ -2,7 +2,12 @@
 #include "print.h"
 #include "nodefce.h"
 
-node_t cache[CACHE_SIZE];
+node_t* cache;
+
+void cacheInit(){
+	cache = calloc(sizeof(node_t),CACHE_SIZE);
+	assert(cache != NULL);
+}
 
 void cacheInsert(node_t* node){
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
