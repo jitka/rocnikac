@@ -84,14 +84,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	
 #ifdef DEBUG
 	if (nodeValue(node) != UNKNOWN){
-		if (!nodeTurnChack(node)){
-			printf("turn\n");
-			printNode(node);
-			printChildren(node);
-		}
 		if (nodeProof(node) != 0 && nodeProof(node) != MAXPROOF){
 			printf("au set maxproof %d\n",MAXPROOF);
-			nodeTurnChack(node);
 //			printNode(node);
 		}
 		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
@@ -367,7 +361,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	*childrenN = 0;
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < i; j++)
-			if ( ! nodeEdgeExist(node, i, j) ) 
+			if ( ! nodeEdgeExist(nodeGraph(node), i, j) ) 
 				//ij je hrana ktera jeste nema barvu
 				children[(*childrenN)++] = createChild(node,i,j);
 	//maze dvojcata	
