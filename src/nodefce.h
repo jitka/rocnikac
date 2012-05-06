@@ -22,7 +22,6 @@ static inline void nodeDelete(node_t* node);
 static inline void nodeEmptyGraph(graph_t * graph);
 static inline void nodeCopyGraph(graph_t * to, graph_t * from);
 static inline bool compareGraph(graph_t * a, graph_t * b);
-static inline bool compareNodeGraph(node_t * a, graph_t * b); //TODO smazat
 
 static inline bool nodeColorEdgeExist(graph_t * graph, int i, int j, color c);
 static inline bool nodeEdgeExist(graph_t * graph, int i, int j);
@@ -30,7 +29,7 @@ static inline void nodeSetEdge(graph_t * graph, int i, int j, color color);
 static inline int nodeDegree(graph_t * graph, int i, color c);
 
 //static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
-static inline bool testK4(node_t * node, int i, int j, color color);
+static inline bool testK4(graph_t * graph, int i, int j, color color);
 static inline void testK4andFreeK4(node_t * node, int * freeK4, bool * fullK4);
 static inline bool nodeThreat(node_t * node, int i, int j, color color);
 #ifdef DEBUG
@@ -387,9 +386,7 @@ static inline void nodeCopyGraph(graph_t * to, graph_t * from){
 static inline bool compareGraph(graph_t * a, graph_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
-static inline bool compareNodeGraph(node_t * a, graph_t * b){
-	return a->graph.graph[0] == b->graph[0] && a->graph.graph[1] == b->graph[1];
-}
+
 static inline u32 nodeNeighbour(graph_t * graph, int i, color color){
 	//vrati masku kde je 1 tam kde vede hrana
 	return (graph->graph[color] >> (i*N)) & N1s; 
@@ -452,9 +449,8 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 	}
 }
 */
-static inline bool testK4(node_t * node, int i, int j, color color){
+static inline bool testK4(graph_t * graph, int i, int j, color color){
 	//otestuje jestli po pridani hrany ij nevznikla K4
-	graph_t * graph = nodeGraph(node);
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
 	tr = nodeNeighbour(graph,i,color) & nodeNeighbour(graph,j,color);
