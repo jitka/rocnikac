@@ -3,30 +3,8 @@
 #include "print.h"
 #include "cache.h"
 
-void printNode(node_t* node){
-
-	if (node == NULL){
-		printf("(null)\n");
-		return;
-	}
-
-	printf("turn %d, hash %u, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeHash(node),nodeProof(node),nodeDisproof(node));
-	if (nodeExpanded(node))
-		printf("yes, value ");
-	else 
-		printf("no, value ");
-	if (nodeValue(node)==TRUE) {
-		printf("TRUE, type ");
-	} else if (nodeValue(node)==FALSE) {
-		printf("FALSE, type ");
-	} else {
-		printf("UNKNOWN, type ");
-	}
-	if (nodeType(node)==OR)
-		printf("OR\n");
-	else 
-		printf("AND\n");
-
+void printGraph(graph_t* graph){
+	printf("hash %u\n",graphHash(graph));
 
 	printf(" | ");
 	for (int j = 0; j < N; j++){
@@ -43,7 +21,7 @@ void printNode(node_t* node){
 		for (int j = 0; j < N; j++){
 			bool print = false;
 			for (int c = 0; c < 2; c++){
-				if ( graphColorEdgeExist(nodeGraph(node),i,j,c)){
+				if ( graphColorEdgeExist(graph,i,j,c)){
 					printf("%d ",c);
 					print = true;
 				}
@@ -55,7 +33,33 @@ void printNode(node_t* node){
 		printf("|\n");
 	}
 	printf("\n");
-				
+}
+
+void printNode(node_t* node){
+
+	if (node == NULL){
+		printf("(null)\n");
+		return;
+	}
+
+	printf("turn %d, proof %d, disproof %d\nexpanded ",nodeTurn(node),nodeProof(node),nodeDisproof(node));
+	if (nodeExpanded(node))
+		printf("yes, value ");
+	else 
+		printf("no, value ");
+	if (nodeValue(node)==TRUE) {
+		printf("TRUE, type ");
+	} else if (nodeValue(node)==FALSE) {
+		printf("FALSE, type ");
+	} else {
+		printf("UNKNOWN, type ");
+	}
+	if (nodeType(node)==OR)
+		printf("OR, ");
+	else 
+		printf("AND, ");
+
+	printGraph(nodeGraph(node));	
 }
 
 void printValue(nodeValue_t value){

@@ -3,6 +3,7 @@
 
 #include "struct.h"
 
+void printGraph(graph_t* graph);
 void printNode(node_t* node);
 void printValue(nodeValue_t value);
 void printChildren(node_t* node);

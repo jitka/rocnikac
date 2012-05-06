@@ -322,6 +322,7 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
 			printf("pred %d\n",kdo);
 			printNode(node);
+			printGraph(nodeGraph(node));
 			printNode(child);
 		}
 		numberOfNodes++;

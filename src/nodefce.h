@@ -385,6 +385,10 @@ static inline void graphCopy(graph_t * to, graph_t * from){
 	to->hash = from->hash;
 }
 
+static inline u32 graphHash(graph_t * graph){
+	return graph->hash;
+}
+
 static inline bool graphCompare(graph_t * a, graph_t * b){
 	return a->graph[0] == b->graph[0] && a->graph[1] == b->graph[1];
 }
