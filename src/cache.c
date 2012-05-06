@@ -23,7 +23,7 @@ void cacheInsert(node_t* node){
 		if ( 
 				nodeCurrent(&cache[position]) || 
 				nodeCurrentChild(&cache[position]) || 
-				nodeValue(&cache[position]) != UNKNOWN ||
+//				nodeValue(&cache[position]) != UNKNOWN ||
 				(nodeTurn(&cache[position]) == nodeTurn(node)) )
 			continue;
 		//jeho detem ho odebrat za rodice
