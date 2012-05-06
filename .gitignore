@@ -8,5 +8,7 @@ program-opt
 zacatky/zacatky
 zacatky/zacatky.hi
 zacatky/zacatky.o
-
+*.{log,dvi,aux,toc,lof,out}
+thesis.ps 
+thesis.pdf
 

@@ -20,7 +20,11 @@ void cacheInsert(node_t* node){
 #endif //DEBUG
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
-		if (nodeCurrent(&cache[position]) || nodeCurrentChild(&cache[position]) || (nodeTurn(&cache[position]) == nodeTurn(node)) )
+		if ( 
+				nodeCurrent(&cache[position]) || 
+				nodeCurrentChild(&cache[position]) || 
+				nodeValue(&cache[position]) != UNKNOWN ||
+				(nodeTurn(&cache[position]) == nodeTurn(node)) )
 			continue;
 		//jeho detem ho odebrat za rodice
 		//TODO testovat rodice

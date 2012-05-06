@@ -18,7 +18,6 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 static inline node_t* nodeNew(u8 turn);
-static inline void nodeDelete(node_t* node);
 
 //-------------NODE---------------GRAPH------------------ 
 ////TODO odfelit graph node
@@ -262,17 +261,6 @@ static inline u32 nodeThDisproof(node_t * node){
 }
 #endif //DFPN
 
-
-//delete
-static inline void nodeDelete(node_t* node){ //nestara se o mazani deti ani rodicu
-#ifdef DEBUG
-	if ( nodeExpanded(node) ){
-		printf("tohle by se nemelo mazat\n");
-		printNode(node);
-	}
-#endif //DEBUG
-	free(node);
-}
 
 //new
 static inline node_t* nodeNew(u8 turn){

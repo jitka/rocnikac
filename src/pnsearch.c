@@ -315,7 +315,7 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 		assert(kdo == 0);
 		nodeAddParent(n,nodeGraph(node));
 		nodeAddChild(node,nodeGraph(n));
-		nodeDelete(child);
+		//nodeDelete(child);
 	} else {
 		//neni v cachy	
 		assert( kdo==0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
@@ -350,7 +350,7 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 }
 
 static inline node_t** generateChildren(node_t* node, int *childrenN){
-	node_t** children = malloc(sizeof(node_t)*M);
+	node_t** children = malloc(sizeof(node_t*)*M);
 #ifdef DEBUG
 	assert(children != NULL);
 #endif //DEBUG
@@ -537,6 +537,7 @@ static inline void developNode(node_t* node){
 //		printNode( cacheFind( &node->children[v] ) );
 		assert(children[v]!=NULL);
 		free(children[v]);
+		//children[v] == NULL;
 	}
 	free(children);
 
