@@ -294,6 +294,8 @@ static inline node_t* nodeNew(u8 turn){
 	graphEmpty(&node->graph);
 
 	nodeSetExpanded( node, false);
+	printf("alokoval jsem node na adrese %pn, ktery ma MAXCHILD=%d\n",node,MAXCHILD(turn));
+
 	return node;
 }
 
@@ -318,15 +320,21 @@ static inline void nodeAddChild(node_t * node, graph_t * child){
 			nodeTurn(node),
 			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
-//	printf("add %d\n",node->childrenN);
+	printf("add %d\n",node->childrenN);
 //	printGraph(child);
 	assert(child != NULL );
 	assert(node != NULL );
+	assert(node->childrenN < MAXCHILD(nodeTurn(node)));
 	assert(node->children != NULL );
-	assert(node->childrenN < MAXCHILD(nodeTurn(node)-1)-1);
+	printf("pridavam k node na adrese %pn %d-teho syna\n",node,node->childrenN);
+
+	printf("1\n");
 	node->children[0].hash = 0;
+	printf("2\n");
 	node->children[node->childrenN].hash = 0;
+	printf("3\n");
 	memcpy( &node->children[node->childrenN], child, sizeof(graph_t) );
+	printf("4\n");
 	node->childrenN++;
 //	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
 
