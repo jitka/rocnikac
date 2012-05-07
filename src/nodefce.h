@@ -311,12 +311,6 @@ static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 }
 static inline void nodeAddChild(node_t * node, graph_t * child){
 
-//	printf("add\n");
-//	printGraph(child);
-	assert(child != NULL );
-	assert(node != NULL );
-	memcpy( &node->children[node->childrenN++], child, sizeof(graph_t) );
-//	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
 		printf("moc deti %d %d %d\n",
@@ -324,6 +318,16 @@ static inline void nodeAddChild(node_t * node, graph_t * child){
 			nodeTurn(node),
 			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
+//	printf("add\n");
+//	printGraph(child);
+	assert(child != NULL );
+	assert(node != NULL );
+	assert(node->childrenN < MAXCHILD(nodeTurn(node))-1);
+//	printGraph( &node->children[node->childrenN] );
+	memcpy( &node->children[node->childrenN], child, sizeof(graph_t) );
+	node->childrenN++;
+//	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
+
 }
 
 static inline u8 nodeParentsN(node_t * node){

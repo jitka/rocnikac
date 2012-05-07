@@ -859,8 +859,8 @@ nodeValue_t proofNumberSearch(node_t* root){
 		counter++;
 		node_t * mostProovingNode = currentPath[currentNode];
 		//if (counter % 100000 == 0){
-		if (true){
-		//if (false){
+		//if (true){
+		if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u \n",nodeHash(mostProovingNode),nodeTurn(mostProovingNode));
 			//printNode(mostProovingNode);

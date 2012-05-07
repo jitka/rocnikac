@@ -5,17 +5,63 @@
 
 \section{PN-search}
 
-\TODO{pro jake typy her se da pouzit}
+\TODO{pro jake typy her se da pouzit, jak budu kreslit obrazky}
 
-\section{Enhancements}
+\section{Enhancements of PN-search}
 
 \subsection{Path from root}
-\TODO{zakladni,DF+hasovany}
 
-\subsection{Problem  \TODO{obtečení}}
+Proof number search is best first search. It disadvantages is that searching for most-proving node takes
+a lot of time. 
+
+\newtheorem*{currentPath}{Definition}	
+\begin{currentPath}
+A~{\sl current path} is a~path from root to most-proving node which pn-search traversals.
+\end{currentPath}
+
+There are two enhancements which reduces the number of node traversals necessary to select
+most-proving node. 
+
+\subsubsection{Last changed node}
+
+This enhancement was introduced in \cite{allis}\TODO{TODO} (page 31-32).
+In pn-search each iteration start at the root and traversals down. After developing
+most-proving node we update proof and disproof numbers starting in most-proving and 
+traversals into root. \TODO{obrazek: puvodni strom se zvirasnenou current path, a 
+proof vlevo disproof vpravo s cervenym/kurzivou kde se zmenila hodnota}
+So we traversals current path twice. 
+
+There are two basic observation.
+
+\begin{itemize}
+\item When there is no change during node update, traversals can by stop even though we
+aren't at root.
+\item Current path of two consecutive iteration has the same beginning. They can by different 
+only in part where proof or disproof number was updated.
+\end{itemize}
+
+\newtheorem*{currentNode}{Definition}	
+\begin{currentNode}
+A~{\sl current node} is a~node from current path. It is the highest changed node.
+\end{currentNode}
+
+\TODO{zkontrolovat jestli sedi nazvy fci}
+
+Enhanced pn-search works similar like ordinary pn-search. It has one variable
+called $currentNode$, at the beginning value of $currentNode$ is root. Each
+$selectMostProvingNode()$ starts in $currentNode$. And each $updateAncestors()$
+end at node where proof and disproof numbers aren't changed and set
+$currentNode$ as the last changed node.
+
+\subsubsection{DF-PN search}
+
 
 \subsection{Transpositions in DAGs}
 \TODO{ a to jak ze se do jednoho vrcholu da dostat vice zpusoby tak simetrie}
+
+\TODO{zakladni,DF+hasovany}
+
+\subsection{Problem  \TODO{obtečení}}
 
 \subsection{Heuristic}
 \TODO{ty cisla na zacatku a zminit poradi synu}
