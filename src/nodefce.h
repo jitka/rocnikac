@@ -318,12 +318,14 @@ static inline void nodeAddChild(node_t * node, graph_t * child){
 			nodeTurn(node),
 			MAXCHILD(nodeTurn(node)));
 #endif //DEBUG
-//	printf("add\n");
+//	printf("add %d\n",node->childrenN);
 //	printGraph(child);
 	assert(child != NULL );
 	assert(node != NULL );
-	assert(node->childrenN < MAXCHILD(nodeTurn(node))-1);
-//	printGraph( &node->children[node->childrenN] );
+	assert(node->children != NULL );
+	assert(node->childrenN < MAXCHILD(nodeTurn(node)-1)-1);
+	node->children[0].hash = 0;
+	node->children[node->childrenN].hash = 0;
 	memcpy( &node->children[node->childrenN], child, sizeof(graph_t) );
 	node->childrenN++;
 //	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
