@@ -20,6 +20,7 @@
 // N 8 
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
+// prepinac update ancestors
 // heuristika misto 1 1
 // heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
 // psat - probublani bokem

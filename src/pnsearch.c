@@ -388,7 +388,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 				last = nodeHash(children[i]);
 			} else {
 				numberOfNodes--;
-				free(children[i]);
+				nodeDelete(children[i]);
 			}
 		}
 		*childrenN = where;
@@ -500,7 +500,7 @@ static inline void repairNode(node_t* node){
 			insertChild(node,children[i],1);
 		}
 		numberOfNodes--;
-		free(children[i]);
+		nodeDelete(children[i]);
 	}
 	free(children);
 
@@ -541,7 +541,7 @@ static inline void developNode(node_t* node){
 //		printNode( cacheFind( &node->children[v] ) );
 		assert(children[v]!=NULL);
 		numberOfNodes--;
-		free(children[v]);
+		nodeDelete(children[v]);
 		//children[v] == NULL;
 	}
 	free(children);
@@ -826,7 +826,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 //		printNode(node);
 //		printChildren(node);
 		setProofAndDisproofNubers(node);
-		updateAncestors(node);
+		//updateAncestors(node);
 //		printf("4\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
@@ -858,8 +858,8 @@ nodeValue_t proofNumberSearch(node_t* root){
 #ifdef DEBUG
 		counter++;
 		node_t * mostProovingNode = currentPath[currentNode];
-		if (counter % 100000 == 0){
-		//if (true){
+		//if (counter % 100000 == 0){
+		if (true){
 		//if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u \n",nodeHash(mostProovingNode),nodeTurn(mostProovingNode));

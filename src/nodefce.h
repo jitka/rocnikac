@@ -18,6 +18,7 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 static inline node_t* nodeNew(u8 turn);
+static inline void nodeDelete(node_t * node);
 
 //-------------NODE---------------GRAPH------------------ 
 ////TODO odfelit graph node
@@ -296,6 +297,12 @@ static inline node_t* nodeNew(u8 turn){
 	return node;
 }
 
+static inline void nodeDelete(node_t * node){
+	free(node->children);
+	free(node->parents);
+	free(node);
+}
+
 static inline u8 nodeChildrenN(node_t * node){
 	return node->childrenN;
 }
@@ -306,7 +313,10 @@ static inline void nodeAddChild(node_t * node, graph_t * child){
 
 //	printf("add\n");
 //	printGraph(child);
-	graphCopy( &node->children[node->childrenN++], child );
+	assert(child != NULL );
+	assert(node != NULL );
+	memcpy( &node->children[node->childrenN++], child, sizeof(graph_t) );
+//	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
 #ifdef DEBUG
 	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
 		printf("moc deti %d %d %d\n",
