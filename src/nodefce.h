@@ -329,6 +329,7 @@ static inline void nodeSetParentN(node_t * node, u32 parentsN){
 	node->parentsN = parentsN;
 }
 static inline void nodeAddParent(node_t * node, graph_t * parent){
+#ifdef DELETEUSELESSPARENTS
 	//smrsknu 
 	int where=0; 
 	bool exist = false;
@@ -342,6 +343,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	node->parentsN = where;
 	if (exist)
 		return;
+#endif //DELETEUSELESSPARENTS
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG

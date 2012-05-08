@@ -18,7 +18,7 @@
 // 			- testovat v develop ne generate
 // 		- pri ne DFPN pocitat taky se zmyzelima detma
 // 	- napsat prepinace
-// 		- prepinac na zahozovani otcu -- zpomaluje
+// 		- prepinac jestli je mozne ztracet deti nebo padne
 // psat - probublani bokem
 // psat - moje programovici cast
 //
@@ -83,6 +83,9 @@ void printSetting(){
 #endif
 #ifdef UPDATEANCESTORS2
 	printf("UPDATEANCESTORS2 ");
+#endif
+#ifdef DELETEUSELESSPARENTS
+	printf("DELETEUSELESSPARENTS ");
 #endif
 
 	printf("\n---------------------------------------------------------\n");
