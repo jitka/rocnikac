@@ -71,8 +71,7 @@ static inline void setUnknown(node_t* node){
 	nodeSetProof(node,1);
 	nodeSetDisproof(node,1);
 #ifdef DEBUG
-	if (nodeExpanded(node))
-		perror("tohle se teprve tvori");
+	assert(!nodeExpanded(node));
 #endif //DEBUG
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +107,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	if (missing)
 		repairNode(node);
 
+#ifdef DEBUG
 	missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
 		node_t* child = cacheFind(&node->children[i]);
@@ -116,9 +116,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			missing = true;
 		}
 	}
-
-	if (missing)
-		printf("TODO tohle nechci resit\n");
+	assert(!missing);
+#endif //DEBUG	
 
 
 	if (nodeType(node) == OR ) {
@@ -134,10 +133,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		for (int i = 0; i < nodeChildrenN(node); i++) {
 			node_t* child = cacheFind(&node->children[i]);
 #ifdef DEBUG
-			//nepodarilo se vytvorit vsechny deti/navzajem se vyhazuji
-			if (child == NULL){
-				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
-			}
+			assert(child != NULL);
 #endif //DEBUG
 			//zahodim zbytecne
 			if ( nodeValue(child) == FALSE ){
@@ -195,11 +191,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		for (int i = 0; i < nodeChildrenN(node); i++) {
 			node_t* child = cacheFind(&node->children[i]);
 #ifdef DEBUG
-			if (child == NULL){
-				printf("TODO smazano dite %d %d \n",nodeChildrenN(node),i);
-				printNode(node);
-				printChildren(node);
-			}
+			assert(child != NULL);
 #endif //DEBUG
 			//zahodim zbytecne
 			if ( nodeValue(child) == TRUE ){
@@ -396,7 +388,6 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 //		printf("prvni hrac nema moznost vyhrat %d\n",nodeTurn(node));
 		//	printNode(node);
 		setFalse(node);
-		updateAncestors(node); //TODO tady taky prepinac
 	}
 #endif //NOFREEK4
 #ifdef HEURISTIC1
@@ -531,7 +522,6 @@ static inline void updateAncestors(){ //po hladinach
 			node_t * parent = cacheFind(&node->parents[i]);
 #ifdef DEBUG
 			if (parent == NULL){
-				perror("TODO neni rodic");
 				parentMiss++;
 			}
 #endif //DEBUG
