@@ -11,6 +11,7 @@
 #define STATS
 #define NORM2
 #define DFPN
+#define UPDATEANCESTORS2
 //#define HEURISTIC1 //listy se radi tak aby driv byly ti co maji vic volnych vyhernich pozic ZPOMALUJE
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 #define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti

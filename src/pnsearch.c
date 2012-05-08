@@ -495,9 +495,9 @@ static inline void updateAncestors(){ //po hladinach
 #ifdef STATS
 	int updateS = 0;
 #endif //STATS
-#ifdef DFPN
+#ifdef UPDATEANCESTORS2
 	updateN++; //kolikaty probyha update
-#endif //DFPN
+#endif //UPDATEANCESTORS2
 
 	ll2_t ancestors;
        	ll2New(&ancestors);
@@ -508,11 +508,11 @@ static inline void updateAncestors(){ //po hladinach
 
 		node_t* node = ll2FirstNode(&ancestors);
 		ll2DelFirst(&ancestors);
-#ifdef DFPN
+#ifdef UPDATEANCESTORS2
 		if (nodeUpdated(node, updateN))
 			continue;
 		nodeUpdate(node, updateN);
-#endif //DFPN
+#endif //UPDATEANCESTORS2
 #ifdef STATS
 		updateS++;
 #endif //STATS

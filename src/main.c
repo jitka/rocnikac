@@ -19,7 +19,6 @@
 // 		- pri ne DFPN pocitat taky se zmyzelima detma
 // 	- napsat prepinace
 // 		- prepinac na zahozovani otcu -- zpomaluje
-// 		- prepinac update ancestors - grafove
 // psat - probublani bokem
 // psat - moje programovici cast
 //
@@ -81,6 +80,9 @@ void printSetting(){
 #endif
 #ifdef NOFREEK4
 	printf("NOFREEK4 ");
+#endif
+#ifdef UPDATEANCESTORS2
+	printf("UPDATEANCESTORS2 ");
 #endif
 
 	printf("\n---------------------------------------------------------\n");

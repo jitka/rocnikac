@@ -60,8 +60,10 @@ struct node{
 	u32 set_stats; //kolikrat byl na tento node pusten setProofAndDisproofNubers
 #endif //stats
 
-#ifdef DFPN
+#ifdef UPDATEANCESTORS2
 	u32 update;
+#endif //UPDATEANCESTORS2
+#ifdef DFPN
 	u32 thProof; //zarazky
 	u32 thDisproof;
 #endif //DFPN
