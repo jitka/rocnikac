@@ -11,11 +11,11 @@
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// testovat jestli neexistuji 0 0
 // smazat spojak uplne
 // jine varianty - prepinace
 // 	- testovat vsechny prepinace
 // 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
+// 			- testovat v develop ne generate
 // 		- pri ne DFPN pocitat taky se zmyzelima detma
 // 	- napsat prepinace
 // 		- prepinac na zahozovani otcu -- zpomaluje

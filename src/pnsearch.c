@@ -81,19 +81,16 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	node->set_stats++;
 #endif //STATS
 	
-#ifdef DEBUG
 	if (nodeValue(node) != UNKNOWN){
-		if (nodeProof(node) != 0 && nodeProof(node) != MAXPROOF){
-			printf("au set maxproof %d\n",MAXPROOF);
-		}
-		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
-			printf("au set");
+#ifdef DEBUG
+		assert( (nodeProof(node) == 0 || nodeProof(node) == MAXPROOF) );
+		assert( (nodeDisproof(node) == 0 || nodeDisproof(node) == MAXPROOF) );
 		//printf("zbytecne\n");
+#endif //DEBUG	
 		return; 
 	}
-	if (!nodeExpanded(node)){
-		printf("neexpandove\n");
-	}
+#ifdef DEBUG
+	assert(nodeExpanded(node));
 #endif //DEBUG	
 
 	bool missing = false;	
@@ -242,11 +239,8 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		setFalse(node);
 	}
 #ifdef DEBUG
-	if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-		printf("dve nekonecna\n");
-		printNode(node);
-		printChildren(node);
-	}
+	assert(nodeProof(node) != MAXPROOF || nodeDisproof(node) != MAXPROOF);
+	assert( nodeProof(node)!=0 || nodeDisproof(node) != 0 );
 #endif //DEBUG
 }
 
@@ -390,6 +384,9 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 #endif //HEURISTIC1
 		setValue(children[v],fullK4);
 
+#ifdef DEBUG
+		assert( nodeProof(children[v])!=0 || nodeDisproof(children[v]) != 0 );
+#endif //DEBUG
 	}
 #ifdef NOFREEK4
 	if (possible == false && nodeType(node)==OR ){
@@ -465,6 +462,9 @@ static inline void repairNode(node_t* node){
 #endif //DEBUG
 		nodeUnsetCurrentChild(child);
 	}
+#ifdef DEBUG
+	assert( nodeProof(node)!=0 || nodeDisproof(node) != 0 );
+#endif //DEBUG
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -482,6 +482,11 @@ static inline void developNode(node_t* node){
 	free(children);
 
 	nodeSetExpanded(node,true);
+
+#ifdef DEBUG
+	assert( nodeProof(node)!=0 || nodeDisproof(node) != 0 );
+#endif //DEBUG
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
