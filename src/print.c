@@ -85,7 +85,10 @@ void printChildren(node_t* node){
 	}
 	printf("potomci %d:\n",nodeChildrenN(node));
 	for (int i = 0; i < nodeChildrenN(node); i++){
-		printNode(cacheFind(&node->children[i]));
+		node_t * child = cacheFind(&node->children[i]);
+		printNode(child);
+		if (child == NULL)
+			printGraph(&node->children[i]);
 	}
 	printf("potomci konec-------------------------------------------------\n");
 //	int tmp; scanf("%d",&tmp);

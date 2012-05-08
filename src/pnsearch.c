@@ -9,7 +9,7 @@
 #include "cache.h"
 
 // or node... na tahu je prvni hrac
-int numberOfNodes = 1; //abych vedela kolik zeru pameti
+int numberOfNodes = 0; //abych vedela kolik zeru pameti - to co je mimo cache
 node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
@@ -315,41 +315,47 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 		assert(kdo == 0);
 		nodeAddParent(n,nodeGraph(node));
 		nodeAddChild(node,nodeGraph(n));
-		//nodeDelete(child);
+		nodeDelete(child);
 	} else {
 		//neni v cachy	
 		assert( kdo==0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 #ifdef STATS
 		statsNewNode(child);
 #endif //STATS
-/*		if ( kdo==2 ){
-			printf("pn ins pred %d\n",kdo);
-			printNode(node);
-			printNode(child);
-			printParents(child);
+		if ( kdo==2 ){
+			printf("pn ins pred\n");
+//			printNode(node);
+//			printNode(child);
+//			printParents(child);
 		}
-*/		
+		
 //		if ( kdo==1 && nodeTurn(node) == 17 && nodeHash(node) == 3646){
 //		printf("neni tam\n");
 //		printGraph(nodeGraph(child));
 		nodeAddChild(node,nodeGraph(child));
 		nodeAddParent(child,nodeGraph(node));
-		cacheInsert(child);
+		if ( kdo==2 )
+		cacheInsert(child,2);
+		else
+		cacheInsert(child,0);
 //	node_t* n2 = cacheFind(nodeGraph(child));
 //	printNode(n2);
-/*		if ( kdo==2 ){
-			printf("pn ins po %d\n",kdo);
-			printNode(node);
-			printNode(child);
-			printParents(child);
+		if ( kdo==2 ){
+			printf("hledam vlozeny:\n");
+			printNode(cacheFind(nodeGraph(child)));
+//			printNode(node);
+//			printNode(child);
+//			printParents(child);
+			printf("pn ins po \n");
 		}
-*/		assert( nodeParentsN(child) == 1);
+		assert( nodeParentsN(child) == 1);
 		assert( kdo == 0 || cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 	}
 //	printf("insert\n");
 }
 
 static inline node_t** generateChildren(node_t* node, int *childrenN){
+	int tmp = numberOfNodes;
 	node_t** children = malloc(sizeof(node_t*)*M);
 #ifdef DEBUG
 	assert(children != NULL);
@@ -369,6 +375,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 			if ( ! graphEdgeExist(nodeGraph(node), i, j) ) 
 				//ij je hrana ktera jeste nema barvu
 				children[(*childrenN)++] = createChild(node,i,j);
+	assert(tmp+(*childrenN) == numberOfNodes);
 	//maze dvojcata	
 	if (nodeTurn(node) < TURNDDELETECHILDRENST) {
 		for (int i = 0; i < *childrenN; i++){
@@ -382,20 +389,18 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 		}
 		u32 last = 0;
 		int where = 0;
+		//TODO tady nestačí hash
 		for (int i = 0; i < *childrenN; i++){
 			if (nodeHash(children[i]) != last){
 				children[where++]=children[i];
 				last = nodeHash(children[i]);
 			} else {
-				numberOfNodes--;
 				nodeDelete(children[i]);
 			}
 		}
 		*childrenN = where;
-/*		for (int i = 0; i < childrenN; i++){
-			printf("%d ",nodeHash(children[i]));
-		} printf("\n");*/
 	}
+	assert(tmp+(*childrenN) == numberOfNodes);
 
 	//vyhodnocuje deti	
 	for (int v = 0; v < *childrenN; v++){
@@ -405,7 +410,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 				nodeLastEdgeI(children[v]),nodeLastEdgeJ(children[v]),
 				(nodeTurn(children[v]) % 2 == 1) ? RED : BLUE, //kterou barvou byl nakreslet posledni tah
 				&freeK4, &fullK4);
- 
+
 #ifdef NOFREEK4
 		if (freeK4 > 0)
 			possible = true;
@@ -418,29 +423,29 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	}
 #ifdef NOFREEK4
 	if (possible == false && nodeType(node)==OR ){
-	//	printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
-	//	printNode(node);
+		//	printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+		//	printNode(node);
 		setFalse(node);
 	}
 #endif //NOFREEK4
 #ifdef HEURISTIC1
 	//tridi deti aby nejdriv byly ty s vyce moznostmi
 	for (int i = 0; i < *childrenN; i++){
-		for (int j = i+1; j < childrenN; j++){
+		for (int j = i+1; j < *childrenN; j++){
 			if (free[i] < free[j]){
 				{int tmp = free[i]; free[i] = free[j]; free[j] = tmp;}
 				{node_t* tmp = children[i]; children[i] = children[j]; children[j] = tmp;}
 			}
 		}	
 	}
-/*		for (int i = 0; i < childrenN; i++){
-			printf("%d ",free[i]);
-		} printf("\n");*/
 #endif //HEURISTIC1
 
 
+	assert(tmp+(*childrenN) == numberOfNodes);
 	return children;
 }
+
+int kolik = 0;
 
 static inline void repairNode(node_t* node){
 #ifdef DEBUG
@@ -479,16 +484,28 @@ static inline void repairNode(node_t* node){
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
 
-	//pridam chybejici
+/*	bool chyceno = false;
+	if (nodeHash(node) == 3 && nodeTurn(node) == 7){
+		kolik++;
+//		if (kolik == 2){
+			printf("chyceno\n");
+			chyceno = true;
+			printNode(node);
+			printChildren(node);
+//		}
+	}
+*/	//pridam chybejici
 	for (int i = 0; i < childrenN; i++){
 		node_t* child = cacheFind(nodeGraph(children[i]));
 		if ( child == NULL){
+//			if (chyceno)
+//				printf("pridam hash-%u\n",nodeHash(children[i]));
 			assert(children[i] !=NULL); //ma deti
 			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL); //posledni dite existuje
-	//		if ( nodeTurn(children[i]) == 11 && nodeHash(children[i]) == 174){
-	//			printf("pred\n");
-	//			insertChild(node,children[i],2);
-	//		} else 
+			//		if ( nodeTurn(children[i]) == 11 && nodeHash(children[i]) == 174){
+			//			printf("pred\n");
+			//			insertChild(node,children[i],2);
+			//		} else 
 			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL);
 			if (children[i]->parentsN > 1){
 				printf("tu par %d %d\n",children[i]->parentsN,i);
@@ -497,10 +514,13 @@ static inline void repairNode(node_t* node){
 				printParents(children[i]);
 			}
 			nodeSetCurrentChild(children[i]);
-			insertChild(node,children[i],1);
+//			if (chyceno)
+//				insertChild(node,children[i],2);
+//			else 
+				insertChild(node,children[i],1);
+		} else {
+			nodeDelete(children[i]);
 		}
-		numberOfNodes--;
-		nodeDelete(children[i]);
 	}
 	free(children);
 
@@ -511,8 +531,8 @@ static inline void repairNode(node_t* node){
 		if ( child == NULL){
 			missing = true;
 			printf("TODO2 neni\n");
-			printNode(node);
-			printChildren(node);
+//			printNode(node);
+//			printChildren(node);
 		}
 		nodeUnsetCurrentChild(child);
 	}
@@ -530,19 +550,17 @@ static inline void developNode(node_t* node){
 	assert(!nodeExpanded(node));
 #endif //DEBUG
 
-//		printf("develop\n");
+	//		printf("develop\n");
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
 	for (int v = 0; v < childrenN; v++){ 
-//		printNode(children[v]);
+		//		printNode(children[v]);
 		insertChild(node,children[v],0);
-//		printf("child\n");
-//		printGraph(&node->children[v]);
-//		printNode( cacheFind( &node->children[v] ) );
+		//		printf("child\n");
+		//		printGraph(&node->children[v]);
+		//		printNode( cacheFind( &node->children[v] ) );
 		assert(children[v]!=NULL);
-		numberOfNodes--;
-		nodeDelete(children[v]);
-		//children[v] == NULL;
+		//	nodeDelete(children[v]);
 	}
 	free(children);
 
@@ -858,9 +876,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 #ifdef DEBUG
 		counter++;
 		node_t * mostProovingNode = currentPath[currentNode];
-		//if (counter % 100000 == 0){
+		if (counter % 100000 == 0){
 		//if (true){
-		if (false){
+		//if (false){
 			//printNode(mostProovingNode);
 			printf("hotov node (%u) %u \n",nodeHash(mostProovingNode),nodeTurn(mostProovingNode));
 			//printNode(mostProovingNode);

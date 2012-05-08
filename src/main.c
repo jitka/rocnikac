@@ -18,6 +18,8 @@
 // uklid?
 // grepnout TODO
 // N 8 
+// smazat exist
+//TODO tady nestačí hash
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
 // prepinac update ancestors

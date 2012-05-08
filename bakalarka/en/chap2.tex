@@ -61,7 +61,7 @@ $currentNode$ as the last changed node.
 
 As we see in picture \TODO{3 obr,neco jen ... misto hran, nespojene, spojene
 jen poradi, spojene i symetrie} of tic-tac-toe game tree.  We ale exploring one
-game state many times. Basic enchantment is to join that nodes into one.
+game state many times. Basic enhancement is to join that nodes into one.
 
 The problem is that we have game DAGs \footnote{There aren't cycles because in the
 positional game all edges leads into position with more position occupied.}
@@ -74,12 +74,12 @@ and disproof number as they was defined \TODO{above}.
 We can use PN-search with few modification. When we generate children we look
 if there is such node yet. We can use hash table for it. Second modification is
 that we need update all parents. There could be problem if we use another
-enchantments (see \TODO{chap}) but if we use ordinary PN-search it works. Allis
+enhancements (see \TODO{chap}) but if we use ordinary PN-search it works. Allis
 proof it in \cite{allis} (page 39-40).
 
 One game state in turn $t$ can be exploring in the worst case $t!$ times
 because position can by occupied in any order. So join them is good idea and
-there exist many enchantments of this enchantment. They usually forgot on
+there exist many enhancements of this enhancement. They usually forgot on
 symmetry, because in many games there are only few symmetry. For example in
 chess there are only four symmetry and typically it is useless to count this
 because white player has usually most chessman on his side. 
