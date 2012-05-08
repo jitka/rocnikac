@@ -14,8 +14,9 @@
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
 // grepnout TODO
+// pri ne DFPN pocitat taky se zmyzelima detma
+// #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // N 8 
-// smazat exist
 //TODO tady nestačí hash
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje

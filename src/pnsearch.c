@@ -89,7 +89,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		}
 		if (nodeDisproof(node) != 0 && nodeDisproof(node) != MAXPROOF)
 			printf("au set");
-		printf("zbytecne\n");
+		//printf("zbytecne\n");
 		return; 
 	}
 	if (!nodeExpanded(node)){
@@ -389,9 +389,10 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	}
 #ifdef NOFREEK4
 	if (possible == false && nodeType(node)==OR ){
-		//	printf("prvni hrac nema moznost vyhrat %d\n",nodeHash(node));
+//		printf("prvni hrac nema moznost vyhrat %d\n",nodeTurn(node));
 		//	printNode(node);
 		setFalse(node);
+		updateAncestors(node); //TODO tady taky prepinac
 	}
 #endif //NOFREEK4
 #ifdef HEURISTIC1

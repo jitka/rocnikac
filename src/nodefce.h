@@ -290,7 +290,6 @@ static inline node_t* nodeNew(u8 turn){
 	node->current = false;
 	node->currentChild = false;
 	node->turn = turn;
-	node->exist = true;
 	graphEmpty(&node->graph);
 
 	nodeSetExpanded( node, false);
