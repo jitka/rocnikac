@@ -16,7 +16,6 @@
 // 	- testovat vsechny prepinace
 // 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // 			- testovat v develop ne generate
-// 		- pri ne DFPN pocitat taky se zmyzelima detma
 // 	- napsat prepinace
 // 		- prepinac jestli je mozne ztracet deti nebo padne
 // psat - probublani bokem

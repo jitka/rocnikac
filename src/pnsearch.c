@@ -13,8 +13,10 @@ int numberOfNodes = 0; //abych vedela kolik zeru pameti - to co je mimo cache
 node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
+#ifdef NODEDELETE
 int parentMiss = 0;
 int childMiss = 0;
+#endif //NODEDELETE
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node);
@@ -24,7 +26,9 @@ static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
 static inline void insertChild(node_t* node, node_t* child);
+#ifdef NODEDELETE
 static inline void repairNode(node_t* node);
+#endif //NODEDELETE
 static inline void developNode(node_t* node);
 static inline void updateAncestors();
 static inline void selectMostProving();
@@ -93,6 +97,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 	assert(nodeExpanded(node));
 #endif //DEBUG	
 
+#ifdef NODEDELETE
 	bool missing = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
 		node_t* child = cacheFind(&node->children[i]);
@@ -106,17 +111,18 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		repairNode(node);
 		childMiss++;
 	}
+#endif //NODEDELETE
 
 #ifdef DEBUG
-	missing = false;	
+	bool missing2 = false;	
 	for (int i = 0; i < nodeChildrenN(node); i++) {
 		node_t* child = cacheFind(&node->children[i]);
 		//pokud se smazal syn
 		if ( child == NULL){
-			missing = true;
+			missing2 = true;
 		}
 	}
-	assert(!missing);
+	assert(!missing2);
 #endif //DEBUG	
 
 
@@ -412,8 +418,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	return children;
 }
 
-int kolik = 0;
-
+#ifdef NODEDELETE
 static inline void repairNode(node_t* node){
 #ifdef DEBUG
 	assert(nodeExpanded(node));
@@ -466,6 +471,7 @@ static inline void repairNode(node_t* node){
 	assert( nodeProof(node)!=0 || nodeDisproof(node) != 0 );
 #endif //DEBUG
 }
+#endif //NODEDELETE
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void developNode(node_t* node){
@@ -533,11 +539,12 @@ static inline void updateAncestors(){ //po hladinach
 		//pridat vsechny predky co je potreba updatetovat
 		for (int i = 0; i < nodeParentsN(node); i++){
 			node_t * parent = cacheFind(&node->parents[i]);
-#ifdef DEBUG
+#ifdef NODEDELETE
 			if (parent == NULL){
 				parentMiss++;
 			}
-#endif //DEBUG
+#endif //NODEDELETE
+			ll2AddNodeEnd( &ancestors, parent);
 		}
 
 	}
@@ -729,7 +736,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 #endif //DEBUG
 		
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+#ifdef NODEDELETE
 			nodeUnsetCurrent(node);
+#endif //NODEDELETE
 			currentNode--;
 			continue;
 		}
@@ -742,7 +751,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 //		printf("4\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+#ifdef NODEDELETE
 			nodeUnsetCurrent(node);
+#endif //NODEDELETE
 			currentNode--;
 			continue;
 		}
@@ -765,7 +776,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 		
 		currentNode++;
 		currentPath[currentNode] = child;
+#ifdef NODEDELETE
 		nodeSetCurrent(child);
+#endif //NODEDELETE
 
 #ifdef DEBUG
 		counter++;
@@ -778,9 +791,12 @@ nodeValue_t proofNumberSearch(node_t* root){
 			//printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("cache miss %d ",cacheMiss);
+#ifdef NODEDELETE
 			printf("child miss %d ",childMiss);
 			printf("parent miss %d ",parentMiss);
-			printf("interace %d\n",counter);
+#endif //NODEDELETE
+			printf("interace %d ",counter);
+			printf("\n");
 			//printChildren(mostProovingNode);
 		}
 #endif //DEBUG
@@ -788,8 +804,11 @@ nodeValue_t proofNumberSearch(node_t* root){
 #ifdef DEBUG
 	printf("nodes %d ",numberOfNodes);
 	printf("cache miss %d ",cacheMiss);
+#ifdef NODEDELETE
 	printf("child miss %d ",childMiss);
-	printf("parent miss %d\n",parentMiss);
+	printf("parent miss %d ",parentMiss);
+#endif //NODEDELETE
+	printf("\n");
 //	extern int TMP;	printf("norm %d\n",TMP);
 #endif //DEBUG
 

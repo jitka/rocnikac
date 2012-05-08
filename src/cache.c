@@ -17,6 +17,7 @@ void cacheInsert(node_t* node){
 		cache[position] = node;
 		return;
 	}
+#ifdef NODEDELETE
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if ( 
@@ -50,9 +51,8 @@ void cacheInsert(node_t* node){
 		cache[position] = node;
 		return;
 	}
-
-	printf("neni kam dat %d\n",nodeHash(node));
-	assert(false);
+#endif //NODEDELETE
+	assert(false); //printf("neni kam dat %d\n",nodeHash(node));
 }
 
 node_t* cacheFind(graph_t* graph){ 

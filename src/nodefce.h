@@ -71,21 +71,25 @@ static inline void nodeSetLastEdge(node_t * node, int i, int j); //prehodily se 
 static inline u8 nodeLastEdgeI(node_t *node);
 static inline u8 nodeLastEdgeJ(node_t *node);
 
-#ifdef DFPN
+#ifdef UPDATEANCESTORS2
 static inline void nodeUpdate(node_t * node, u32 update);
 static inline bool nodeUpdated(node_t * node, u32 update);
+#endif //UPDATEANCESTORS2
+
+#ifdef DFPN
 static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof);
 static inline u32 nodeThProof(node_t * node);
 static inline u32 nodeThDisproof(node_t * node);
 #endif //DFPN
 
+#ifdef NODEDELETE
 static inline void nodeSetCurrent(node_t *node); //oznacuje vrcholy v current path, ktere nemohou byt smazane
 static inline void nodeUnsetCurrent(node_t *node);
 static inline bool nodeCurrent(node_t *node); 
-
 static inline void nodeSetCurrentChild(node_t *node); //oznacuje syny ktere se nemuzou smazat kvuli repair
 static inline void nodeUnsetCurrentChild(node_t *node);
 static inline void nodeSetCurrentChild(node_t *node);
+#endif //NODEDELETE
 
 static inline graph_t* nodeGraph(node_t *node);
 //-------------------------------------------------------------
@@ -95,6 +99,7 @@ static inline graph_t* nodeGraph(node_t *node);
 // samotne fce bordel
 //--------------------------------------------------------------
 
+#ifdef NODEDELETE
 static inline void nodeSetCurrent(node_t *node){
 	node->current = true;
 }
@@ -115,6 +120,7 @@ static inline void nodeUnsetCurrentChild(node_t *node){
 static inline bool nodeCurrentChild(node_t *node){ 
 	return node->currentChild;
 }
+#endif //NODEDELETE
 
 static inline graph_t* nodeGraph(node_t *node){
 	return &(node->graph);
@@ -235,7 +241,7 @@ static inline void nodeSetDisproof(node_t * node, u32 disproof){
 }
 
 
-#ifdef DFPN
+#ifdef UPDATEANCESTORS2
 static inline void nodeUpdate(node_t * node, u32 update){
 #ifdef DEBUG
 	if (update > MAXPROOF)
@@ -247,7 +253,8 @@ static inline void nodeUpdate(node_t * node, u32 update){
 static inline bool nodeUpdated(node_t * node, u32 update){
 	return node->update == update;
 }
-
+#endif //UPDATEANCESTORS2
+#ifdef DFPN
 static inline void nodeSetTh(node_t * node, u32 thProof, u32 thDisproof){
 	node->thProof = thProof;
 	node->thDisproof = thDisproof;
@@ -287,8 +294,10 @@ static inline node_t* nodeNew(u8 turn){
 	node->parentsMAX = 2;
 	node->parents = parents2;
 	node->children = children2;
+#ifdef NODEDELETE
 	node->current = false;
 	node->currentChild = false;
+#endif //NODEDELETE
 	node->turn = turn;
 	graphEmpty(&node->graph);
 
