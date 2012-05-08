@@ -18,7 +18,6 @@
 // childMiss
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // N 8 
-//TODO tady nestačí hash
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
 // prepinac update ancestors - grafove

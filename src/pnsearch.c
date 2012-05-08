@@ -22,8 +22,7 @@ static inline void setUnknown(node_t* node);
 static inline void setProofAndDisproofNubers(node_t* node);
 static inline void setValue(node_t* node, bool fullK4);
 static inline node_t* createChild(node_t* node, int i, int j);
-///static inline void insertChild(node_t* node, node_t* child);
-static inline void insertChild(node_t* node, node_t* child, int kdo); //TODO smazat
+static inline void insertChild(node_t* node, node_t* child);
 static inline void repairNode(node_t* node);
 static inline void developNode(node_t* node);
 static inline void updateAncestors();
@@ -300,12 +299,11 @@ static inline node_t* createChild(node_t* node, int i, int j){
 
 }
 
-static inline void insertChild(node_t* node, node_t* child, int kdo){
+static inline void insertChild(node_t* node, node_t* child){
 	//zapoji vrchol do stromu
 	node_t* n = cacheFind(nodeGraph(child));
 	if ( n != NULL ) { 
 		//je v cachy
-		assert(kdo == 0);
 		nodeAddParent(n,nodeGraph(node));
 		nodeAddChild(node,nodeGraph(n));
 		nodeDelete(child);
@@ -454,7 +452,7 @@ static inline void repairNode(node_t* node){
 			assert(children[i]->parentsN == 1);
 #endif //DEBUG
 			nodeSetCurrentChild(children[i]);
-				insertChild(node,children[i],1);
+				insertChild(node,children[i]);
 		} else {
 			nodeDelete(children[i]);
 		}
@@ -480,7 +478,7 @@ static inline void developNode(node_t* node){
 	int childrenN;
 	node_t** children = generateChildren(node,&childrenN);
 	for (int v = 0; v < childrenN; v++){ 
-		insertChild(node,children[v],0);
+		insertChild(node,children[v]);
 	}
 	free(children);
 

@@ -21,7 +21,6 @@ static inline node_t* nodeNew(u8 turn);
 static inline void nodeDelete(node_t * node);
 
 //-------------NODE---------------GRAPH------------------ 
-////TODO odfelit graph node
 static inline void graphEmpty(graph_t * graph);
 static inline void graphCopy(graph_t * to, graph_t * from);
 static inline bool graphCompare(graph_t * a, graph_t * b);
@@ -35,7 +34,7 @@ static inline int graphDegree(graph_t * graph, int i, color c);
 static inline bool testK4(graph_t * graph, int i, int j, color color);
 static inline void testK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4);
 static inline bool graphThreat(graph_t * graph, int i, int j, color color);
-//static inline void nodeChangeNodes(node_t * node, int a, int b); //TODO na rychlejsi norm
+//static inline void nodeChangeNodes(node_t * node, int a, int b); //na rychlejsi norm
 //static inline bool nodeSimetric(node_t * a);
 //static inline bool nodeTurnChack(node_t * a);
 
@@ -329,7 +328,7 @@ static inline void nodeSetParentN(node_t * node, u32 parentsN){
 	node->parentsN = parentsN;
 }
 static inline void nodeAddParent(node_t * node, graph_t * parent){
-	//smrsknu //TODO je to nutne?
+	//smrsknu 
 	int where=0; 
 	bool exist = false;
 	for (u32 i = 0; i < node->parentsN; i++){
