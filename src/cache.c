@@ -9,25 +9,17 @@ void cacheInit(){
 	assert(cache != NULL);
 }
 
-void cacheInsert(node_t* node,int kdo){
+void cacheInsert(node_t* node){
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if ( cache[position] != NULL )
 			continue;
-//		cache[position].exist = true;
-//		memcpy(&cache[position],node,sizeof(node_t));
 		cache[position] = node;
-//		graphCopy(nodeGraph(&cache[position]),nodeGraph(node));
-//		printNode(&cache[position]);
-//		printf("pozice puv %d skut %d\n",( nodeHash(node)  ) % CACHE_SIZE, position);
-//		printf("plnim\n");
 		return;
 	}
 #ifdef DEBUG
 	cacheMiss++;
 #endif //DEBUG
-	if (kdo == 2)
-		printf("cache insert neni misto\n");
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if ( 
@@ -37,20 +29,16 @@ void cacheInsert(node_t* node,int kdo){
 				(nodeTurn(cache[position]) == nodeTurn(node)) )
 			continue;
 		//jeho detem ho odebrat za rodice
-		//TODO testovat rodice
 		node_t* old = cache[position];
-		assert(old!=NULL);
-		if (kdo == 2){
-			printf("cache insert vyhazuji na %d toho:\n",position);
-			printNode(old);
-		}
 		for (int i = 0; i < nodeChildrenN(old); i++){
 			node_t* child = cacheFind(&old->children[i]);
 			if (child == NULL)
 				continue;
 			int where = 0;
 			for(int j = 0; j < nodeParentsN(child); j++){
+#ifdef DEBUG
 				assert(&child->parents[j]!=NULL);
+#endif //DEBUG
 				if ( graphCompare( nodeGraph(old), &child->parents[j]) ){
 					continue;
 				} else {
@@ -62,18 +50,12 @@ void cacheInsert(node_t* node,int kdo){
 			nodeSetParentN(child,where);
 		}
 		nodeDelete(old);
-//		memcpy(&cache[position],node,sizeof(node_t));
 		cache[position] = node;
-		if (kdo == 2){
-			printf("cache insert a davam tam toho:\n");
-			printNode(cache[position]);
-		}
 		return;
 	}
 
-#ifdef DEBUG
 	printf("neni kam dat %d\n",nodeHash(node));
-#endif //DEBUG
+	assert(false);
 }
 
 node_t* cacheFind(graph_t* graph){ 

@@ -266,15 +266,10 @@ static inline u32 nodeThDisproof(node_t * node){
 //new
 extern int numberOfNodes; //abych vedela kolik zeru pameti
 static inline node_t* nodeNew(u8 turn){
-//	printf("1\n");
 	node_t* node = malloc(sizeof(node_t));
-//	printf("2\n");
-//	printf("budu alokoval jsem node na adrese %pn, ktery ma MAXCHILD=%d\n",node,MAXCHILD(turn));
 	numberOfNodes++;
 	graph_t * parents2 = malloc( sizeof(graph_t) * 2 );
-//	printf("3\n");
 	graph_t * children2 = malloc( sizeof(graph_t) * MAXCHILD(turn) );
-//	printf("4\n");
 #ifdef DEBUG
 	if (node == NULL || parents2 == NULL || children2 == NULL)
 		perror("malloc node");
@@ -299,7 +294,6 @@ static inline node_t* nodeNew(u8 turn){
 	graphEmpty(&node->graph);
 
 	nodeSetExpanded( node, false);
-//	printf("alokoval jsem node na adrese %pn, ktery ma MAXCHILD=%d\n",node,MAXCHILD(turn));
 
 	return node;
 }
@@ -314,36 +308,19 @@ static inline void nodeDelete(node_t * node){
 static inline u8 nodeChildrenN(node_t * node){
 	return node->childrenN;
 }
+
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 	node->childrenN = childrenN;
 }
+
 static inline void nodeAddChild(node_t * node, graph_t * child){
-
 #ifdef DEBUG
-	if (node->childrenN >= MAXCHILD(nodeTurn(node)))
-		printf("moc deti %d %d %d\n",
-			node->childrenN,
-			nodeTurn(node),
-			MAXCHILD(nodeTurn(node)));
+	assert( node->childrenN < MAXCHILD(nodeTurn(node)) );
+	assert( child != NULL );
+	assert( node != NULL );
+	assert( node->children != NULL );
 #endif //DEBUG
-//	printf("add %d\n",node->childrenN);
-//	printGraph(child);
-	assert(child != NULL );
-	assert(node != NULL );
-	assert(node->childrenN < MAXCHILD(nodeTurn(node)));
-	assert(node->children != NULL );
-//	printf("pridavam k node na adrese %pn %d-teho syna\n",node,node->childrenN);
-
-//	printf("1\n");
-//	node->children[0].hash = 0;
-//	printf("2\n");
-//	node->children[node->childrenN].hash = 0;
-//	printf("3\n");
-	memcpy( &node->children[node->childrenN], child, sizeof(graph_t) );
-//	printf("4\n");
-	node->childrenN++;
-//	graphCopy( &node->children[node->childrenN++], child ); //TODO tohle je lepsi
-
+	memcpy( &node->children[node->childrenN++], child, sizeof(graph_t) );
 }
 
 static inline u8 nodeParentsN(node_t * node){
@@ -353,7 +330,7 @@ static inline void nodeSetParentN(node_t * node, u32 parentsN){
 	node->parentsN = parentsN;
 }
 static inline void nodeAddParent(node_t * node, graph_t * parent){
-	//smrsknu
+	//smrsknu //TODO je to nutne?
 	int where=0; 
 	bool exist = false;
 	for (u32 i = 0; i < node->parentsN; i++){
@@ -369,29 +346,19 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		if (node->parentsMAX > 20){
-			printf("par %d\n",node->parentsN);
-			printNode(node);
-			printParents(node);
-		}
+		assert(node->parentsMAX < M); //kdyby bylo moc rodicu je to jen divne ne nutne blble
 #endif //DEBUG
 		node->parentsMAX *= 2;
 		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX);
-#ifdef DEBUG
 		assert(parents != NULL);
-#endif //DEBUG
 		for (u32 i = 0; i < node->parentsN; i++){
 			parents[i] = node->parents[i];
 		}
 		free(node->parents);
 		node->parents = parents;
 	}
-
 	//pridam
-	node->parents[node->parentsN].hash = parent->hash;
-	node->parents[node->parentsN].graph[0] = parent->graph[0];
-	node->parents[node->parentsN].graph[1] = parent->graph[1];
-	node->parentsN++;
+	memcpy( &node->parents[node->parentsN++], parent, sizeof(graph_t) );
 }
 
 
@@ -403,9 +370,6 @@ static inline void graphEmpty(graph_t * graph){
 
 static inline void graphCopy(graph_t * to, graph_t * from){
 	memcpy(to,from,sizeof(graph_t));
-//	to->graph[0] = from->graph[0];
-//	to->graph[1] = from->graph[1];
-//	to->hash = from->hash;
 }
 
 static inline u32 graphHash(graph_t * graph){

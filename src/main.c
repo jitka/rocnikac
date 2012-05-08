@@ -13,16 +13,13 @@
 // zeptat Pavel, stroje
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// skutecne mazat prebytecne otce, deti
-// kde trci pamet
-// uklid?
 // grepnout TODO
 // N 8 
 // smazat exist
 //TODO tady nestačí hash
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
-// prepinac update ancestors
+// prepinac update ancestors - grafove
 // heuristika misto 1 1
 // heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
 // psat - probublani bokem

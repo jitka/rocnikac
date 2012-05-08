@@ -8,7 +8,7 @@ extern int cacheMiss;
 #endif //DEBUG
 
 void cacheInit();
-void cacheInsert(node_t* node,int kdo);
+void cacheInsert(node_t* node);
 node_t* cacheFind(graph_t* graph); //vrati ukazatel na stejny graf nebo NULL pokud tam neni
 
 
