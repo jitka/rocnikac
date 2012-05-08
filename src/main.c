@@ -9,27 +9,25 @@
 #include "cache.h"
 
 // TODO HNED
-// obsah
-// zeptat Pavel, stroje
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// pri ne DFPN pocitat taky se zmyzelima detma
-// childMiss
 // testovat jestli neexistuji 0 0
-// #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
-// N 8 
-// nevyhazovat z cache vypoctene - prepinac
-// prepinac na zahozovani otcu -- zpomaluje
-// prepinac update ancestors - grafove
-// heuristika na vyhazovani z cache
-// heuristika misto 1 1
-// heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
+// smazat spojak uplne
+// jine varianty - prepinace
+// 	- testovat vsechny prepinace
+// 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
+// 		- pri ne DFPN pocitat taky se zmyzelima detma
+// 	- napsat prepinace
+// 		- prepinac na zahozovani otcu -- zpomaluje
+// 		- prepinac update ancestors - grafove
 // psat - probublani bokem
 // psat - moje programovici cast
 //
-//
-// TODO NEKDY
-// node - mensi
+// TODO NEKDY MOZNA
+// heuristika misto 1 1
+// heuristika na vyhazovani z cache
+// heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
+// N 8 
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
@@ -38,26 +36,24 @@
 // 	- pocitat s sizeof
 // hasovaci funkce z graph
 // testovat vsechny binarni veci
-// norm-rychlejsi hasovanani
-// norm-lepsi fce, vic fci
+// norm - rychlejsi hasovanani
+// 	- rychlejsi trizeni
+// 	- lepsi fce, vic fci
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
-// pri vkladani co cache zkusit permutovat vrcholy se stejnou ohodnocovacich fci
-// davat dohromady vysledky z ruznych pozic
-// cistejsi predavani stavu mezi haskelem a timhle
-//
-// MOZNE ZRYCHLENI
-// spojak do pole a cely strom do pole
-// do cache data + ukazatel/true/false
-// nepristupovat pres ukazatel ale zkusit cele node_t zkopirovat
-// rychlejsi normalizace -malloc, trizeni
-// mensi node_t (brum prvocisla,ukazatele)
-// rychlejsi predani tupu blue/or spojit dohromady
-// rekurze v delete
-// jak casto se bude pri jednom update ancessor jeden node updatetovat vickrat?
+// generovani tahu 
+// 	- dokazat ze je blbost
+// 	- smazat?
+// 	- davat dohromady vysledky z ruznych pozic
+// 	- cistejsi predavani stavu mezi haskelem a timhle
+// do cache: graph_t + ukazatel/true/false 
+// mensi node_t 
+// 	- (brum prvocisla,ukazatele)
+// 	- rychlejsi predani tupu blue/or spojit dohromady
+// 1+epsilon
+// PN-set
 //
 // DOTAZY
 // proc udpte ancesor vubec nepomuze?
-// co se slepimi cesty?
 
 void printSetting(){
 
