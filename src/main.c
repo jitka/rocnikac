@@ -15,6 +15,7 @@
 // oprofile
 // grepnout TODO
 // pri ne DFPN pocitat taky se zmyzelima detma
+// childMiss
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // N 8 
 //TODO tady nestačí hash

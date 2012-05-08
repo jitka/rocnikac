@@ -321,10 +321,10 @@ static inline void insertChild(node_t* node, node_t* child, int kdo){
 }
 
 static inline node_t** generateChildren(node_t* node, int *childrenN){
-	int tmp = numberOfNodes;
 	node_t** children = malloc(sizeof(node_t*)*M);
 #ifdef DEBUG
 	assert(children != NULL);
+	int tmp = numberOfNodes;
 #endif //DEBUG
 #ifdef NOFREEK4
 	bool possible = false;
@@ -341,7 +341,10 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 			if ( ! graphEdgeExist(nodeGraph(node), i, j) ) 
 				//ij je hrana ktera jeste nema barvu
 				children[(*childrenN)++] = createChild(node,i,j);
+#ifdef DEBUG
 	assert(tmp+(*childrenN) == numberOfNodes);
+	assert(*childrenN > 0);
+#endif //DEBUG
 	//maze dvojcata	
 	if (nodeTurn(node) < TURNDDELETECHILDRENST) {
 		for (int i = 0; i < *childrenN; i++){
@@ -353,20 +356,23 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 				}
 			}
 		}
-		u32 last = 0;
-		int where = 0;
-		//TODO tady nestačí hash
-		for (int i = 0; i < *childrenN; i++){
-			if (nodeHash(children[i]) != last){
+		node_t* last = children[0];
+		int where = 1;
+		for (int i = 1; i < *childrenN; i++){
+			if (nodeHash(children[i]) != nodeHash(last)){
 				children[where++]=children[i];
-				last = nodeHash(children[i]);
+				last = children[i];
 			} else {
+				//jestli se nestane ze dva ruzni synove maji stejnou hash
+				assert(graphCompare( nodeGraph(last), nodeGraph(children[i]) ));
 				nodeDelete(children[i]);
 			}
 		}
 		*childrenN = where;
 	}
+#ifdef DEBUG
 	assert(tmp+(*childrenN) == numberOfNodes);
+#endif //DEBUG
 
 	//vyhodnocuje deti	
 	for (int v = 0; v < *childrenN; v++){
@@ -549,13 +555,9 @@ static inline void selectMostProving(){
 		select++;
 #endif //STATS
 #ifdef DEBUG
-		if (nodeValue(node)!=UNKNOWN){
-			printf("tady ne\n");
-			printNode(node);
-		}
-		if (nodeProof(node) == 0 || nodeDisproof(node) == 0){
-			printf("tady nee\n");
-		}
+		assert(nodeValue(node)==UNKNOWN);
+		assert(nodeProof(node)!= 0);
+	        assert(nodeDisproof(node)!=0);
 		u8 turn = nodeTurn(node);
 #endif //DEBUG
 		switch (nodeType(node)) {
@@ -579,17 +581,12 @@ static inline void selectMostProving(){
 			break;
 		}
 #ifdef DEBUG
-		if (turn == nodeTurn(node)){
-			printf("minimalni (dis)proof numer neni\n");
-			printNode(node);
-			printChildren(node);
-		}
+		assert(turn<nodeTurn(node));
 #endif //DEBUG
 		currentPath[++currentNode] = node;
 	}
 #ifdef STATS
 	histogramAdd( &selectStats, select);
-//	printf("select %d\n",select);
 #endif //STATS
 }
 
