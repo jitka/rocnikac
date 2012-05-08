@@ -14,6 +14,7 @@ node_t* currentPath[M];
 int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
 u32 updateN = 0; //kolikaty probehl update
 int parentMiss = 0;
+int childMiss = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node);
@@ -104,8 +105,10 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		}
 	}
 
-	if (missing)
+	if (missing){
 		repairNode(node);
+		childMiss++;
+	}
 
 #ifdef DEBUG
 	missing = false;	
@@ -343,18 +346,23 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 					node_t * tmp = children[i];
 					children[i] = children[j];
 					children[j] = tmp;
+				} else if (nodeHash(children[i]) == nodeHash(children[j]) &&
+						graphCompare( nodeGraph(children[i]), nodeGraph(children[j]) ) ){
+					node_t * tmp = children[i];
+					children[i] = children[j];
+					children[j] = tmp;
 				}
 			}
 		}
 		node_t* last = children[0];
 		int where = 1;
 		for (int i = 1; i < *childrenN; i++){
-			if (nodeHash(children[i]) != nodeHash(last)){
+			if (nodeHash(children[i]) != nodeHash(last) ||
+					( !graphIdentical(nodeGraph(last),nodeGraph(children[i])) )){
 				children[where++]=children[i];
 				last = children[i];
 			} else {
-				//jestli se nestane ze dva ruzni synove maji stejnou hash
-				assert(graphCompare( nodeGraph(last), nodeGraph(children[i]) ));
+				assert(graphIdentical( nodeGraph(last), nodeGraph(children[i]) ));
 				nodeDelete(children[i]);
 			}
 		}
@@ -440,7 +448,7 @@ static inline void repairNode(node_t* node){
 #ifdef DEBUG
 			assert(children[i] !=NULL); //ma deti
 			assert(cacheFind(&node->children[nodeChildrenN(node)-1]) != NULL); //posledni dite existuje
-			assert(children[i]->parentsN == 1);
+			assert(children[i]->parentsN == 0);
 #endif //DEBUG
 			nodeSetCurrentChild(children[i]);
 				insertChild(node,children[i]);
@@ -504,7 +512,7 @@ static inline void updateAncestors(){ //po hladinach
 		updateS++;
 #endif //STATS
 
-		if ( graphCompare(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
+		if ( graphIdentical(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
 			currentNode = MIN (currentNode, nodeTurn(node) );
 		}
 
@@ -765,6 +773,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 			//printNode(mostProovingNode);
 			printf("nodes %d ",numberOfNodes);
 			printf("cache miss %d ",cacheMiss);
+			printf("child miss %d ",childMiss);
 			printf("parent miss %d ",parentMiss);
 			printf("interace %d\n",counter);
 			//printChildren(mostProovingNode);
@@ -774,6 +783,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 #ifdef DEBUG
 	printf("nodes %d ",numberOfNodes);
 	printf("cache miss %d ",cacheMiss);
+	printf("child miss %d ",childMiss);
 	printf("parent miss %d\n",parentMiss);
 //	extern int TMP;	printf("norm %d\n",TMP);
 #endif //DEBUG

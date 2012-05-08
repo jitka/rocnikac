@@ -23,7 +23,8 @@ static inline void nodeDelete(node_t * node);
 //-------------NODE---------------GRAPH------------------ 
 static inline void graphEmpty(graph_t * graph);
 static inline void graphCopy(graph_t * to, graph_t * from);
-static inline bool graphCompare(graph_t * a, graph_t * b);
+static inline bool graphIdentical(graph_t * a, graph_t * b);
+static inline bool graphCompare(graph_t * a, graph_t * b); //vrati true pokud je a alfabeticky mensi nez b
 static inline u32 graphHash(graph_t * graph);
 
 static inline bool graphColorEdgeExist(graph_t * graph, int i, int j, color c);
@@ -334,7 +335,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	for (u32 i = 0; i < node->parentsN; i++){
 		if ( cacheFind(&node->parents[i]) == NULL ) 
 			continue;
-		if ( graphCompare(nodeGraph(cacheFind(&node->parents[i])), parent) ) 
+		if ( graphIdentical(nodeGraph(cacheFind(&node->parents[i])), parent) ) 
 			exist = true;
 		node->parents[where++] = node->parents[i];
 	}
@@ -374,11 +375,25 @@ static inline u32 graphHash(graph_t * graph){
 	return graph->hash;
 }
 
-static inline bool graphCompare(graph_t * a, graph_t * b){
+static inline bool graphIdentical(graph_t * a, graph_t * b){
 #ifdef DEBUG
 	assert( (a!=NULL) && (b!=NULL) );
 #endif //DEBUG
 	return ((a->graph[0] == b->graph[0]) && (a->graph[1] == b->graph[1]));
+}
+
+static inline bool graphCompare(graph_t * a, graph_t * b){
+       	//vrati true pokud je a alfabeticky mensi nez b
+#ifdef DEBUG
+	assert( (a!=NULL) && (b!=NULL) );
+#endif //DEBUG
+	if (a->hash <= b->hash)
+		return true;
+	if (a->graph[0] <= b->graph[0])
+		return true;
+	if (a->graph[1] <= b->graph[1])
+		return true;
+	return false;
 }
 
 static inline u32 graphNeighbour(graph_t * graph, int i, color color){

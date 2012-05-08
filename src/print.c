@@ -32,8 +32,6 @@ void printGraph(graph_t* graph){
 		}
 		printf("|\n");
 	}
-	printf("\n");
-	
 }
 
 void printNode(node_t* node){

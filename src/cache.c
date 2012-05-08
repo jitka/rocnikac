@@ -17,9 +17,6 @@ void cacheInsert(node_t* node){
 		cache[position] = node;
 		return;
 	}
-#ifdef DEBUG
-	cacheMiss++;
-#endif //DEBUG
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 position = ( nodeHash(node) + i ) % CACHE_SIZE;
 		if ( 
@@ -39,7 +36,7 @@ void cacheInsert(node_t* node){
 #ifdef DEBUG
 				assert(&child->parents[j]!=NULL);
 #endif //DEBUG
-				if ( graphCompare( nodeGraph(old), &child->parents[j]) ){
+				if ( graphIdentical( nodeGraph(old), &child->parents[j]) ){
 					continue;
 				} else {
 					child->parents[where] = child->parents[j];
@@ -59,7 +56,6 @@ void cacheInsert(node_t* node){
 }
 
 node_t* cacheFind(graph_t* graph){ 
-//	printf("cache: hledam\n");
 	for (u32 i = 0; i < CACHE_PATIENCE; i++){
 		u32 where = ( graphHash(graph) + i ) % CACHE_SIZE;
 		if (cache[where] == NULL)
@@ -67,12 +63,13 @@ node_t* cacheFind(graph_t* graph){
 		assert(graph != NULL);
 		assert(cache[where] != NULL);
 		assert(nodeGraph(cache[where]) != NULL);
-		if ( graphCompare( nodeGraph(cache[where]), graph) ){
+		if ( graphIdentical( nodeGraph(cache[where]), graph) ){
 			return cache[where];
 		}
-		//printf("pozice puv %d skut %d\n",( graphHash(graph)  ) % CACHE_SIZE, where);
 	}
-//	printf("cache: neni tam\n");
+#ifdef DEBUG
+	cacheMiss++;
+#endif //DEBUG
 	return NULL;
 }
 

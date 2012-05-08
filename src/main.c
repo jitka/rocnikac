@@ -15,11 +15,13 @@
 // oprofile
 // pri ne DFPN pocitat taky se zmyzelima detma
 // childMiss
+// testovat jestli neexistuji 0 0
 // #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // N 8 
 // nevyhazovat z cache vypoctene - prepinac
 // prepinac na zahozovani otcu -- zpomaluje
 // prepinac update ancestors - grafove
+// heuristika na vyhazovani z cache
 // heuristika misto 1 1
 // heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
 // psat - probublani bokem
