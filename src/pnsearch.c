@@ -3,7 +3,6 @@
 #include "stats.h"
 #include "setting.h"
 #include "print.h"
-#include "linkedlist.h"
 #include "nodefce.h"
 #include "norm.h"
 #include "cache.h"
