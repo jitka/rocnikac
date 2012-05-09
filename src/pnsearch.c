@@ -15,10 +15,9 @@ int parentMiss = 0;
 int childMiss = 0;
 #endif //NODEDELETE
 
-#ifdef NODEDELETE
+#ifdef DEBUG
 int numberOfNodes = 0; //abych vedela kolik zeru pameti - to co je mimo cache
-u32 updateN = 0; //kolikaty probehl update
-#endif //NODEDELETE
+#endif //DEBUG
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 static inline void setTrue(node_t* node);
@@ -500,6 +499,9 @@ static inline void developNode(node_t* node){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef UPDATEANCESTORS2
+u32 updateN = 0; //kolikaty probehl update
+#endif //UPDATEANCESTORS2
 static inline void updateAncestors(){ //po hladinach
 
 #ifdef STATS

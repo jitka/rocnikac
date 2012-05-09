@@ -270,13 +270,15 @@ static inline u32 nodeThDisproof(node_t * node){
 
 
 //new
+#ifdef DEBUG
 extern int numberOfNodes; //abych vedela kolik zeru pameti
+#endif //DEBUG
 static inline node_t* nodeNew(u8 turn){
 	node_t* node = malloc(sizeof(node_t));
-	numberOfNodes++;
 	graph_t * parents2 = malloc( sizeof(graph_t) * 2 );
 	graph_t * children2 = malloc( sizeof(graph_t) * MAXCHILD(turn) );
 #ifdef DEBUG
+	numberOfNodes++;
 	if (node == NULL || parents2 == NULL || children2 == NULL)
 		perror("malloc node");
 #endif //DEBUG
@@ -309,7 +311,9 @@ static inline void nodeDelete(node_t * node){
 	free(node->parents);
 	free(node->children);
 	free(node);
+#ifdef DEBUG
 	numberOfNodes--;
+#endif //DEBUG
 }
 
 static inline u8 nodeChildrenN(node_t * node){
