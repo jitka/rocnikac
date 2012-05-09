@@ -7,14 +7,17 @@
 #include "norm.h"
 #include "cache.h"
 
-// or node... na tahu je prvni hrac
-int numberOfNodes = 0; //abych vedela kolik zeru pameti - to co je mimo cache
 node_t* currentPath[M];
-int currentNode = 0; //kde je posledni prvek, uklaza _ZA_ nej
-u32 updateN = 0; //kolikaty probehl update
+int currentNode = 0; //kde je posledni prvek, uklada se _ZA_ nej
+
 #ifdef NODEDELETE
 int parentMiss = 0;
 int childMiss = 0;
+#endif //NODEDELETE
+
+#ifdef NODEDELETE
+int numberOfNodes = 0; //abych vedela kolik zeru pameti - to co je mimo cache
+u32 updateN = 0; //kolikaty probehl update
 #endif //NODEDELETE
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,7 +319,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	node_t** children = malloc(sizeof(node_t*)*M);
 #ifdef DEBUG
 	assert(children != NULL);
-	int tmp = numberOfNodes;
+	int numberOfNodesOld = numberOfNodes;
 #endif //DEBUG
 #ifdef NOFREEK4
 	bool possible = false;
@@ -334,7 +337,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 				//ij je hrana ktera jeste nema barvu
 				children[(*childrenN)++] = createChild(node,i,j);
 #ifdef DEBUG
-	assert(tmp+(*childrenN) == numberOfNodes);
+	assert(numberOfNodesOld+(*childrenN) == numberOfNodes);
 	assert(*childrenN > 0);
 #endif //DEBUG
 	//maze dvojcata	
@@ -368,7 +371,7 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 		*childrenN = where;
 	}
 #ifdef DEBUG
-	assert(tmp+(*childrenN) == numberOfNodes);
+	assert(numberOfNodesOld+(*childrenN) == numberOfNodes);
 #endif //DEBUG
 
 	//vyhodnocuje deti	
@@ -413,7 +416,9 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 #endif //HEURISTIC1
 
 
-	assert(tmp+(*childrenN) == numberOfNodes);
+#ifdef DEBUG
+	assert(numberOfNodesOld+(*childrenN) == numberOfNodes);
+#endif //DEBUG
 	return children;
 }
 

@@ -11,7 +11,6 @@
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// smazat spojak uplne
 // oddelit fce carama, poradi
 // jednodussi generate a slozitejsi develom => mene zbytecnte prace v repair
 // jine varianty - prepinace
@@ -47,6 +46,7 @@
 // 	- smazat?
 // 	- davat dohromady vysledky z ruznych pozic
 // 	- cistejsi predavani stavu mezi haskelem a timhle
+// 	- smazat spojak uplne
 // do cache: graph_t + ukazatel/true/false 
 // mensi node_t 
 // 	- (brum prvocisla,ukazatele)
