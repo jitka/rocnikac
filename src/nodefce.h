@@ -353,8 +353,10 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 		node->parents[where++] = node->parents[i];
 	}
 	node->parentsN = where;
-	if (exist)
+	if (exist){
+		assert(node->parentsN > 0);
 		return;
+	}
 #endif //DELETEUSELESSPARENTS
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
@@ -372,6 +374,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	}
 	//pridam
 	memcpy( &node->parents[node->parentsN++], parent, sizeof(graph_t) );
+	assert(node->parentsN > 0);
 }
 
 

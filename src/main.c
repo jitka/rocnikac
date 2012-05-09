@@ -11,10 +11,10 @@
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// oddelit fce carama, poradi
-// jednodussi generate a slozitejsi develom => mene zbytecnte prace v repair
+// napsat graphTestK4 a nodeTestK4
 // jine varianty - prepinace
 // 	- testovat vsechny prepinace
+// 		- mazat deti pri ne DF
 // 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 // 			- testovat v develop
 // 		- pri ne DFPN pocitat taky se zmyzelima detma
