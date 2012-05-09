@@ -12,12 +12,16 @@
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
 // smazat spojak uplne
+// oddelit fce carama, poradi
+// jednodussi generate a slozitejsi develom => mene zbytecnte prace v repair
 // jine varianty - prepinace
 // 	- testovat vsechny prepinace
 // 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
-// 			- testovat v develop ne generate
-// 	- napsat prepinace
-// 		- prepinac jestli je mozne ztracet deti nebo padne
+// 			- testovat v develop
+// 		- pri ne DFPN pocitat taky se zmyzelima detma
+// 			- resit priznak current
+// 		- pri DFPN resit obteceni - posunuti vis v develom oddelat current a asi zarvat
+// 		- DFPN -updateAncestor - prepinac
 // psat - probublani bokem
 // psat - moje programovici cast
 //

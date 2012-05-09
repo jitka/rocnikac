@@ -505,16 +505,17 @@ static inline void updateAncestors(){ //po hladinach
 	updateN++; //kolikaty probyha update
 #endif //UPDATEANCESTORS2
 
-	ll2_t ancestors;
-       	ll2New(&ancestors);
-	ll2AddNodeEnd( &ancestors, currentPath[currentNode]);
-//	printf("%d: ",nodeTurn(currentPath[currentNode]));
+	node_t* ancestors2[MAXTREEWIDTH]; 	
+	ancestors2[0] = currentPath[currentNode];
+	assert(ancestors2[0] != NULL);
+	int ancestorsCurrent = 0; //odkut ctu
+	int ancestorsLast = 1; //kam budu psat nasledujiciho
 
-	while ( ! ll2Empty(&ancestors) ){
+	while ( ancestorsCurrent != ancestorsLast ){
 
-		node_t* node = ll2FirstNode(&ancestors);
-		ll2DelFirst(&ancestors);
+		node_t* node = ancestors2[ancestorsCurrent++];
 #ifdef UPDATEANCESTORS2
+		assert(node!= NULL);
 		if (nodeUpdated(node, updateN))
 			continue;
 		nodeUpdate(node, updateN);
@@ -524,6 +525,7 @@ static inline void updateAncestors(){ //po hladinach
 #endif //STATS
 
 		if ( graphIdentical(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
+			//TODO tohle nefunguje s DFPN
 			currentNode = MIN (currentNode, nodeTurn(node) );
 		}
 
@@ -544,7 +546,9 @@ static inline void updateAncestors(){ //po hladinach
 				parentMiss++;
 			}
 #endif //NODEDELETE
-			ll2AddNodeEnd( &ancestors, parent);
+			ancestors2[ancestorsLast] = parent;
+			ancestorsLast = (ancestorsLast+1) % MAXTREEWIDTH;
+			assert( ancestorsCurrent != ancestorsLast ); //obsazene je cele pole
 		}
 
 	}
@@ -654,87 +658,35 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef DFPN
 nodeValue_t proofNumberSearch(node_t* root){
 
 	
-	currentPath[0] = root;
-	currentNode = 0;
-
 #ifdef DEBUG
 	int counter = 0;
 #endif //DEBUG
-#ifdef UNLOOP1 
-	node_t* oldMostProovingNode = NULL;
-#endif
-	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
-#ifdef STATS
-		interations_stats++;
-#endif //STATS
+	currentPath[0] = root;
+	currentNode = 0;
 
+#ifndef DFPN //-------------------------------------------
+
+	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
 //		printf("1\n");
 		selectMostProving();
+#ifdef DEBUG
 		node_t* mostProovingNode = currentPath[currentNode];
-		
+#endif //DEBUG
 //		printf("2\n");
-		developNode(mostProovingNode);
-
+		developNode(currentPath[currentNode]);
 //		printf("3\n");
 		updateAncestors(); 
 //		printf("4\n");
+
+#else  //DFPN -------------------------------------------
 	
-#ifdef DEBUG
-		counter++;
-		//if (counter % 1000 == 0){
-		//if (true){
-		if (false){
-			//printNode(mostProovingNode);
-			printf("hotov node (%u) %u %u\n",nodeHash(mostProovingNode),nodeProof(mostProovingNode),nodeDisproof(mostProovingNode));
-			//printNode(mostProovingNode);
-			printf("nodes %d ",numberOfNodes);
-			printf("root %u %u\n",nodeProof(root),nodeDisproof(root));
-			//printChildren(mostProovingNode);
-		}
-#endif //DEBUG
-	}
-
-#ifdef DEBUG
-	printf("nodes %d\n",numberOfNodes);
-	printf("cache miss %d\n",cacheMiss);
-//	extern int TMP;	printf("norm %d\n",TMP);
-#endif //DEBUG
-
-
-	return nodeValue(root);
-}
-
-#else  //DFPN
-
-nodeValue_t proofNumberSearch(node_t* root){
-
-	currentPath[0] = root;
-	currentNode = 0;
-
 	nodeSetTh(root,MAXPROOF,MAXPROOF);
-#ifdef DEBUG
-	int counter = 0;
-#endif //DEBUG
-	
-
 	while (nodeValue(root) == UNKNOWN) {
 		node_t * node = currentPath[currentNode];
 //		printf("1\n");
-#ifdef STATS
-		interations_stats++;
-#endif //STATS
-#ifdef DEBUG
-		if (false){
-			printf("cN %d\n",currentNode);
-			printf("th %d %d p/d %d %d\n",nodeThProof(node),nodeThDisproof(node),nodeProof(node),nodeDisproof(node));
-			printNode(node);
-		}
-#endif //DEBUG
-		
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 #ifdef NODEDELETE
 			nodeUnsetCurrent(node);
@@ -747,8 +699,9 @@ nodeValue_t proofNumberSearch(node_t* root){
 			developNode(node);
 //		printf("3\n");
 		setProofAndDisproofNubers(node);
-// 		updateAncestors(node);
 //		printf("4\n");
+ 		updateAncestors(node);
+//		printf("5\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 #ifdef NODEDELETE
@@ -757,7 +710,6 @@ nodeValue_t proofNumberSearch(node_t* root){
 			currentNode--;
 			continue;
 		}
-//		printf("5\n");
 	
 		u32 secondProof; u32 secondDisproof;
 		node_t * child = selectMostProving2(node,&secondProof,&secondDisproof);
@@ -781,8 +733,17 @@ nodeValue_t proofNumberSearch(node_t* root){
 #endif //NODEDELETE
 
 #ifdef DEBUG
-		counter++;
 		node_t * mostProovingNode = currentPath[currentNode];
+#endif //DEBUG
+
+
+#endif  //DFPN ----------------------------------------------------
+
+#ifdef STATS
+		interations_stats++;
+#endif //STATS
+#ifdef DEBUG
+		counter++;
 		if (counter % 100000 == 0){
 		//if (true){
 		//if (false){
@@ -815,4 +776,3 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 	return nodeValue(root);
 }
-#endif  //DFPN
