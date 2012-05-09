@@ -31,14 +31,17 @@ static inline bool graphEdgeExist(graph_t * graph, int i, int j);
 static inline void graphSetEdge(graph_t * graph, int i, int j, color color);
 static inline int graphDegree(graph_t * graph, int i, color c);
 
-static inline bool testK4(graph_t * graph, int i, int j, color color);
-static inline void testK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4);
+static inline bool graphTestK4(graph_t * graph, int i, int j, color color);
+static inline void graphTestK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4);
 static inline bool graphThreat(graph_t * graph, int i, int j, color color);
 //static inline void nodeChangeNodes(node_t * node, int a, int b); //na rychlejsi norm
 //static inline bool nodeSimetric(node_t * a);
 //static inline bool nodeTurnChack(node_t * a);
 
 //-------------NODE---------------DATA------------------
+static inline bool nodeTestK4(node_t * node);
+static inline void nodeTestK4andFreeK4(node_t * node,int * freeK4, bool * fullK4);
+
 static inline u8 nodeChildrenN(node_t * node);
 static inline void nodeSetChildrenN(node_t * node, u8 childrenN);
 static inline void nodeAddChild(node_t * node, graph_t * child);
@@ -97,6 +100,14 @@ static inline graph_t* nodeGraph(node_t *node);
 //--------------------------------------------------------------
 // samotne fce bordel
 //--------------------------------------------------------------
+
+static inline bool nodeTestK4(node_t * node){
+	return graphTestK4( &node->graph, node->last_i, node->last_j, (node->turn%2==1)?RED:BLUE);
+}
+
+static inline void nodeTestK4andFreeK4(node_t * node, int * freeK4, bool * fullK4){
+	graphTestK4andFreeK4( &node->graph, node->last_i, node->last_j, (node->turn%2==1)?RED:BLUE, freeK4, fullK4);
+}
 
 #ifdef NODEDELETE
 static inline void nodeSetCurrent(node_t *node){
@@ -467,7 +478,7 @@ static inline void nodeChangeNodes(node_t * node, int a, int b){
 	}
 }
 */
-static inline bool testK4(graph_t * graph, int i, int j, color color){
+static inline bool graphTestK4(graph_t * graph, int i, int j, color color){
 	//otestuje jestli po pridani hrany ij nevznikla K4
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana
@@ -484,7 +495,7 @@ static inline bool testK4(graph_t * graph, int i, int j, color color){
 	return false;
 }
 
-static inline void testK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4){
+static inline void graphTestK4andFreeK4(graph_t * graph, int i, int j, color color, int * freeK4, bool * fullK4){
 	//otestuje jestli po pridani hrany ij nevznikla K4
 	u32 tr; //jednicky jsou na tech pozicich kam vede hrana jak z i tak z je
 	         //prvni vyhral pokud mezi dvema takovimi poziceme vede jeho hrana

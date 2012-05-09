@@ -11,7 +11,6 @@
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
-// napsat graphTestK4 a nodeTestK4
 // jine varianty - prepinace
 // 	- testovat vsechny prepinace
 // 		- mazat deti pri ne DF

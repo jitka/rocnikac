@@ -389,7 +389,7 @@ static inline void repairNode(node_t* node){
 #endif //DEBUG
 			nodeSetCurrentChild(children[i]);
 			insertChild(node,children[i]);
-			setValue(child,testK4(nodeGraph(child),nodeLastEdgeI(child),nodeLastEdgeJ(child),(nodeTurn(child)%2 == 1) ? RED : BLUE));
+			setValue(child, nodeTestK4(child));
 			assert(nodeParentsN(children[i]) > 0 || nodeTurn(children[i]) == 0);
 		} else {
 			nodeDelete(children[i]);
@@ -455,10 +455,7 @@ static inline void developNode(node_t* node){
 	for (int v = 0; v < childrenN; v++){
 		int freeK4;
 		bool fullK4; 
-		testK4andFreeK4(nodeGraph(children[v]), 
-				nodeLastEdgeI(children[v]),nodeLastEdgeJ(children[v]),
-				(nodeTurn(children[v]) % 2 == 1) ? RED : BLUE, //kterou barvou byl nakreslet posledni tah
-				&freeK4, &fullK4);
+		nodeTestK4andFreeK4( children[v], &freeK4, &fullK4);
 
 #ifdef NOFREEK4
 		if (freeK4 > 0)
