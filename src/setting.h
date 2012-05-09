@@ -19,8 +19,8 @@
 //#define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
 #define TURNDDELETECHILDRENST M //do ktereho tahu se mazou vicenasobne deti
 #define DELETEUSELESSPARENTS //velmi vhodne pokud se vyhazuje z cache, jinak nasobnosti pretece pamet
-#define NODEDELETE //kdyz neni misto v cachy a node neni nutne potreba je zahozen
-#define DFPN
+//#define NODEDELETE //kdyz neni misto v cachy a node neni nutne potreba je zahozen
+//#define DFPN
 
 #define MAXCHILD(TURN) MAX((M-(TURN)),3)
 

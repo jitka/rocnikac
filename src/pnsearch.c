@@ -511,15 +511,15 @@ static inline void updateAncestors(){ //po hladinach
 	updateN++; //kolikaty probyha update
 #endif //UPDATEANCESTORS2
 
-	node_t* ancestors2[MAXTREEWIDTH]; 	
-	ancestors2[0] = currentPath[currentNode];
-	assert(ancestors2[0] != NULL);
+	node_t* ancestors[MAXTREEWIDTH]; 	
+	ancestors[0] = currentPath[currentNode];
+	assert(ancestors[0] != NULL);
 	int ancestorsCurrent = 0; //odkut ctu
 	int ancestorsLast = 1; //kam budu psat nasledujiciho
 
 	while ( ancestorsCurrent != ancestorsLast ){
 
-		node_t* node = ancestors2[ancestorsCurrent++];
+		node_t* node = ancestors[ancestorsCurrent++];
 #ifdef UPDATEANCESTORS2
 		assert(node!= NULL);
 		if (nodeUpdated(node, updateN))
@@ -531,8 +531,14 @@ static inline void updateAncestors(){ //po hladinach
 #endif //STATS
 
 		if ( graphIdentical(nodeGraph(node), nodeGraph(currentPath[nodeTurn(node)])) ){
-			//TODO tohle nefunguje s DFPN
-			currentNode = MIN (currentNode, nodeTurn(node) );
+			assert(nodeTurn(node) <= currentNode);
+#ifdef NODEDELETE
+			//TODO tohle testovat
+			for (int i = currentNode; i > nodeTurn(node); i--){
+				nodeUnsetCurrent(node);
+			}
+#endif //NODEDELETE
+			currentNode = nodeTurn(node);
 		}
 
 		u32 oldProof = nodeProof(node);
@@ -550,9 +556,16 @@ static inline void updateAncestors(){ //po hladinach
 #ifdef NODEDELETE
 			if (parent == NULL){
 				parentMiss++;
+				continue;
 			}
 #endif //NODEDELETE
-			ancestors2[ancestorsLast] = parent;
+			if (parent==NULL){
+				printNode(node);
+				printf("otcu %d\n",node->parentsN);
+				printGraph(&node->parents[0]);
+			}
+			assert(parent != NULL);
+			ancestors[ancestorsLast] = parent;
 			ancestorsLast = (ancestorsLast+1) % MAXTREEWIDTH;
 			assert( ancestorsCurrent != ancestorsLast ); //obsazene je cele pole
 		}
@@ -601,6 +614,9 @@ static inline void selectMostProving(){
 #ifdef DEBUG
 		assert(turn<nodeTurn(node));
 #endif //DEBUG
+#ifdef NODEDELETE
+		nodeSetCurrent(node);
+#endif //NODEDELETE
 		currentPath[++currentNode] = node;
 	}
 #ifdef STATS
@@ -671,6 +687,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 	int counter = 0;
 #endif //DEBUG
 	currentPath[0] = root;
+	cacheInsert(root);
 	currentNode = 0;
 
 #ifndef DFPN //-------------------------------------------
