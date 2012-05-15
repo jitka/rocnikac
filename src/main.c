@@ -12,14 +12,11 @@
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
 // jine varianty - prepinace
-// 	- testovat vsechny prepinace
-// 		- mazat deti pri ne DF
-// 		- #define NOFREEK4 //kdyz prvni hrac nema zadnou nezabranenou K4 hra je FALSE TESTOVAT
-// 			- testovat v develop
-// 		- pri ne DFPN pocitat taky se zmyzelima detma
-// 			- resit priznak current
-// 		- pri DFPN resit obteceni - posunuti vis v develom oddelat current a asi zarvat
-// 		- DFPN -updateAncestor - prepinac
+//	- ne DF ne DEL
+// 	- NOFREEK4 DF 
+// 	- DFPN -updateAncestor 
+// 		- prepinac jestli pouzit
+// 		- posouvat current node vys jen pokud preroste zarazky (jak casto se deje?)
 // psat - probublani bokem
 // psat - moje programovici cast
 //

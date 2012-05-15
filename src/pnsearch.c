@@ -327,9 +327,6 @@ static inline node_t** generateChildren(node_t* node, int *childrenN){
 	assert(children != NULL);
 	int numberOfNodesOld = numberOfNodes;
 #endif //DEBUG
-#ifdef NOFREEK4
-	bool possible = false;
-#endif //NOFREEK4
 #ifdef HEURISTIC1
 	int free[M];
 #endif //HEURISTIC1
@@ -452,6 +449,9 @@ static inline void developNode(node_t* node){
 	}
 
 	//vyhodnocuje deti	
+#ifdef NOFREEK4
+	bool possible = false;
+#endif //NOFREEK4
 	for (int v = 0; v < childrenN; v++){
 		int freeK4;
 		bool fullK4; 
@@ -571,6 +571,7 @@ static inline void updateAncestors(){ //po hladinach
 			}
 #endif //NODEDELETE
 			currentNode = nodeTurn(node);
+//			printf("deje se %d %d\n");
 		}
 
 		u32 oldProof = nodeProof(node);
@@ -579,7 +580,7 @@ static inline void updateAncestors(){ //po hladinach
 		setProofAndDisproofNubers(node);
 
 		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
-		if (!changed)
+		if ( (!changed) && (nodeValue(node)==UNKNOWN) )
 			continue;
 
 		if(updateN == 1800){
@@ -612,6 +613,12 @@ static inline void updateAncestors(){ //po hladinach
 		}
 
 	}
+/*		node_t* tmp = currentPath[currentNode];
+			if(nodeValue(currentPath[currentNode]) != UNKNOWN){
+				printNode(tmp);
+			}
+*/			
+	assert(nodeValue(currentPath[currentNode]) == UNKNOWN || currentNode == 0);
 #ifdef STATS
 	histogramAdd( &updateStats, updateS);
 #endif //STATS
@@ -810,7 +817,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 //		printf("3\n");
 		setProofAndDisproofNubers(node);
 //		printf("4\n");
- 		//updateAncestors(node);
+ 		updateAncestors(node);
 //		printf("5\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
