@@ -30,7 +30,11 @@ static inline void insertChild(node_t* node, node_t* child);
 #ifdef NODEDELETE
 static inline void repairNode(node_t* node);
 #endif //NODEDELETE
+#ifdef NOFREEK4
+static inline bool developNode(node_t* node); //vrati jestli je node prohrane
+#else //NOFREEK4
 static inline void developNode(node_t* node);
+#endif //NOFREEK4
 static inline void updateAncestors();
 static inline void selectMostProving();
 static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* secondDisproof);
@@ -96,7 +100,9 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		return; 
 	}
 #ifdef DEBUG
+#ifndef NODEDELETE
 	assert(nodeExpanded(node));
+#endif //NODEDELETE
 #endif //DEBUG	
 
 #ifdef NODEDELETE
@@ -408,7 +414,11 @@ static inline void repairNode(node_t* node){
 #endif //NODEDELETE
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef NOFREEK4
+static inline bool developNode(node_t* node){
+#else //NOFREEK4
 static inline void developNode(node_t* node){
+#endif //NOFREEK4
 
 #ifdef DEBUG
 	assert(!nodeExpanded(node));
@@ -475,6 +485,8 @@ static inline void developNode(node_t* node){
 //		printf("prvni hrac nema moznost vyhrat %d\n",nodeTurn(node));
 		//	printNode(node);
 		setFalse(node);
+	} else {
+		possible = true;
 	}
 #endif //NOFREEK4
 #ifdef HEURISTIC1
@@ -502,6 +514,9 @@ static inline void developNode(node_t* node){
 	}
 	assert( nodeProof(node)!=0 || nodeDisproof(node) != 0 );
 #endif //DEBUG
+#ifdef NOFREEK4
+	return !possible;
+#endif //NOFREEK4
 
 }
 
@@ -544,8 +559,9 @@ static inline void updateAncestors(){ //po hladinach
 		}
 
 		node_t* node = ancestors[ancestorsCurrent];
+#ifndef NODEDELETE
 		assert(nodeParentsN(node) > 0 || nodeTurn(node) == 0);
-
+#endif //NODEDELETE
 		ancestorsCurrent = (ancestorsCurrent+1) % MAXTREEWIDTH;
 
 #ifdef UPDATEANCESTORS2
@@ -577,41 +593,40 @@ static inline void updateAncestors(){ //po hladinach
 		u32 oldProof = nodeProof(node);
 		u32 oldDisproof = nodeDisproof(node);
 
+#ifndef NODEDELETE
+		assert(nodeExpanded(node));
+#endif //NODEDELETE
 		setProofAndDisproofNubers(node);
 
-		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node));
-		if ( (!changed) && (nodeValue(node)==UNKNOWN) )
+		int changed = (oldProof != nodeProof(node)) || (oldDisproof != nodeDisproof(node)) || (nodeValue(node) != UNKNOWN);
+		if (!changed)
 			continue;
 
-		if(updateN == 1800){
+/*		if(updateN == 1800){
 			printf("pridavam puvodni pocet %d, rodicu %d ",ancestorsLast,nodeParentsN(node));
 		}
-		//pridat vsechny predky co je potreba updatetovat
+*/		//pridat vsechny predky co je potreba updatetovat
 		for (int i = 0; i < nodeParentsN(node); i++){
 			node_t * parent = cacheFind(&node->parents[i]);
-		if(updateN == 1800){
-			printf("rodic ");
-		}
 #ifdef NODEDELETE
 			if (parent == NULL){
 				parentMiss++;
-				printf("stalo se\n");
+//				printf("stalo se\n");
 				continue;
 			}
+#else //NODEDELETE
+			assert(nodeExpanded(parent));
 #endif //NODEDELETE
-		if(updateN == 1800){
-			printf("je tam  ");
-		}
 			assert(parent != NULL);
 			assert(cacheFind(nodeGraph(parent))!= NULL);
 			ancestors[ancestorsLast] = parent;
 			ancestorsLast = (ancestorsLast+1) % MAXTREEWIDTH;
 			assert( ancestorsCurrent != ancestorsLast ); //obsazene je cele pole
 		}
-		if(updateN == 1800){
+/*		if(updateN == 1800){
 			printf("novy pocet %d\n",ancestorsLast);
 		}
-
+*/
 	}
 /*		node_t* tmp = currentPath[currentNode];
 			if(nodeValue(currentPath[currentNode]) != UNKNOWN){
@@ -777,6 +792,7 @@ static inline node_t* selectMostProving2(node_t* node, u32* secondProof, u32* se
 nodeValue_t proofNumberSearch(node_t* root){
 
 	
+		int tmp=0;
 #ifdef DEBUG
 	int counter = 0;
 #endif //DEBUG
@@ -788,6 +804,8 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 	while (nodeProof(root) > 0 && nodeDisproof(root) > 0 && numberOfNodes < MAXNODES ){
 //		printf("1\n");
+		if(nodeTurn(currentPath[currentNode]) == 0)
+			tmp++;
 		selectMostProving();
 #ifdef DEBUG
 		node_t* mostProovingNode = currentPath[currentNode];
@@ -800,6 +818,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 
 #else  //DFPN -------------------------------------------
 	
+
 	nodeSetTh(root,MAXPROOF,MAXPROOF);
 	while (nodeValue(root) == UNKNOWN) {
 		node_t * node = currentPath[currentNode];
@@ -812,21 +831,41 @@ nodeValue_t proofNumberSearch(node_t* root){
 			continue;
 		}
 //		printf("2\n");
-		if ( !nodeExpanded(node) )
+		bool zadnaK4 = false;
+		if ( !nodeExpanded(node) ){
+#ifdef NOFREEK4
+			if (developNode(node)){
+//				printf("konec\n");
+				assert(nodeTurn(node) > 1);
+				currentNode--;
+				node = currentPath[currentNode];
+				zadnaK4 = true;
+				printf("zacatek\n");
+			}
+#else //NOFREEK4
 			developNode(node);
+#endif //NOFREEK4
+		}
 //		printf("3\n");
 		setProofAndDisproofNubers(node);
 //		printf("4\n");
+#ifdef DFPNUPDATE
  		updateAncestors(node);
+#endif //DFPNUPDATE
 //		printf("5\n");
 
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
+			//TODO tady by se to melo chytit a nechyti zkontrolovat jestli je nodeTh nastavene
+			if (zadnaK4)
+				printf("ano\n");
 #ifdef NODEDELETE
 			nodeUnsetCurrent(node);
 #endif //NODEDELETE
 			currentNode--;
 			continue;
 		}
+			if (zadnaK4)
+				printf("ne\n");
 	
 		u32 secondProof; u32 secondDisproof;
 		node_t * child = selectMostProving2(node,&secondProof,&secondDisproof);
@@ -881,6 +920,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 	}
 #ifdef DEBUG
 	printf("nodes %d ",numberOfNodes);
+	printf("root update %d ",tmp);
 	printf("cache miss %d ",cacheMiss);
 #ifdef NODEDELETE
 	printf("child miss %d ",childMiss);

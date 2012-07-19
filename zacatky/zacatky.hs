@@ -21,7 +21,7 @@ graphs n t = graphs' ((t+1)`div`2) (t`div`2) n
         where graphs' r b n = concat $ map (\(reds,rest) ->  map (\x-> (reds, fst x)) $ choose b rest) $ choose r $ edges n
 
 --ohodnoceni vrcholu jen barevne stupne (konstanty nastavene pro stupne < 10)
-evaluate n (a,b) = accumArray (+) 0 (0,n-1) $ sign' 100  b ++ sign' 10000 a
+evaluate n (a,b) = accumArray (+) 0 (0,n-1) $ sign' 10  b ++ sign' 1000 a
         where sign' t x = map (\x-> (head x, t * (length x))) $ group $ sort $ concat $ map (\(a,b)-> [a,b]) x  
 
 --ohodnoceni vrcholu se stupnemi sousedu
@@ -60,4 +60,4 @@ ekvialent n a b = or $ map (\c -> c == b) $ map ((flip permutateGraph) a) (all n
 --nubBy rozdeli na tridy exvivalence
 hui n k = concat $ map (nubBy (ekvialent n)) $ generate2 n k
 
-main = print $ hui 7 6
+--main = print $ hui 7 6

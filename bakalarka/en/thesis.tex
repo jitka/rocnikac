@@ -1,31 +1,29 @@
 %%% Hlavní soubor. Zde se definují základní parametry a odkazuje se na ostatní části. %%%
-% TODO
-% mozna kapitola paralelizace, nefunguje predpocitani tah, spolecna cache, postupny update
 
 %% Verze pro jednostranný tisk:
 % Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
 % (ale pozor, LaTeX si sám přidává 1in)
-% \documentclass[12pt,a4paper]{report}
+ \documentclass[12pt,a4paper]{report}
+ \setlength\textwidth{145mm}
+ \setlength\textheight{247mm}
+ \setlength\oddsidemargin{15mm}
+ \setlength\evensidemargin{15mm}
+ \setlength\topmargin{0mm}
+ \setlength\headsep{0mm}
+ \setlength\headheight{0mm}
+% \openright zařídí, aby následující text začínal na pravé straně knihy
+ \let\openright=\clearpage
+
+%% Pokud tiskneme oboustranně:
+% \documentclass[12pt,a4paper,twoside,openright]{report}
 % \setlength\textwidth{145mm}
 % \setlength\textheight{247mm}
 % \setlength\oddsidemargin{15mm}
-% \setlength\evensidemargin{15mm}
+% \setlength\evensidemargin{0mm}
 % \setlength\topmargin{0mm}
 % \setlength\headsep{0mm}
 % \setlength\headheight{0mm}
-% \openright zařídí, aby následující text začínal na pravé straně knihy
-% \let\openright=\clearpage
-
-%% Pokud tiskneme oboustranně:
-\documentclass[12pt,a4paper,twoside,openright]{report}
-\setlength\textwidth{145mm}
-\setlength\textheight{247mm}
-\setlength\oddsidemargin{15mm}
-\setlength\evensidemargin{0mm}
-\setlength\topmargin{0mm}
-\setlength\headsep{0mm}
-\setlength\headheight{0mm}
-\let\openright=\cleardoublepage
+% \let\openright=\cleardoublepage
 
 %% Použité kódování znaků: obvykle latin2, cp1250 nebo utf8:
 \usepackage[utf8]{inputenc}
@@ -39,9 +37,9 @@
 %% Balíček hyperref, kterým jdou vyrábět klikací odkazy v PDF,
 %% ale hlavně ho používáme k uložení metadat do PDF (včetně obsahu).
 %% POZOR, nezapomeňte vyplnit jméno práce a autora.
-\usepackage[ps2pdf,unicode]{hyperref}   % Musí být za všemi ostatními balíčky
-\hypersetup{pdftitle=: Algorithms for solving strong positional games with high symmetry}
-\hypersetup{pdfauthor= Jitka Novotná}
+%\usepackage[ps2pdf,unicode]{hyperref}   % Musí být za všemi ostatními balíčky
+%\hypersetup{pdftitle=: Algorithms for solving strong positional games with high symmetry}
+%\hypersetup{pdfauthor= Jitka Novotná}
 
 %%% Drobné úpravy stylu
 
@@ -72,6 +70,11 @@
 \def\TODO#1{
 \textcolor{red}{#1}
 }
+\def\obr#1{
+\textcolor{red}{#1}
+}
+\let \node \textbf
+\let \value \textbf
 
 \begin{document}
 
@@ -243,7 +246,7 @@ Keywords:
 %%% prací je přípustné, aby seznam tabulek a zkratek, existují-li, byl umístěn
 %%% na začátku práce, místo na jejím konci.
 
-\openright
+%\openright
 \pagestyle{plain}
 \setcounter{page}{1}
 \tableofcontents
@@ -254,14 +257,12 @@ Keywords:
 \include{chap2}
 \include{chap3}
 \include{chap4}
+%\include{example}
 
-% Ukázka použití některých konstrukcí LateXu (odkomentujte, chcete-li)
-\include{example}
-
-\include{epilog}
+%\include{epilog}
 
 %%% Seznam použité literatury
-\include{bibliography}
+% \include{bibliography}
 
 %%% Tabulky v bakalářské práci, existují-li.
 %\chapwithtoc{List of Tables}

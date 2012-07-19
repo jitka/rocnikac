@@ -11,11 +11,10 @@
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile
+// update ancestors vycistit
 // jine varianty - prepinace
-//	- ne DF ne DEL
 // 	- NOFREEK4 DF 
 // 	- DFPN -updateAncestor 
-// 		- prepinac jestli pouzit
 // 		- posouvat current node vys jen pokud preroste zarazky (jak casto se deje?)
 // psat - probublani bokem
 // psat - moje programovici cast
@@ -24,6 +23,7 @@
 // heuristika misto 1 1
 // heuristika na vyhazovani z cache
 // heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
+// pokud je hrozba umoznit hrozenemu jen jeden tah pokud vic tak prohra
 // N 8 
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
@@ -76,6 +76,9 @@ void printSetting(){
 	printf("TURNDDELETECHILDRENST %d ",TURNDDELETECHILDRENST);
 #ifdef DFPN
 	printf("DFPN ");
+#endif
+#ifdef DFPNUPDATE
+	printf("DFPNUPDATE ");
 #endif
 #ifdef NOFREEK4
 	printf("NOFREEK4 ");

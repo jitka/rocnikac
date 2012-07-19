@@ -1,50 +1,364 @@
-\chapter{ Application algorithms on clique game }
+\chapter{\TODO{Application on clique game}}
 
-\TODO{tady nejaky obecny kec}
+\TODO{kec 
+to co jsem vymyslela
+nejen clikova ale vsechny positional
+}
 
-\section{ Solution \TODO{obteceni} }
+\section{Other enhancements}
+Here we will introduce some other enhancements of pn-search which we found and
+implemented. We will also describe some solutions for problems which arise 
+when we combine several enhancements together. 
 
-\subsection{ Start from root}
+\subsection{Ordering of sons} \label{ord}
 
-\subsection{ Start at the highest changed level}
+Ordering of sons of some node could by important. When there are two or more
+sons with minimal (dis)proof number we usually choose leftmost but there could
+be better variant so we order sons by some heuristic.
 
-\subsection{ Remember whole path from root }
+\subsection{Deleting solved sons}
 
-\section{ Deleting mutiedges }
+When we proof son of \node{or} node we proof also the node. When we disproof
+son of \node{or} node and symmetrically when we proof son of \node{and} node it
+is also useful and we can delete the relationship between them. The node will
+have less sons so the sum or max or min of numbers could be counted quicker and
+update ancestors will be also quicker. Bigger advantage happens when we use the
+weak pn-search \ref{weak}\TODO{<-} too which depends on branching factor and it decreases.
 
-\section{ Implementation of update ancestors function}
+\subsection{Deleting multiple edges }
 
-\section{ Clique game - graph representation }
+When we use transposition into DAG multiple edges may be created, for example
+on the beginning of solution clique game. Root has $N \choose 2$ sons. Sons are
+$K_N$ with one edge colored. When we norm them they will all be the same and so
+we have $N \choose 2$-multiple edge from root there. It is good idea to
+change multi-edge to single edge.
 
-\subsection{ Triangle in line }
+\subsection{Variants of updateAncestors}
 
-\subsection{ \TODO{scvrkavani} }
+There are tree enhancements which influence updateAncestors function. First is
+using last changed node \ref{last} to shorten the path. Second is df-pn-search
+\ref{dfpn} even if there is no function named updateAncestors and it is
+updating lazily. It updates the most proving node and the path up when coming
+from recursion. Third is transposition into DAG \ref{DAG}. We found no article
+considering changes in updateAncestor when node has more then one parent.
+
+When we use ordinary updateAncestors even if we use transposition into DAG
+\ref{DAG} the most proving node could be in another place than where algorithm
+tries to find it. \obr{ 10) obrazek obteceni}. \footnote{This isn't as big
+problem as it seems to be. In worst case we didn't solve the root. It couldn't
+happen that the algorithm returns wrong answer. \TODO{urezat si nad sebou vetev
+;-)}} To avoid it we must use wider updateAncestors and better
+selectMostProvingNode as we will show in next subsection. 
+
+Simple way how to define wider updateAncestors is recursively. Function updates
+a node and if it changed at least one of proof and disproof numbers we call the
+function recursively on nodes parents. It could happen that some nodes are
+updated many times. So its parents are updated also many times and the number
+of updates is growing with the number of possible paths. 
+
+There are two better solutions. First, we can update each node on some level
+and create list of parents which need to be updated. After we dispose with
+duplicities we do the same with higher level. Second, we can store another
+information --- in which iteration of pn-search was the node last updated. In
+this case we can update recursively and stop when we are going to update some
+node twice. 
+
+\TODO{slo by to paralelne}
+
+\subsection{Variants of selectMostProvingNode}
+
+As you can see \obr{10} it could happen that some numbers are changed on
+current path above unchanged node. So observation from section Last changed
+node \ref{last} doesn't hold and it can happen that algorithm select most
+proving node wrongly. There is a example \obr{15}. There are few solution which
+we found.
+
+\subsubsection{Start from root}
+
+Simplest solution is to not use enhancements Last changed node \ref{last}
+or df-pn-search \ref{dfpn}. In each iteration start search from root.
+
+\subsubsection{Start at the highest changed level}
+
+We can use this solution when we have current path in stack, which usually
+happens when we use recursion. Function updateAncestors will compute level of
+highest changed node. We delete so many nodes from the stack that stack has
+length equal to the level of highest changed node. In next iteration we can
+start searching from the node on \TODO{neni to naopak?} top of stack. This way
+we will find same most proving node as when we are searching from root. We can
+use same argument as in Last changed node \ref{last} to prove it.
+
+\subsubsection{Remember current path}
+
+In the best solution we found we hold whole current path in array. In every
+node which is updated we test if it is in current path which can be done
+quickly.  Level of updated node can by found as a number of positions
+\footnote{ position in this case means position in the game state of positional
+game} which are occupied or we can save this information in node. Then we
+check if the node from current path on same level is same. If so we save the
+level. In the end we shorten current path to length equal to highest changed
+level and we can start with next iteration.
+
+\subsection{Developing without creating child}
+
+This enhancement saves memory. Game tree is largest when root is solved.  In
+this state there is a lot of nodes which are undeveloped. \obr{ 11) hotovy strom se
+spoustou listu} We could reduce memory requirements if we don't create part of
+them. 
+
+When we are developing node we create and evaluate all sons in order to get
+proof and disproof numbers, as usually. We destruct these sons after. When we
+find that most proving node is a son of the same node which was developed this
+way we create all its sons again and now let them stay in partial game tree.
+Every node is developed at most twice so time requirements rise at most twice.
+\obr{12) 11) po tomhle } 
+
+We can save maybe even more memory when we use some counter in nodes
+and save only developed sons or all sons if their percentage or number is 
+above some threshold.
+
+\subsection{Cache }
+
+There is a possibility to use cache when we use dp-pn-search \ref{dfpn}.
+We can use cache also when we use ordinary pn-search but we must
+do some modifications in this case: 
+
+\begin{enumerate}
+\item Do not delete from cache node is on current path.
+\item Stop updateAncestor when ancestor is deleted.
+\item When some child is missing create it again.
+\end{enumerate}
+
+Both dp-pn-search and modified pn-search have problem that when cache is really small (slightly
+more then maximal current path length). In this case it could happen that algorithm
+never solves the root. It could happen that root has
+two sons and algorithm runs for a while in subtree of one and after in second
+subtree disposing all from first and then returns back to first to improve
+it but it can't because it must create nodes again (hence deleting nodes from the
+second subtree) and the situation repeats ad infinitum. 
+Hopefully this doesn't happen with big cache.
+
+We use \TODO{nazev-prosim poradte.. srustajici retizky} cache. When we are adding new node to
+cache we check in place with number equal to nodes hash. If this place is free
+we insert the node here. If not we check if some of next $c$ places is free and
+if so we insert the node on first free place. If none of the places is free we
+must delete some of this $c$ nodes. When we are searching for some node we
+start checking on place with number equal to nodes hash and continue until we
+found it or we found free place or we search $c$ places. In last two cases the
+node isn't in cache. Last thing to specify is how to decide which node delete
+from cache. We cannot delete node from current path and sons of node which is
+just developing. We can set other rules which nodes cannot be deleted or aren't
+preferred for deleting. When we set too many rules it can happen that there in
+no node which can be deleted and in this case we halt whole program. 
+
+Our experience is that it happens early or never.
+
+\subsubsection{Example of rules: \TODO{ne example,delsi}}
+\begin{itemize}
+\item Don't delete node on current path and sons of node which we are developing.
+\item Do not prefer nodes with value \value{true} or \value{false}.
+\item Do not prefer nodes with many parents - these are more important than nodes
+      with few parents.
+\item Prefer nodes which aren't developed - we don't lose any important information
+      when we delete these. 
+\end{itemize}
+
+\section{Clique game - graph representation }
+
+We need to save game position during searching the game tree. In other words we
+need to save which edges are claimed and which color they have. In
+this section we introduce few suitable solutions and their properties.
+
+Generally we use adjacency matrix but there are several ways how to represent
+it in memory. Adjacency matrix is preferred over other structure (adjacency list etc.) because
+most position we search are in depth where graph is \TODO{hustý}.
+
+\subsection{Basic representation }
+The adjacency matrix is straightforwardly represented as two 
+dimensional array $N \times N$ of numbers where value on the position
+$(i,j)$ is zero if edge $(i,j)$ is free or color number of edge if some player claimed it.
+
+This representation is unnecessarily large. For saving space we need just two
+bit information for every edge and we can use the symmetry of the adjacency
+matrix. 
+
+\subsection{Triangle in a~line }
+
+Here we store the lower triangular part of the adjacency matrix in a line of
+bits. Supposing that size of int is at least ${N \choose 2} * 2$ we can use
+single int. If this doesn't hold we can use more ints instead. For each edge
+$(i,j)$ we set two bits. First, if the edge is free we set the bit at position
+$((u*(u+1))/2+v)*2$. Second, to store the color of the edge we set the bit at
+position $((u*(u+1))/2+v)*2+1$.
+
+\subsubsection{ Two small improvements }
+
+There is still space for improvement. Imagine that every two bits in line form
+a binary number \--- it can be 0,1,2 never 3. So, structure from the last
+paragraph is a~number in base three. We can convert this number into base two
+before storing and convert it back before reading. In this case structure has
+size $ 3/4=75\% $ of the original structure. It is the best solution if we care
+only about space, but converting between bases is slow.
+
+Faster possibility is to break the number into parts by three edges (stored
+in six bits) and convert these short numbers into binary, which can be done
+quickly using translation table. This structure has size $5/6 = 83\% $. Similar
+procedure can be used for parts by $n$ edges. If $n=5$ structure has size 
+$8/10=80\%$. For bigger $n$ reduction in space complexity can be bigger
+but at the cost of growth of translation tables.
 
 \subsection{ Adjacency matrix in line}
 
-\subsection{ Trick: Find common neighbours }
+Hear we store whole adjacency matrix of red edges in one line of bits and blue
+in second line of bits. Again, we suppose that we have int with size at least
+$N^2$. Information if edge has red color is stored at position $i*N+j$ and
+also at position $j*N+i$ in red line, and correspondingly with blue edges and
+blue line.
 
-\subsection{ Find K4 of one color }
+This structure is slightly more than twice larger than previous, but it has
+several advantages in speed of operations, and it's easier for programing which
+is also important. Only this variant was implemented in our software.
 
-\subsection{ Find \TODO{vyhravajici linie} }
+\subsubsection{ Trick: Find common neighbours }
 
-\subsection{ Find threat }
+We often need to know which nodes $v$ have edges with red color to nodes $i$
+and $j$ simultaneously. If we use basic representation there is one way how to
+find it. We look if red edges $(i,v)$ and $(j,v)$ exist for every node $v$ ($v
+\ne i \; \& \; v \ne j$). If we use last described structure, there is a~trick.
+We can use bit mask and bit shift to get $i$-th and $j$-th row of matrix, that
+is bits on position $i*N \ldots (i\!+\!1)\!*\!N\!-\!1$ and $j*N \ldots
+(j\!+\!1)\!*\!N\!-\!1 $. Then we just AND these rows. Every nonzero position
+indicates such $v$.
 
-\section{ Clique game - \TODO{norm} }
+\subsubsection{ Find claimed winning set } 
 
-\section{ Heuristic sequence of child }
+When red player claims edge $(i,j)$ we want to know if he wins (determine if he
+created red $K_4$). Straight solution is to test every edge between every set
+of four nodes which contain $i$ and $j$.
 
-\section{ Our implementation }
+We can also use a~trick. We can find all nodes which can be in winning set very
+quickly. Then, we test if in this set are distinct nodes $u$ and $v$ such that
+red edge $(u,v)$ exist.
 
-\TODO{jazyk, rocnikac, blbosti}
 
-\subsubsection{ Used enhancements }
+\subsubsection{ Find free winning sets }
 
-\subsubsection{ Statistic }
-\TODO{kdo co travi kolic casu v nejrycchlejsi verzi}
+It can by useful to find if there is a winning set which opponent haven't
+claimed yet and how many such sets exist. We can stop searching game tree if
+there are no free winning sets and we can prefer to turn to edges which is
+contained in the most free winning sets.
 
-\subsubsection{ Licence }
+Free winning sets can by found in a similar way to claimed winning sets. We use
+complement of opponents line instead players line.
 
+\subsubsection{ Find threat }
+
+We want to know if player who just played created a~threat. If he created one
+thread his opponent has only one possible turn and if he created more then one
+thread he wins. 
+
+Threat is a state where there are five edges with same color and one free edge
+between four nodes. Suppose that last turn was into $(i,j)$. There are two
+types of threats.
+ 
+\begin{enumerate} 
+	\item Free edge begins on node $i$ or $j$ (without loose of generality $i$). 
+	\item Free edge doesn't contains any of them.  
+\end{enumerate}
+
+In first case we use the trick to find all nodes $u$ which are neighbours of both
+$i$ and $j$, and again to find all nodes $v$ which are neighbours of
+both $j$ and $u$. If there is such $u$ and $v$ we check if there is free edge
+$(i,v)$. If yes then $i$,$j$,$u$ and $v$ is thread.  \obr{ 13a) hrozba}
+
+Second case is similar to finding claim winning set. We just check if there is free
+edge between $(u,v)$ instead of red.  \obr{ 13b) hrozba}
+
+\subsubsection{ Compute degree }
+
+We can compute color degree of any vertex $v$ very quickly. We precompute table of size
+$2^N$ containing all answers for degree questions. Then we just indexing this table by
+row $v$. 
+
+\section{ Games on full graph - Norm } \label{norm} 
+
+Many isomorph game position and their subtrees are traversed during ordinary
+PN-search multiple times. If we want to use advantage of hight symmetry of the
+game we need to join these positions and reduce number of subtrees we must
+search.
+
+In an ideal case we want to search subtree of each graph in isomorph class only
+once. When we are creating new graph $G$ we compute \TODO{spravny nazev}
+representative graph $H$ of isomorph class where $G$ belongs, and then use $H$
+instead of $G$. Enhancement transpositions into DAG \ref{DAG} arranges that
+each subtree of two isomorph graphs will be searched at most once.
+
+The difficulty of this lies in computing representative graph, which is hard problem.
+ \TODO{np-těžký nebo np-úplný? jestě těžší.. citace}
+So we will compute almost representative graph instead. We will call
+them norm graphs.
+
+\newtheorem*{norm}{Definition}	
+\begin{norm}
+{\sl Norm function} is a~function that for
+every graph $G$ returns graph $N$ such that $N$ is isomorph with $G$. We we will call
+$N$ is a~{\sl norm graph}.
+\end{norm}
+
+We want to find norm function which can by computing fast and
+which is effective. Here efficiency means if we apply the function on
+isomorph class of graph we receive as small set of norm graphs as is possible,
+or in other words there are only few distinct norm graphs which are isomorph.
+
+We introduce few such function and compare their effectiveness and speed on
+graphs with five nodes and $k$ edges. See table. Column number in row $k$ says
+how many norm graphs after turn $k$ exist, for simplicity we don't care if
+there is claimed winning set. Column time says average time of computing in
+milliseconds in our software on PC \footnote{\TODO{porametry celera}}.
+ 
+
+\TODO{tabulka+pridat radek sum}
+[1,10,90,360,1260,2520,4200,4200,3150,1260,252] identita
+[1,1,2,9,31,60,96,96,69,28,22] norm1
+[1,1,2,7,24,36,63,63,55,28,22] norm2 -blbe predelat dvoji sum
+[1,1,2,6,17,30,47,47,37,16,6] pefect
+
+\subsubsection{Identity}
+Trivial to compute but ineffective.
+
+\subsubsection{Sort by degree}
+We can compute degree of each node and sort nodes by degree. Basic improvement
+is to count every red edges $M$ times where $M$ is number of edges in full
+graph. This improvement decreases number of norm graphs which are isomorph.
+
+\subsubsection{Sort by adjacent degree} Previous function fails in case shown
+in \obr{14) 2 grafy co by se driv znormovaly a ted ne}. It helps to consider
+degree of adjacent nodes. We define functions $f()$ and $g()$ on nodes. 
+\obr{14)obrazek popis: This two graphs was both norm but isomorph before
+improvement but now norm function must return same graph.}
+
+\begin{eqnarray*} 
+f(v) = \mbox{blue}\Delta (v) * M^2 + \mbox{red}\Delta (v) * M^5.
+\end{eqnarray*}
+
+\begin{eqnarray*} 
+g(v) = f(v) + \sum_{(u,v) \mbox{is red}}{\frac{f(u)}{M}} + \sum_{(u,v) \mbox{is blue}}{\frac{f(u)}{M^2}}
+\end{eqnarray*}
+
+Then norm function just sorts edges by $g()$.
+
+This function is asymptoticly slower than previous, but still polynomial
+and more effective.
+
+\subsubsection{Ideal case} 
+We assign representative graph of isomorph class.
+This is the most effective solution but hard to compute as we noted before.
+This function wasn't implemented so we can't measure its time.
+Efficiency was computed this way: We use previous norm function
+and for every two graphs with same values $g()$ we straightforwardly test 
+if they are isomorph. 
+
+\section{ Games on full graph - hash } 
 
 
 
