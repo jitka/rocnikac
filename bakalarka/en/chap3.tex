@@ -23,7 +23,7 @@ son of \node{or} node and symmetrically when we proof son of \node{and} node it
 is also useful and we can delete the relationship between them. The node will
 have less sons so the sum or max or min of numbers could be counted quicker and
 update ancestors will be also quicker. Bigger advantage happens when we use the
-weak pn-search \ref{weak}\TODO{<-} too which depends on branching factor and it decreases.
+\sec{weak pn-search} \ref{weak} too which depends on branching factor and it decreases.
 
 \subsection{Deleting multiple edges }
 
@@ -35,19 +35,23 @@ change multi-edge to single edge.
 
 \subsection{Variants of updateAncestors}
 
-There are tree enhancements which influence updateAncestors function. First is
-using last changed node \ref{last} to shorten the path. Second is df-pn-search
+There are tree enhancements which influence updateAncestors function. The first is
+using last changed node \ref{last} to shorten the path. The second is df-pn-search
 \ref{dfpn} even if there is no function named updateAncestors and it is
 updating lazily. It updates the most proving node and the path up when coming
-from recursion. Third is transposition into DAG \ref{DAG}. We found no article
-considering changes in updateAncestor when node has more then one parent.
+from recursion. The third is transposition into DAG \ref{DAG}. We found no article
+considering changes in \fce{updateAncestor()} when node has more then one parent.
 
 When we use ordinary updateAncestors even if we use transposition into DAG
 \ref{DAG} the most proving node could be in another place than where algorithm
-tries to find it. \obr{ 10) obrazek obteceni}. \footnote{This isn't as big
+tries to find it. \obr{ 10) obrazek obteceni}. 
+\footnote{This isn't as big
 problem as it seems to be. In worst case we didn't solve the root. It couldn't
-happen that the algorithm returns wrong answer. \TODO{urezat si nad sebou vetev
-;-)}} To avoid it we must use wider updateAncestors and better
+happen that the algorithm returns wrong answer. Unusual situation can happen 
+when we use also \sec{deleting solved subtrees} \label{delete} ---
+as a Czech proverb warns we could ``saw off a branch which is holding us''}
+} 
+To avoid it we must use wider updateAncestors and better
 selectMostProvingNode as we will show in next subsection. 
 
 Simple way how to define wider updateAncestors is recursively. Function updates
@@ -56,7 +60,7 @@ function recursively on nodes parents. It could happen that some nodes are
 updated many times. So its parents are updated also many times and the number
 of updates is growing with the number of possible paths. 
 
-There are two better solutions. First, we can update each node on some level
+There are two better solutions. The first, we can update each node on some level
 and create list of parents which need to be updated. After we dispose with
 duplicities we do the same with higher level. Second, we can store another
 information --- in which iteration of pn-search was the node last updated. In
@@ -70,7 +74,7 @@ node twice.
 As you can see \obr{10} it could happen that some numbers are changed on
 current path above unchanged node. So observation from section Last changed
 node \ref{last} doesn't hold and it can happen that algorithm select most
-proving node wrongly. There is a example \obr{15}. There are few solution which
+proving node wrongly. There is a~example \obr{15}. There are few solution which
 we found.
 
 \subsubsection{Start from root}
@@ -92,7 +96,7 @@ use same argument as in Last changed node \ref{last} to prove it.
 
 In the best solution we found we hold whole current path in array. In every
 node which is updated we test if it is in current path which can be done
-quickly.  Level of updated node can by found as a number of positions
+quickly.  Level of updated node can by found as a~number of positions
 \footnote{ position in this case means position in the game state of positional
 game} which are occupied or we can save this information in node. Then we
 check if the node from current path on same level is same. If so we save the
@@ -102,13 +106,13 @@ level and we can start with next iteration.
 \subsection{Developing without creating child}
 
 This enhancement saves memory. Game tree is largest when root is solved.  In
-this state there is a lot of nodes which are undeveloped. \obr{ 11) hotovy strom se
+this state there is a~lot of nodes which are undeveloped. \obr{ 11) hotovy strom se
 spoustou listu} We could reduce memory requirements if we don't create part of
 them. 
 
 When we are developing node we create and evaluate all sons in order to get
 proof and disproof numbers, as usually. We destruct these sons after. When we
-find that most proving node is a son of the same node which was developed this
+find that most proving node is a~son of the same node which was developed this
 way we create all its sons again and now let them stay in partial game tree.
 Every node is developed at most twice so time requirements rise at most twice.
 \obr{12) 11) po tomhle } 
@@ -119,7 +123,7 @@ above some threshold.
 
 \subsection{Cache }
 
-There is a possibility to use cache when we use dp-pn-search \ref{dfpn}.
+There is a~possibility to use cache when we use dp-pn-search \ref{dfpn}.
 We can use cache also when we use ordinary pn-search but we must
 do some modifications in this case: 
 
@@ -132,8 +136,8 @@ do some modifications in this case:
 Both dp-pn-search and modified pn-search have problem that when cache is really small (slightly
 more then maximal current path length). In this case it could happen that algorithm
 never solves the root. It could happen that root has
-two sons and algorithm runs for a while in subtree of one and after in second
-subtree disposing all from first and then returns back to first to improve
+two sons and algorithm runs for a~while in subtree of one and after in the second
+subtree disposing all from the first and then returns back to the first to improve
 it but it can't because it must create nodes again (hence deleting nodes from the
 second subtree) and the situation repeats ad infinitum. 
 Hopefully this doesn't happen with big cache.
@@ -153,10 +157,12 @@ no node which can be deleted and in this case we halt whole program.
 
 Our experience is that it happens early or never.
 
-\subsubsection{Example of rules: \TODO{ne example,delsi}}
+\subsubsection{List of rules for deleting from cache:}
 \begin{itemize}
 \item Don't delete node on current path and sons of node which we are developing.
-\item Do not prefer nodes with value \value{true} or \value{false}.
+\item Do not prefer nodes with value \value{true} or \value{false} - they are 
+      more important than nodes with value \value{unknown} but we need really big
+      cache for it.
 \item Do not prefer nodes with many parents - these are more important than nodes
       with few parents.
 \item Prefer nodes which aren't developed - we don't lose any important information
@@ -165,31 +171,31 @@ Our experience is that it happens early or never.
 
 \section{Clique game - graph representation }
 
-We need to save game position during searching the game tree. In other words we
+We need to save game position during searching the partial game tree. In other words we
 need to save which edges are claimed and which color they have. In
 this section we introduce few suitable solutions and their properties.
 
 Generally we use adjacency matrix but there are several ways how to represent
 it in memory. Adjacency matrix is preferred over other structure (adjacency list etc.) because
-most position we search are in depth where graph is \TODO{hustý}.
+most position we search are in depth where graph is dense.
 
 \subsection{Basic representation }
 The adjacency matrix is straightforwardly represented as two 
 dimensional array $N \times N$ of numbers where value on the position
 $(i,j)$ is zero if edge $(i,j)$ is free or color number of edge if some player claimed it.
 
-This representation is unnecessarily large. For saving space we need just two
-bit information for every edge and we can use the symmetry of the adjacency
+This representation is unnecessarily large. For saving space we need just
+two-bit information for every edge and we can use the symmetry of the adjacency
 matrix. 
 
 \subsection{Triangle in a~line }
 
-Here we store the lower triangular part of the adjacency matrix in a line of
-bits. Supposing that size of int is at least ${N \choose 2} * 2$ we can use
-single int. If this doesn't hold we can use more ints instead. For each edge
-$(i,j)$ we set two bits. First, if the edge is free we set the bit at position
-$((u*(u+1))/2+v)*2$. Second, to store the color of the edge we set the bit at
-position $((u*(u+1))/2+v)*2+1$.
+Here we store the lower triangular part of the adjacency matrix in a~line of
+bits. Supposing that size of \TODO{tomovi se nelibi int} is at least ${N
+\choose 2} * 2$ we can use single int. If this doesn't hold we can use more
+ints instead. For each edge $(i,j)$ we set two bits. The first, if the edge is free
+we set the bit at position $((u*(u+1))/2+v)*2$. Second, to store the color of
+the edge we set the bit at position $((u*(u+1))/2+v)*2+1$.
 
 \subsubsection{ Two small improvements }
 
@@ -210,7 +216,7 @@ but at the cost of growth of translation tables.
 \subsection{ Adjacency matrix in line}
 
 Hear we store whole adjacency matrix of red edges in one line of bits and blue
-in second line of bits. Again, we suppose that we have int with size at least
+in the second line of bits. Again, we suppose that we have int with size at least
 $N^2$. Information if edge has red color is stored at position $i*N+j$ and
 also at position $j*N+i$ in red line, and correspondingly with blue edges and
 blue line.
@@ -218,23 +224,24 @@ blue line.
 This structure is slightly more than twice larger than previous, but it has
 several advantages in speed of operations, and it's easier for programing which
 is also important. Only this variant was implemented in our software.
+\TODO{tohle patri do 4.}
 
-\subsubsection{ Trick: Find common neighbours }
+\subsubsection{ Trick: Detect common neighbours }
 
-We often need to know which nodes $v$ have edges with red color to nodes $i$
-and $j$ simultaneously. If we use basic representation there is one way how to
-find it. We look if red edges $(i,v)$ and $(j,v)$ exist for every node $v$ ($v
-\ne i \; \& \; v \ne j$). If we use last described structure, there is a~trick.
-We can use bit mask and bit shift to get $i$-th and $j$-th row of matrix, that
-is bits on position $i*N \ldots (i\!+\!1)\!*\!N\!-\!1$ and $j*N \ldots
-(j\!+\!1)\!*\!N\!-\!1 $. Then we just AND these rows. Every nonzero position
+We often need to know which nodes $v$ have red edges to nodes $i$ and $j$
+simultaneously. If we use basic representation there is one way how to find it.
+We look if red edges $(i,v)$ and $(j,v)$ exist for every node $v$ ($v \ne i \;
+\& \; v \ne j$). If we use \sec{Adjacency matrix in line}, there is a~trick. We can
+use binary mask and binary shift to get $i$-th and $j$-th row of matrix, that is, bits
+on position $i*N, \ldots, (i\!+\!1)\!*\!N\!-\!1$ and $j*N, \ldots,
+(j\!+\!1)\!*\!N\!-\!1 $. Then we just \fce{and} these rows. Every nonzero bit
 indicates such $v$.
 
 \subsubsection{ Find claimed winning set } 
 
 When red player claims edge $(i,j)$ we want to know if he wins (determine if he
 created red $K_4$). Straight solution is to test every edge between every set
-of four nodes which contain $i$ and $j$.
+of four nodes which contain $i$ and $j$. \TODO{ \obr{13z)} }
 
 We can also use a~trick. We can find all nodes which can be in winning set very
 quickly. Then, we test if in this set are distinct nodes $u$ and $v$ such that
@@ -243,12 +250,12 @@ red edge $(u,v)$ exist.
 
 \subsubsection{ Find free winning sets }
 
-It can by useful to find if there is a winning set which opponent haven't
-claimed yet and how many such sets exist. We can stop searching game tree if
+It can by useful to find if there is a~winning set which opponent haven't
+claimed yet and how many such sets exist. We can stop searching partial game tree if
 there are no free winning sets and we can prefer to turn to edges which is
 contained in the most free winning sets.
 
-Free winning sets can by found in a similar way to claimed winning sets. We use
+Free winning sets can by found in a~similar way to claimed winning sets. We use
 complement of opponents line instead players line.
 
 \subsubsection{ Find threat }
@@ -257,27 +264,27 @@ We want to know if player who just played created a~threat. If he created one
 thread his opponent has only one possible turn and if he created more then one
 thread he wins. 
 
-Threat is a state where there are five edges with same color and one free edge
-between four nodes. Suppose that last turn was into $(i,j)$. There are two
+Threat is a~state where there are five edges with same color and one free edge
+between four nodes. Suppose that last turn was to $(i,j)$. There are two
 types of threats.
  
 \begin{enumerate} 
-	\item Free edge begins on node $i$ or $j$ (without loose of generality $i$). 
+	\item Free edge begins on node $i$ or $j$ (without loss of generality $i$). 
 	\item Free edge doesn't contains any of them.  
 \end{enumerate}
 
-In first case we use the trick to find all nodes $u$ which are neighbours of both
+In the first case we use the trick to find all nodes $u$ which are neighbours of both
 $i$ and $j$, and again to find all nodes $v$ which are neighbours of
 both $j$ and $u$. If there is such $u$ and $v$ we check if there is free edge
-$(i,v)$. If yes then $i$,$j$,$u$ and $v$ is thread.  \obr{ 13a) hrozba}
+$(i,v)$. If yes then $i$,$j$,$u$ and $v$ is threat.  \obr{ 13a) hrozba}
 
 Second case is similar to finding claim winning set. We just check if there is free
-edge between $(u,v)$ instead of red.  \obr{ 13b) hrozba}
+edge between $(u,v)$ instead of red edge.  \obr{ 13b) hrozba}
 
 \subsubsection{ Compute degree }
 
 We can compute color degree of any vertex $v$ very quickly. We precompute table of size
-$2^N$ containing all answers for degree questions. Then we just indexing this table by
+$2^N$ containing all answers for degree questions. Then we just index this table by
 row $v$. 
 
 \section{ Games on full graph - Norm } \label{norm} 
@@ -290,19 +297,19 @@ search.
 In an ideal case we want to search subtree of each graph in isomorph class only
 once. When we are creating new graph $G$ we compute \TODO{spravny nazev}
 representative graph $H$ of isomorph class where $G$ belongs, and then use $H$
-instead of $G$. Enhancement transpositions into DAG \ref{DAG} arranges that
+instead of $G$. The enhancement \fce{transpositions into DAG} \ref{DAG} causes that
 each subtree of two isomorph graphs will be searched at most once.
 
-The difficulty of this lies in computing representative graph, which is hard problem.
- \TODO{np-těžký nebo np-úplný? jestě těžší.. citace}
-So we will compute almost representative graph instead. We will call
-them norm graphs.
+\TODO{tomovi nelibi -- The difficulty of this lies} in computing representative
+graph, which is hard problem.  \TODO{np-těžký nebo np-úplný? jestě těžší..
+citace compiual?  complexity, handbook of complexity} So we will compute almost
+representative graph instead. We will call them norm graphs.
 
 \newtheorem*{norm}{Definition}	
 \begin{norm}
 {\sl Norm function} is a~function that for
 every graph $G$ returns graph $N$ such that $N$ is isomorph with $G$. We we will call
-$N$ is a~{\sl norm graph}.
+$N$ a~{\sl norm graph}.
 \end{norm}
 
 We want to find norm function which can by computing fast and
@@ -326,12 +333,12 @@ milliseconds in our software on PC \footnote{\TODO{porametry celera}}.
 \subsubsection{Identity}
 Trivial to compute but ineffective.
 
-\subsubsection{Sort by degree}
+\subsubsection{Sorting by degree}
 We can compute degree of each node and sort nodes by degree. Basic improvement
 is to count every red edges $M$ times where $M$ is number of edges in full
 graph. This improvement decreases number of norm graphs which are isomorph.
 
-\subsubsection{Sort by adjacent degree} Previous function fails in case shown
+\subsubsection{Sorting by adjacent degree} Previous function fails in case shown
 in \obr{14) 2 grafy co by se driv znormovaly a ted ne}. It helps to consider
 degree of adjacent nodes. We define functions $f()$ and $g()$ on nodes. 
 \obr{14)obrazek popis: This two graphs was both norm but isomorph before

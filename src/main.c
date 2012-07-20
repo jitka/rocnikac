@@ -8,6 +8,18 @@
 #include "stats.h"
 #include "cache.h"
 
+// TODO BAKALARKA
+// poradi synu -- neni naopak?
+// najit funkcni variantu na N=7
+// jde stale pouzit na pozice ?
+// ktere varianty funguji ?
+// dokumentace - staci cesky?
+// dokumentace - zakladni kec
+// 	       - odkaz do bakalarky
+// 	       - ze detaily v komentarich
+// 	       - jak spoustet + uprava zdrojaku je z duvodu rychlosti
+// 	       - jake varianty funguji 
+//
 // TODO HNED
 // googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
 // oprofile

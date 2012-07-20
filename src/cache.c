@@ -24,7 +24,7 @@ void cacheInsert(node_t* node){
 				nodeCurrent(cache[position]) || 
 				nodeCurrentChild(cache[position]) || 
 //				nodeValue(&cache[position]) != UNKNOWN ||
-				(nodeTurn(cache[position]) == nodeTurn(node)) )
+//				(nodeTurn(cache[position]) == nodeTurn(node)) )
 			continue;
 		//jeho detem ho odebrat za rodice
 		node_t* old = cache[position];

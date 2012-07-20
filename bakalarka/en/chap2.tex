@@ -4,24 +4,26 @@
 
 \subsection{Meta algorithm}
 
-We will describe a meta algorithm how to prove that two-player finite
-positional game is determined (that there is a winning strategy for the first
-player or draw strategy for the second).
+\TODO{hrana (u,v)}
 
-All game progress can be represented as a rooted tree. Each game position is a
+We will describe a~meta algorithm how to prove that a finite two-player
+positional game is determined, that is there is a~winning strategy for the first
+player or draw strategy for the second.
+
+All game states can be represented as a~rooted tree. Each game position is a
 node and if someone can turn from one position to another, there is an edge
-between the corresponding nodes. We will not try to build a complete game tree,
-representing every possible position in the game because it would be too large
-to be represented in memory. Instead, we will incrementally  build partial game 
-tree starting from empty tree, trying to keep partial game tree as small as
+between the corresponding nodes. We will not try to build a~complete game tree,
+representing every possible position in the game, because it would be too large
+to be represented in memory. Instead, we will incrementally build a partial game 
+tree starting from the empty tree, trying to keep the partial game tree as small as
 possible.
 
-We will assigned to each node one of three possible values -- \value{true},
-\value{false}, \value{unknown}. Node will have value \value{true} when we
-proved that there is a winning strategy for the first player and value
-\value{false} when we proved that there is a draw strategy for the second
-player. If we didn't proved anything node has value \value{unknown}. We will
-say that node is solved if it has value \value{true} or \value{false}.
+We assign to each node one of three possible values -- \value{true},
+\value{false}, \value{unknown}. Node will have value \value{true} when we prove
+that there is a~winning strategy for the first player and value \value{false}
+when we prove that there is a~draw strategy for the second player. Otherwise
+the node has value \value{unknown}. We say that node is solved if it has value
+\value{true} or \value{false}.
 
 The algorithm starts with one node with value \value{unknown}. In each iteration the
 algorithm does one of the two things:
@@ -29,7 +31,8 @@ algorithm does one of the two things:
 \begin{itemize} 
 	\item{Develop node} We choose one leaf node with value \value{unknown}
 		and develop it, which means that we create its sons. When 
-		a son is created we evaluate it.
+		a son is created we evaluate it (we check whether one of the players
+		won).
 	\item{Update node} We choose one developed node with value \value{unknown}
 		and look over its sons. We check if we can assign value \value{true} 
 		or \value{false} to the node.
@@ -37,149 +40,166 @@ algorithm does one of the two things:
 
 Algorithm ends when root is solved and so game is determined.
 
-There are two types of nodes. When first player is on turn it is \node{or}
-node. When we want to assign value \value{true} for it, it is enough if one of its sons
-have value \value{true}. Than, first player has winning strategy which starts by the
-turn to the node with value \value{true}. On the opposite when first player hasn't
-winning strategy after any turn he hasn't winning strategy at all. So we can
-assign value \value{false} when all sons have value \value{false}. If nothing of above holds
-the value of the node remains \value{unknown}. Hence value of or node can by found by
-operation which is very similar to simple or.
+There are two types of nodes. When the first player is on turn it is an \node{or}
+node. To assign value \value{true} for it, it is enough if one of its sons
+have value \value{true}. Then, the first player has a winning strategy which starts by the
+turn to the node with value \value{true}. On the other hand, when the first player has
+no winning strategy after any turn he has no winning strategy at all. So we can
+assign value \value{false} when all sons have value \value{false}. If none of above holds
+the value of the node remains \value{unknown}. Hence value of an \node{or} node can be found by
+an operation which is very similar to simple logical \fce{or}.
 
-Second type of node is \node{and} node. Second player is on turn. Assigning values
-works in similar way, we just use and-like operation instead of or-like.
+The second type of node is an \node{and} node. The second player is on turn. Assigning values
+works in a similar way, we just use \fce{and}-like operation instead of \fce{or}-like.
 
 \obr{obrazek 1) and kolecko} 
 
-\subsection{Depth-first search}
-We can use ordinary depth-first search for searching the game tree and solving the root.
-We start by creating the root. We developed root and choose one of it sons. We solve the sons
-recursively and update the root. We continue solving sons and updating until root is solved.
+\subsection{Depth-first search} We can use ordinary depth-first search for
+searching the complete game tree and solving the root.  We start by creating
+the root. We develop root and choose one of it sons. We solve the son
+recursively and update the root. We continue solving the sons and updating
+until the root is solved.
 
-This algorithm is suitable solution for clique game. Depth of three is $N \choose 2$ so it
-doesn't take much memory. This is obviously slow but if we use some of enhancements of pn-search which
-are described later this algorithm can find solution for $N=5$ and maybe more.
+This algorithm is a suitable solution for the clique game. The depth of the
+tree is $N \choose 2$ so it doesn't take much memory. This is obviously slow
+but if we use some of enhancements of pn-search which are described later, this
+algorithm can find a solution for $N=5$ and maybe more.
 
 \subsection{Alpha-beta}
 
-Alpha-beta is well known algorithm for finding good strategy. \TODO{citace}.
-We can use it for any node $n$. It searches part of subtree under $n$ and for
-nodes in some depth uses rating function and returns rating of $n$. The rating
-which alpha-beta returns can by used for decision to which position turn. It
-is useful as a heuristic and can be used for example in AI and also in our
-problem. We can use depth-first search and when we make decision which sons
-solve we rate all its sons by alpha-beta first and then solve in order
-determined by ratings.
+Alpha-beta is a well known algorithm for finding good strategies. \TODO{citace}.
+We can use it for any node $n$. It searches a part of the subtree under $n$ and for
+nodes in some depth uses a rating function and returns the rating of $n$. The rating
+which alpha-beta returns can be used for deciding to which position to turn. It
+is useful as a~heuristic and can be used for example in AI and also in our
+problem. We can use depth-first search and when we make a decision which sons
+to solve, we first rate all its sons by alpha-beta and then solve them in order
+determined by the ratings.
 
 \subsection{PN-search}
 
-PN-search was found by Allis \TODO{citace}. We will describe immediate evaluation
-variant of it which is better suited for our problem, because test if position is winning is
+PN-search was introduced by Allis \TODO{citace}. We will describe an immediate evaluation
+variant of it which is better suited for our problem, because a test if a position is winning is
 is quick.
 
-PN-search is a best-first search. Main point of this algorithm is to determine
-which node is the best. We start with some definitions, which were used in \TODO{allis}. 
+PN-search is a~best-first search. We need to specify which node is the best for our problem.
+ We start with some definitions, which were used in \TODO{allis}. 
 
 \newtheorem*{prove}{Definition}	
 \begin{prove}
-We will say that we \emph{prove} node if we proved that first player has winning strategy
+We will say that we \emph{prove} a node if we proved that the first player has winning strategy
 from it and we can assign \value{true} to it. 
 \end{prove}
 
 \newtheorem*{disprove}{Definition}	
 \begin{disprove}
-We will say that we \emph{disprove} node if we proved that second player has draw strategy
+We will say that we \emph{disprove} node if we proved that the second player has draw strategy
 from it and we can assign \value{false} to it. 
 \end{disprove}
 
 \newtheorem*{proofSet}{Definition}	
 \begin{proofSet}
-	For any game tree $T$ a set of nodes with value \value{unknown} $S$ is a~{\sl proof set}
+	For any partial game tree $T$ a~set of leaf nodes with value \value{unknown} $S$ is a~{\sl proof set}
 	if proving all nodes within $S$ proves $T$.
 \end{proofSet}
 
 \newtheorem*{disproofSet}{Definition}	
 \begin{disproofSet}
-	For any game tree $T$ a set of nodes with value \value{unknown} $S$ is a~{\sl disproof set}
-	if proving all nodes within $S$ disproves $T$.
+	For any partial game tree $T$ a~set of leaf nodes with value \value{unknown} $S$ is a~{\sl disproof set}
+	if disproving all nodes within $S$ disproves $T$.
 \end{disproofSet}
 
 \newtheorem*{proofNumber}{Definition} 
 \begin{proofNumber}
-	For any game tree $T$, the {\sl proof number} of $T$ is defined as the 
-	cardinality of the smallest proof set of T.
+	For any partial game tree $T$, the {\sl proof number} of $T$ is defined as the 
+	cardinality of the smallest proof set of $T$.
 \end{proofNumber}
 
 \newtheorem*{disproofNumber}{Definition}	
 \begin{disproofNumber}
-	For any game tree $T$, the {\sl disproof number} of $T$ is defined as the 
-	cardinality of the smallest proof set of T.
+	For any partial game tree $T$, the {\sl disproof number} of $T$ is defined as the 
+	cardinality of the smallest disproof set of $T$.
 \end{disproofNumber}
 
-We will show how proof and disproof numbers works and how they can by calculate
-on some examples. At picture \obr{2)} you can see tree with proof number.
+We will show how proof and disproof numbers work and how they can be calculated
+on some examples. At picture \obr{2)} you can see a tree with proof numbers.
 Nodes with value \value{true} have proof number 0 --- there is nothing left to
-proof. Nodes with value \value{false} have proof number $ \infty $ there
-exist no smaller set of nodes which proof it. Leaf nodes with value \value
-{unknown} have proof number 1 because there is enough to prove the node itself.
-Internal \node{and} node has proof number which is equal to sum of proof numbers
-of its son, because for proving the \node{and} node we must prove all its sons
-by proving their proof sets. Internal \node{or} node has poof number equals to
-minimum of proof numbers of it sons because we need to prove one of its son.
+prove. Nodes with value \value{false} have proof number $ \infty $ --- there
+exists no set of nodes which proves it. Leaf nodes with value \value{unknown}
+have proof number 1 because it is enough to prove the node itself. Internal
+\node{and} node has proof number which is equal to sum of the proof numbers of
+its sons, because for proving the \node{and} node we must prove all its sons by
+proving their proof sets. Internal \node{or} node has proof number equal to
+minimum of proof numbers of it sons because we need to prove at least one of
+its son.
 
-Determining of disproof number works similar way. As you can see an picture
+Determining the disproof number works in a similar way. As you can see an picture
 \obr{3)}. 
 
 \newtheorem*{mostProvingNode}{Definition}	
 \begin{mostProvingNode}
-	For any game tree $T$ a~{\sl most-proving node} of $T$ is a~node, which by 
-	obtaining the value \value{true} reduces T's proof number by 1, while by obtaining the
-	value \value{false}  reduces T's disproof number by 1.
+	For any partial game tree $T$ a~{\sl most proving node} of $T$ is a~node, which by 
+	obtaining the value \value{true} reduces $T$'s proof number by 1, while by obtaining the
+	value \value{false} reduces $T$'s disproof number by 1.
 \end{mostProvingNode}
 
-Most-proving node is node which helps solve root in both cases (proving or disproving it)
+Most-proving node is a node which helps solve the root in both cases (proving or disproving it)
 so we will use 
-it as the best node in best-first search. We will show that such node exist in each
+it as the best node in best-first search. We will show that such a node exists in every
 partial tree.
+
+\begin{lemma}
+	In every partial game tree there is a most proving node.
+\end{lemma}
 
 \begin{proof}
 
 	We will prove it by induction on depth of partial game tree.
-	It is enough there are such minimal proof and minimal disproof sets that they have 
-	common node. Proving the node reduces the proof set and disproving it reduces
+	It is enough to show that there is a minimal proof set and a minimal disproof set having a 
+	common node. Proving the node reduces the proof set and disproving it reduces the
 	disproof set.
 
 	\begin{itemize} 
 		\item{Basic} 
-			If root is a leaf node both proving and disproving set 
-			are the root.
+			If root is a~leaf node, both the proving and the disproving set 
+			contain just the root.
 		\item{Induction step}
-			Let root be an \node{and} node. Proof set of the root is proof set
-			of it's son which has minimal cardinality. Disproof set of the root
-			is union of disproof sets of it's sons, so it contains
-			disproof set of the son which has minimal proof set.
-			Imagine a game (sub)tree where this son is root. By induction his
-			proof and disproof sets have common node, which is also 
-			in intersection of proof and disproof sets of original root and
+			Let the root be an \node{and} node. Minimal proof set of the root is the minimal proof set
+			of its son $s$ with minimal proof number. Minimal disproof set of the root
+			is the union of minimal disproof sets of its sons, so it contains
+			the minimal disproof set of $s$.
+
+			Imagine a~game (sub)tree where $s$ is root. By induction, his
+			minimal proof set and minimal disproof set have a common node, which is also 
+			in the intersection of minimal proof and minimal disproof sets of the original root and
 			is the most proving node.
-			Proof for \node{or} node proceeds analogously.
+
+			Proof for \node{or} root proceeds analogously.
 	\end{itemize}
 \end{proof}
 
-Now we can describe whole pn-search. We store partial game tree and we will
-store (dis)proof numbers of each node. We start with one node --- root. We will
-repeat three steps until root is solved. First step is
-\emph{SelectMostProving(node)}. This function works similar as the proof that
-most proving node exists. \obr{4)obrazek} We start in root and continue by
-choosing the sons which have minimal proof number when we are in \node{and}
-node disprove number in \node{or} node until we are in a leaf node. When there
-are more nodes with minimal number we choose leftmost. Second step is
-\emph{DevelopNode(mostProvingNode)}. There we create sons and evaluate them.
-Third step is \emph{UpdateAncestors(mostProvingNode)}. Proof and disproof
+Now we informally describe the whole pn-search, as detailed in pseudocode in
+\TODO{pseudkod}. 
+
+We store a partial game tree and proof and disproof numbers of each node. We
+start with one node --- the root. Then we repeat the following three steps
+until the root is solved. 
+
+The first step is \fce{selectMostProving(node)}. This function works similarly
+to the proof that a most proving node exists. \obr{4)obrazek} We start in the
+root and continue by choosing the son which has the minimal proof number when
+we are in \node{and} node, respectively the minimal  disprove number in
+\node{or} node, until we are in a~leaf node. When there are more sons with a
+minimal number we choose the leftmost one (we fix an arbitrary ordering). 
+
+The second step is \fce{developNode(mostProvingNode)}. There we create sons of
+the \fce{mostProvingNode} and evaluate them.
+
+The third step is \fce{updateAncestors(mostProvingNode)}. Proof and disproof
 numbers in partial game tree have changed so we must update their stored
-values. We start updating mostProvingNode and continue by updating its
-ancestors up to the root. At the end of the iteration the (dis)proof numbers
-are again correct, because only numbers above mostProvingNode could have
+values. We start updating \fce{mostProvingNode} and continue by updating its
+ancestors up to the root. At the end of these three steps the (dis)proof numbers
+are again correct, because only numbers above \fce{mostProvingNode} could have
 changed.
 
 \TODO{opsat pseudokod z allis}
@@ -189,7 +209,7 @@ changed.
 \TODO{prepsat}
 ze tetusim jestli je vyhr/prohr u nejakych nahodnych nodu
 We choose pn-search to our problem. It seems to be quicker then alpha-beta. \TODO{citace} Alpha-beta
-could be part of pn-search when we use rating from it as a heuristic (\TODO{11}, \ref{ord}).
+could be part of pn-search when we use rating from it as a~heuristic (\TODO{11}, \ref{ord}).
 And finally there are many enhancements and heuristics which seem to help reduce the partial game tree size  
 then the choice the algorithm.
 
@@ -211,7 +231,8 @@ a lot of time.
 
 \newtheorem*{currentPath}{Definition}	
 \begin{currentPath}
-	A~{\sl current path} is a~path from root to the  most proving node. \TODO{ktera cesta}
+	A~{\sl current path} is a~path from root to the most proving node which is
+	used when we search most proving node. \TODO{ktera cesta}
 \end{currentPath}
 
 In pn-search each iteration starts at the root and descends down. After developing
@@ -237,8 +258,6 @@ A~{\sl current node} is a~node from current path. It is the lowest unchanged nod
 root if everything was changed.
 \end{currentNode}
 
-\TODO{zkontrolovat jestli sedi nazvy fci}
-
 Enhanced pn-search works like ordinary pn-search. It has one variable
 called $currentNode$, at the beginning value of $currentNode$ is root. Each
 $selectMostProvingNode()$ starts in $currentNode$. And each $updateAncestors()$
@@ -260,7 +279,7 @@ number will by different.
 Let $p$ and $d$ be proof and disproof number of node $n$. Let $pt$ and $dt$ be
 their thresholds. When $n$ is \node{and} node we assume that its sons $1\ldots k$
 are ordered so $p_1 < p_2 < \ldots < p_k$. Rules for setting new thresholds
-were deduced in \TODO{epsilon trick str4}:\obr{6.3)} 
+were deduced in \TODO{cit: epsilon trick str4}:\obr{6.3)} 
 \begin{eqnarray*} 
 	pt_1 = min(pt, p_2+1), dt_1 = dt - d + d_1.
 \end{eqnarray*}
@@ -299,33 +318,34 @@ above}. However $proofNumbers$ and $disproofNumbers$ computed by
 PN-search can be useful even though they can be higher then proof and disproof
 number as they was defined. 
 
-We can use PN-search with a few modifications. When we generate children we
+We can use PN-search with a~few modifications. When we generate children we
 check whether they already exist. We can use hash table for this. Second
 modification is that we need to update all parents. This could cause problems
 if used together with other enhancements as last changed node \ref{last} but if
 we use ordinary PN-search it works. Allis proof it in \cite{allis} (page
-39-40).
+39--40).
 
 One game state in turn $t$ can be visited in the worst case $t!$ times because
-positions can be occupied in any order. So joining them is a good idea and
+positions can be occupied in any order. So joining them is a~good idea and
 there exist many enhancements of this enhancement.
 
 In this thesis we will try to use advantage of symmetry as much as possible.
 So we want in addition join game positions which are isomorph. See \obr{9) }
-how it works on tic-tac-toe game tree. However in clique game we cannot joint
-all isomorph game position into one because finding \TODO{jak se to pise?}
-represent is hard problem. So we will use almost representative graph instead.
-See section \ref{norm}.
+how it works on tic-tac-toe game tree. However in clique game we cannot join
+all isomorphuos game position into one because finding \TODO{jak
+se to pise?} represent is hard problem. So we will use ``almost
+representative graph'' \TODO{novy nazev} instead. See section \ref{norm}
+for definition.
 
-\textbf{Note}: We will use "game tree" even if we talk about game DAG. It can be little confusing 
+\textbf{Note}: We will use ``game tree'' even if we talk about game DAG. It can be little confusing 
 but in many cases there isn't any reason to distinguish if we talk about tree or DAG. 
-We will use "leaf node" when we are talking about undeveloped node. 
+We will use ``leaf node'' when we are talking about undeveloped node. 
 
 %\subsection{Heuristic 1 1}
 %%
 %\TOD{napsat co je me?}
 %
-%By definition the proof and disproof numbers of a leaf node with value
+%By definition the proof and disproof numbers of a~leaf node with value
 %\value{unknown} are 1 and 1. In general and/or tree we don't now anything more
 %and we must use this assignment, when we know more we can set these numbers
 %differently and break definition.
@@ -335,7 +355,7 @@ We will use "leaf node" when we are talking about undeveloped node.
 %and each node on same level has same number of sons. \ODO{obrazek vyvoj}
 %
 %For this reason it is useful to initially set proof and disproof numbers
-%differently. First we can use the numbers which the node will probably have if
+%differently. The first we can use the numbers which the node will probably have if
 %we develop it. For example if the \node{and} node has $n$ sons we give it proof
 %number $n$ and disproof number $1$.
 %
@@ -346,11 +366,11 @@ We will use "leaf node" when we are talking about undeveloped node.
 %There is other way how to assign the numbers. \ODO{citace} When PN-search works on partial
 %tree where are only few or no value \value{true} and \value{false} nodes, it prefers node with 
 %fewer sons. We can initially set $n$ using some heuristic. When it is \node{and} node with
-%$n$ sons and position is good for first player we give it numbers $m 1$ ($m$ is slightly less
-%then $n$). When it is \node{or} node with $n$ sons and position is bad for first player we
+%$n$ sons and position is good for the first player we give it numbers $m 1$ ($m$ is slightly less
+%then $n$). When it is \node{or} node with $n$ sons and position is bad for the first player we
 %give it numbers $1 m$ ($m$ is slightly more then $n$).
 
-\subsection{Weak PN-search}
+\subsection{Weak PN-search} \label{weak}
 
 When we use transposition into DAG one node can by counted in (dis)proof number many times.
 Hence we show an enhancement which tries to minimize this disadvantage. 
@@ -358,23 +378,23 @@ Hence we show an enhancement which tries to minimize this disadvantage.
 \TODO{tady mam v kodu nejakou vyjimku to je pro 0 nebo pro 1?}
 \TODO{zkontrolovat ze je tam ta \^2 jen jednou}
 \TODO{da se to cele nejak jednoduse vysvetlit? \^2.. kdyz vyvracim zalezi na branching factor kdyz dokazuju prehodit}
-We will count proof and disproof number in a different way:
+We will count proof and disproof number in a~different way:
 \begin{enumerate} 
-	\item Let $n$ be a leaf node. It depends on value of node.
+	\item Let $n$ be a~leaf node. It depends on value of node.
 		\begin{itemize}
 			\item \value{true} $p(n)=0$, $d(n)=\infty$
 			\item \value{false} $p(n)=\infty$, $d(n)=0$
 			\item \value{unknown} $p(n)=1$, $d(n)=1$
 		\end{itemize}
-	\item Let $n$ be an internal \node{or} node with $k$ sons \newline
-		$p(n) = min_{1 \le i \le k}(n_i)$ \newline
-		$d(n) = max_{1 \le i \le k}(n_i) + (k-1)^2$ 
-	\item Let $n$ be an internal \node{and} node with $k$ sons\newline
-		$p(n) = max_{1 \le i \le k}(n_i) + (k-1)$ \newline 
-		$d(n) = min_{1 \le i \le k}(n_i)$
+	\item Let $n$ be an internal \node{or} node with $k$ sons. Then \newline
+		$p(n) = min_{1 \le i \le k}(n_i)$, \newline
+		$d(n) = max_{1 \le i \le k}(n_i) + (k-1)^2$. 
+	\item Let $n$ be an internal \node{and} node with $k$ sons. Then \newline
+		$p(n) = max_{1 \le i \le k}(n_i) + (k-1)$, \newline 
+		$d(n) = min_{1 \le i \le k}(n_i)$.
 \end{enumerate}
 		
-\subsection{Deleting solved subtrees}
+\subsection{Deleting solved subtrees} \label{delete}
 
 To save memory we can delete node after it is solved. However this doesn't 
 help --- see \TODO{4.kapitola}

@@ -372,7 +372,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
 #ifdef DEBUG
-		assert(node->parentsMAX < M); //kdyby bylo moc rodicu je to jen divne ne nutne blble
+		assert(node->parentsMAX < M*2); //kdyby bylo moc rodicu je to jen divne ne nutne blble
 #endif //DEBUG
 		node->parentsMAX *= 2;
 		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX);
