@@ -38,10 +38,10 @@ struct stats_T {
 	int finished_false;
 	int threat;
 
-	histogram_t setFin;
-	histogram_t setDel;
-	histogram_t parFin;
-	histogram_t parDel;
+	histogram_t setFin; //kolikrat problehlo set pred vyresenim nodu
+	histogram_t setDel; // pred smazanim
+	histogram_t parFin; //kolik ma roducu node pri vyreseni
+	histogram_t parDel; // pri smazani
 };
 
 

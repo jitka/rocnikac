@@ -9,61 +9,46 @@
 #include "cache.h"
 
 // TODO BAKALARKA
-// poradi synu -- neni naopak?
-// najit funkcni variantu na N=7
-// jde stale pouzit na pozice ?
 // ktere varianty funguji ?
-// dokumentace - staci cesky?
+// poradi synu -- neni naopak?
+// weak
+// statistiky - norm
 // dokumentace - zakladni kec
 // 	       - odkaz do bakalarky
 // 	       - ze detaily v komentarich
 // 	       - jak spoustet + uprava zdrojaku je z duvodu rychlosti
 // 	       - jake varianty funguji 
-//
-// TODO HNED
-// googlit klikovou hru clique game, hight symetri, low branching facto strong, positional, časopis combinoro.. Beck combinatorial games
-// oprofile
-// update ancestors vycistit
-// jine varianty - prepinace
-// 	- NOFREEK4 DF 
-// 	- DFPN -updateAncestor 
-// 		- posouvat current node vys jen pokud preroste zarazky (jak casto se deje?)
-// psat - probublani bokem
-// psat - moje programovici cast
-//
-// TODO NEKDY MOZNA
-// heuristika misto 1 1
 // heuristika na vyhazovani z cache
-// heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
-// pokud je hrozba umoznit hrozenemu jen jeden tah pokud vic tak prohra
-// N 8 
+//
+// ifdef DEBUG
+// uplne smazat nove change
+// smazat maxnodes
+// update ancestors vycistit
+// lechce mensi node_t
+// precist cele
+// doplnit komentare 
+//
+// cistci predavani pozic
+// hasovaci funkce z graph
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
 // 	- velikost cache 
 // 	- velikost stomu 
 // 	- pocitat s sizeof
-// hasovaci funkce z graph
-// testovat vsechny binarni veci
-// norm - rychlejsi hasovanani
-// 	- rychlejsi trizeni
-// 	- lepsi fce, vic fci
+//
+// smazat spojak uplne
+// pokud je vic hrozeb tak prohra
+// heuristika jit tam kde ma protihrac nejvic nejvetsich(co do poctu plnych hran2^) hrozeb
+// heuristika misto 1 1
+// N 8  generovani tahu - jak moc musim predgenerovat?
 // kdyz nucene tahy DB-search, nejspis vyhodne az pozdeji... po nejakem stupni? tahu?
-// generovani tahu 
-// 	- dokazat ze je blbost
-// 	- smazat?
-// 	- davat dohromady vysledky z ruznych pozic
-// 	- cistejsi predavani stavu mezi haskelem a timhle
-// 	- smazat spojak uplne
 // do cache: graph_t + ukazatel/true/false 
 // mensi node_t 
 // 	- (brum prvocisla,ukazatele)
-// 	- rychlejsi predani tupu blue/or spojit dohromady
+// 	- blue/or spojit dohromady
 // 1+epsilon
 // PN-set
-//
-// DOTAZY
-// proc udpte ancesor vubec nepomuze?
 
 void printSetting(){
 
@@ -111,16 +96,15 @@ int main(){
 	statsInit();
 #endif //STATS
 	tabsInit();
-
 	cacheInit();
 
 	printSetting();
+
 
 //	printf("%d\n",sizeof(node_t));
 	node_t* root = getRoot();
 	nodeValue_t value = proofNumberSearch(root);
 	printValue(value);
-
 /*
 	node_t* root = readNode();
 	printNode(root);
@@ -131,14 +115,14 @@ int main(){
 	ll2_t nodes = readNodes();
 	ll2FStart(&nodes); 
 	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){
-//		printNode(node);
-		nodeValue_t v = proofNuberSearch(node);
+		printNode(node);
+//		nodeValue_t v = proofNumberSearch(node);
 //		if (v != FALSE)
-			printValue(v);
+//			printValue(v);
 	}
 	printf("\nhotovo\n");
-*/
 
+*/
 #ifdef STATS
 	printf("---------------------------------------------------------\n");
 	printStats( );

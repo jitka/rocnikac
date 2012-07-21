@@ -104,8 +104,8 @@ u64 differentNodes(){
 void printStats(){
 
 	printf("interace %d\n",interations_stats);
-	//histogramPrint( &all_stats.setFin );
-	//histogramPrint( &all_stats.parFin );
+	histogramPrint( &all_stats.setFin );
+	histogramPrint( &all_stats.parFin );
 	//histogramPrint( &all_stats.setDel );
 	//histogramPrint( &updateStats );
 	//histogramPrint( &selectStats );

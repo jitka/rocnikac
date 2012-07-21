@@ -3,27 +3,27 @@
 %% Verze pro jednostranný tisk:
 % Okraje: levý 40mm, pravý 25mm, horní a dolní 25mm
 % (ale pozor, LaTeX si sám přidává 1in)
- \documentclass[12pt,a4paper]{report}
- \setlength\textwidth{145mm}
- \setlength\textheight{247mm}
- \setlength\oddsidemargin{15mm}
- \setlength\evensidemargin{15mm}
- \setlength\topmargin{0mm}
- \setlength\headsep{0mm}
- \setlength\headheight{0mm}
-% \openright zařídí, aby následující text začínal na pravé straně knihy
- \let\openright=\clearpage
-
-%% Pokud tiskneme oboustranně:
-% \documentclass[12pt,a4paper,twoside,openright]{report}
+% \documentclass[12pt,a4paper]{report}
 % \setlength\textwidth{145mm}
 % \setlength\textheight{247mm}
 % \setlength\oddsidemargin{15mm}
-% \setlength\evensidemargin{0mm}
+% \setlength\evensidemargin{15mm}
 % \setlength\topmargin{0mm}
 % \setlength\headsep{0mm}
 % \setlength\headheight{0mm}
-% \let\openright=\cleardoublepage
+%% \openright zařídí, aby následující text začínal na pravé straně knihy
+% \let\openright=\clearpage
+
+% Pokud tiskneme oboustranně:
+ \documentclass[12pt,a4paper,twoside,openright]{report}
+ \setlength\textwidth{145mm}
+ \setlength\textheight{247mm}
+ \setlength\oddsidemargin{15mm}
+ \setlength\evensidemargin{0mm}
+ \setlength\topmargin{0mm}
+ \setlength\headsep{0mm}
+ \setlength\headheight{0mm}
+ \let\openright=\cleardoublepage
 
 %% Použité kódování znaků: obvykle latin2, cp1250 nebo utf8:
 \usepackage[utf8]{inputenc}
@@ -261,13 +261,13 @@ Keywords:
 \include{chap4}
 %\include{example}
 
-%\include{epilog}
+\include{epilog}
 
 %%% Seznam použité literatury
-% \include{bibliography}
+\include{bibliography}
 
 %%% Tabulky v bakalářské práci, existují-li.
-%\chapwithtoc{List of Tables}
+\chapwithtoc{List of Tables}
 
 %%% Použité zkratky v bakalářské práci, existují-li, včetně jejich vysvětlení.
 %\chapwithtoc{List of Abbreviations}

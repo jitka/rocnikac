@@ -4,23 +4,153 @@ In this chapter we will talk directly about our softwere. We give some
 statistic which ilustrate which ehantments helps with solving clique
 game. 
 
-\TODO{
-veta o df
-weak, zkusit jine kombinace \^2
-u kombinaci hlidam ze odpovi spravne = jednuche a uz ne tolik ze pracuje podle definice
-ze df-pn moc nepomohlo ale usetrilo pamet
-kdy se muze stat ze si pod (teda nad) sebou urezu vetev pn-, DAG, delete solvet,
-df-proc mi moc nepomuze 
-seznam funkcnich nastavitek
-zkontrolovat ze funguje nacitani pozic
+\section{ Clique game }
+We solved clique game for $K=4, N=6$ and $ N=7$. In this section we
+describe partial game trees which was created during solving that
+games. We use \sec{weak pn-search} \ref{weak} and \sec{transposition
+into DAG} \ref{DAG} with norm function \ref{norm2} and \TODO{\sec{
+nofreeK4}} \ref{nofreeK4}.
+ 
+%N 7 M 22
+%CACHE_SIZE 16777216, CACHE_PATIENCE 100, MAXNODES 6000000
+%DEBUG WEAK STATS NORM2 TURNDDELETECHILDRENST 0 NOFREEK4 UPDATEANCESTORS2 
+
+\begin{table} 
+\begin{tabular}{l|c|c|c}
+level & \sec{all} & \sec{created} & \sec{solved} \\
+\hline
+$\sum$ & 10165779& 1241 (0,12)& 110\\
+0& 1& 0 (0,0)& 1\\
+1& 16& 1 (0,0)& 1\\
+2& 240& 2 (0,0)& 1\\
+3& 1680& 7 (0,0)& 6\\
+4& 10920& 26 (0,0)& 5\\
+5& 43680& 73 (0,0)& 28\\
+6& 160160& 190 (0,0)& 14\\
+7& 400400& 306 (0,0)& 31\\
+8& 900900& 273 (0,0)& 23\\
+9& 1441440& 363 (0,12)& 0\\
+10& 2018016& 0 (0,0)& 0\\
+11& 2018016& 0 (0,0)& 0\\
+12& 1681680& 0 (0,0)& 0\\
+13& 960960& 0 (0,0)& 0\\
+14& 411840& 0 (0,0)& 0\\
+15& 102960& 0 (0,0)& 0\\
+16& 12870& 0 (0,0)& 0\\
+\end{tabular}
+\caption{Property of game tree of the clique game ($N=6,K=4$).}
+\label{stats6}
+\end{table}
+
+\begin{table}
+\begin{tabular}{l|c|c|c}
+level & \sec{all} & \sec{created} & \sec{solved} \\
+\hline $\sum$ & 6 377 181 825& 65 979 (92, 605)& 2 356\\
+0& 1& 0 (0, 0)& 1\\
+1& 22& 1 (0, 0)& 1\\
+2& 462& 2 (0, 0)& 2\\
+3& 4 620& 7 (0, 0)& 7\\
+4& 43 890& 29 (0, 0)& 7\\
+5& 263 340& 107 (0, 0)& 44\\
+6& 1 492 260& 396 (0, 0)& 26\\
+7& 5 969 040& 1 247 (0, 0)& 242\\
+8& 22 383 900& 3 812 (0, 0)& 76\\
+9& 62 674 920& 9 108 (0, 49)& 752\\
+10& 162 954 792& 16 938 (0, 96)& 226\\
+11& 325 909 584& 17 303 (9, 113)& 452\\
+12& 597 500 904& 8 252 (0, 119)& 293\\
+13& 853 572 720& 7 280 (43, 203)& 159\\
+14& 1 097 450 640& 825 (0, 0)& 22\\
+15& 1 097 450 640& 672 (40, 25)& 46\\
+16& 960 269 310& 0& 0\\
+17& 640 179 540& 0& 0\\
+18& 355 655 300& 0& 0\\
+19& 142 262 120& 0& 0\\
+20& 42 678 636& 0& 0\\
+21& 7 759 752& 0& 0\\
+22& 705 432& 0& 0\\
+\end{tabular}
+\caption{Property of game tree of the clique game ($N=7,K=4$).}
+\label{stats7}
+\end{table}
+
+In the first case ($N=6$) algorithm does 337 iteration to solve the game. It the second
+case algorithm does 16489 iteration and solve it in tree second.
+
+Tables \ref{stats6} and \ref{stats7} show information about levels in trees.
+
+The column \sec{all} illustrate how many game state could exist on some level $L$. This
+number was computed as a number of edge coloring graph with $N$ nodes with $L$
+\fce{div} 2 red edges and $(L-1)$ \fce{div} 2 blue edges. So numbers from the first
+column are not exactly right because they count game states which have for example
+two $K_4$ with same color which cannot happen in real game.
+
+In the column \sec{created}  are number of nodes which was really created on each level. 
+In the bracket behind there how many of them was first evaluated as a \value{false} respectively
+how many of them are thread. There was no node which was first evaluated as \value{true},
+this is a god mark, because nodes with value \value{true} never helps to disprove anything and
+algorithm se jim vyhne.
+
+In the column \sec{solved} there is how many of nodes was solved on its level.
+All of them was solved as a \value{false}.
+
+\section{ \TODO{Meření zlepšení} }
+
+\TODO{obecny kec o mereni
+nezapomenout originalni cisla
 }
+
+\subsection{df}
+\TODO{ze df-pn moc nepomohlo ale usetrilo pamet
+df-proc mi moc nepomuze ze nezalezi na ceste ale na norm 
+nefunguje nofreeK4
+}
+
+\subsection{Weak pn-search}
+\TODO{
+zkusit jine kombinace \^2
+}
+
+\subsection{Deleting solved subtrees} 
+\TODO{nepomohlo, ted uz neni}
+
+\subsection{\TODO{no free K4}}
+
+\subsection{Ordering of sons} 
+\TODO{nepomohlo, lepsi heuristiky?}
+
+\subsection{Deleting multiple edges}
+
+\subsection{Cache}
+
+\subsection{\fce{selectMostProvingNode()} and \fce{updateAncestors()} }
+\TODO{jak dlouho za jakych okolnosti trvna select update}
+
+\subsection{\TODO{mereni obteceni}}
 
 \section{ More about our implementation }
 
-\TODO{jazyk, rocnikac, licence, nejrychlejsi verze + kde je pomala}
+Our software was created in order to solve clique game for $K=4$ and as higher
+$N$ as is possible. We knew that there is no chance to solve it for all $N$ up
+to 17 because only check if winning strategy is right needs to check so many
+states that it could be done. 
+ 
+We chose language C. Our code is on github \TODO{jak se sazi adresa?} and
+it is under \TODO{licence - i udelat}.
 
+During crating this project we need to test if some heuristic helps or not.
+First we try to implemented something and after we decide if let it there or if
+deleted it. Later we decided to write enhancement into ifdefs. The result is
+that we can try combination of more enhancement and we can compare them.
+There are thousands of combination. Not all of them works perfectly. List
+of combination which was tested is in documentation of the project. 
 
+\subsection{ \TODO{nejrychlejsi verze} }
+
+\TODO{kde je pomala}
 
 \section{ Futher work }
 
-i na teorii
+\TODO{ i na teorii 
+tabulky- zbytecne moc vytvorene
+}

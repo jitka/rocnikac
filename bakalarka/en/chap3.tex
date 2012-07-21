@@ -1,4 +1,4 @@
-\chapter{\TODO{Application on clique game}}
+\chapter{Application on clique game}
 
 \TODO{kec 
 to co jsem vymyslela
@@ -50,7 +50,7 @@ problem as it seems to be. In worst case we didn't solve the root. It couldn't
 happen that the algorithm returns wrong answer. Unusual situation can happen 
 when we use also \sec{deleting solved subtrees} \label{delete} ---
 as a Czech proverb warns we could ``saw off a branch which is holding us''}
-} 
+ 
 To avoid it we must use wider updateAncestors and better
 selectMostProvingNode as we will show in next subsection. 
 
@@ -338,7 +338,9 @@ We can compute degree of each node and sort nodes by degree. Basic improvement
 is to count every red edges $M$ times where $M$ is number of edges in full
 graph. This improvement decreases number of norm graphs which are isomorph.
 
-\subsubsection{Sorting by adjacent degree} Previous function fails in case shown
+\subsubsection{Sorting by adjacent degree} \label{norm2}
+
+ Previous function fails in case shown
 in \obr{14) 2 grafy co by se driv znormovaly a ted ne}. It helps to consider
 degree of adjacent nodes. We define functions $f()$ and $g()$ on nodes. 
 \obr{14)obrazek popis: This two graphs was both norm but isomorph before

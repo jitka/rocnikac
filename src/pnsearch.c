@@ -188,7 +188,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 #endif //WEAK
 #ifdef DEBUG
 		if (nodeProof(node) == MAXPROOF && nodeDisproof(node) == MAXPROOF){
-			printf("dve nekonecna %d %d\n",min,max);
+//			printf("dve nekonecna %d %d\n",min,max);
 			printNode(node);
 			printChildren(node);
 		}
@@ -840,7 +840,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 				currentNode--;
 				node = currentPath[currentNode];
 				zadnaK4 = true;
-				printf("zacatek\n");
+//				printf("zacatek\n");
 			}
 #else //NOFREEK4
 			developNode(node);
@@ -857,7 +857,7 @@ nodeValue_t proofNumberSearch(node_t* root){
 		if (nodeThProof(node) <= nodeProof(node) || nodeThDisproof(node) <= nodeDisproof(node) ){
 			//TODO tady by se to melo chytit a nechyti zkontrolovat jestli je nodeTh nastavene
 			if (zadnaK4)
-				printf("ano\n");
+//				printf("ano\n");
 #ifdef NODEDELETE
 			nodeUnsetCurrent(node);
 #endif //NODEDELETE

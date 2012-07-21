@@ -148,9 +148,10 @@ so we will use
 it as the best node in best-first search. We will show that such a node exists in every
 partial tree.
 
-\begin{lemma}
+\newtheorem{mpnExist}{Theorem}
+\begin{mpnExist}
 	In every partial game tree there is a most proving node.
-\end{lemma}
+\end{mpnExist}
 
 \begin{proof}
 
@@ -399,7 +400,7 @@ We will count proof and disproof number in a~different way:
 To save memory we can delete node after it is solved. However this doesn't 
 help --- see \TODO{4.kapitola}
 
-\subsection{ Prohrano pokud neni vyhravajici linie}
+\subsection{ Prohrano pokud neni vyhravajici linie} \label{nofreeK4}
 \TODO{dopsat az po prvni kapitole}
 
 \subsection{PN-set}
