@@ -6,6 +6,7 @@
 #   ./program-dbg
 
 N?=6
+T?=1
 CFLAGS=-std=gnu99 -Wall -W -DN=$(N) $(OPTS)
 OPTCFLAGS=$(CFLAGS) -O3 -march=native 
 DBGCFLAGS=$(CFLAGS) -ggdb3
@@ -22,6 +23,26 @@ program-dbg: main.c start.c print.c pnsearch.c linkedlist.c norm.c tabs.c stats.
 clean:
 	rm -f *.o *.s program-opt program-dbg tmp/*
 
-varianta1:
-	OPTS="-DDEBUG -DWEAK -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=0 -DNOFREEK4 -DUPDATEANCESTORS2"\
+K4Weak:
+	OPTS="-DDEBUG -DWEAK -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DNOFREEK4 -DUPDATEANCESTORS2"\
 	 make clean all
+
+K4:
+	OPTS="-DDEBUG -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DNOFREEK4 -DUPDATEANCESTORS2"\
+	 make clean all
+
+weak:
+	OPTS="-DDEBUG -DWEAK -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DUPDATEANCESTORS2"\
+	 make clean all
+
+basic:
+	OPTS="-DDEBUG -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DUPDATEANCESTORS2"\
+	 make clean all
+
+dfpn:
+	OPTS="-DDEBUG -DWEAK -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DUPDATEANCESTORS2 -DDFPN"\
+	 make clean all
+
+ordering:
+	OPTS="-DDEBUG -DWEAK -DSTATS -DNORM2 -DTURNDDELETECHILDRENST=${T} -DNOFREEK4 -DUPDATEANCESTORS2 -DHEURISTIC1"\
+	make clean all

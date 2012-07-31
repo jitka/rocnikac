@@ -9,33 +9,24 @@
 #include "cache.h"
 
 // TODO BAKALARKA
-// ktere varianty funguji ?
-// poradi synu -- neni naopak?
-// weak
-// statistiky - norm
-// dokumentace - zakladni kec
-// 	       - odkaz do bakalarky
-// 	       - ze detaily v komentarich
-// 	       - jak spoustet + uprava zdrojaku je z duvodu rychlosti
-// 	       - jake varianty funguji 
-// heuristika na vyhazovani z cache
-//
-// ifdef DEBUG
+// defaultni hodne ukecany stats
+// ifdef DEBUG HEURISTIC1
 // uplne smazat nove change
 // smazat maxnodes
 // update ancestors vycistit
 // lechce mensi node_t
+// printf smazat 
 // precist cele
 // doplnit komentare 
 //
 // cistci predavani pozic
-// hasovaci funkce z graph
 // konstanty 
 // 	- vhodne CACHE_PATIENCE, 
 // 	- TURNDELETECHILDRENST 
 // 	- velikost cache 
 // 	- velikost stomu 
 // 	- pocitat s sizeof
+// hasovaci funkce z graph
 //
 // smazat spojak uplne
 // pokud je vic hrozeb tak prohra
@@ -102,6 +93,7 @@ int main(){
 
 
 //	printf("%d\n",sizeof(node_t));
+	//1.varianta
 	node_t* root = getRoot();
 	nodeValue_t value = proofNumberSearch(root);
 	printValue(value);
@@ -112,6 +104,7 @@ int main(){
 	printNode(root);
 */
 /*
+	//2.varianta
 	ll2_t nodes = readNodes();
 	ll2FStart(&nodes); 
 	for (node_t* node; (node = ll2FGet(&nodes)) != NULL; ll2FNext(&nodes)){

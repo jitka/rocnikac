@@ -1,10 +1,7 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#ifndef N
-#define N 6 //funguje pro N 5..8 aby sla matice sousedu ulozit 
-#endif
-
+//#define N 6 // definuje se v Makefile funguje pro N 5..8 aby sla matice sousedu ulozit 
 #define M ((N*(N-1))/2+1) 
 #define MAXPROOF (INT_MAX/M)
 #define CACHE_SIZE (1<<24)
@@ -12,6 +9,7 @@
 #define MAXNODES 6000000 //kolik node se vleze do pameti NEFUNGUJE
 #define MAXTREEWIDTH 100000 //velikost pole pro updateAncestors
 
+//tito se zapinaji v makefile
 //#define DEBUG
 //#define WEAK //jestli je klasicky nebo weak PN-search 
 //#define NOVECHANGE //prehazuju sploupce i radky maskama POMALE, NEFUNGUJE

@@ -1,52 +1,55 @@
-\chapter{Software results}
+\chapter{Experimental results}
 
-In this chapter we will talk directly about our softwere. We give some
-statistic which ilustrate which ehantments helps with solving clique
+In this chapter we describe directly our solver and results
+illustrating which enhancements help with solving the clique
 game. 
 
-\section{ Clique game }
-We solved clique game for $K=4, N=6$ and $ N=7$. In this section we
-describe partial game trees which was created during solving that
-games. We use \sec{weak pn-search} \ref{weak} and \sec{transposition
-into DAG} \ref{DAG} with norm function \ref{norm2} and \TODO{\sec{
-nofreeK4}} \ref{nofreeK4}.
+\section{Clique game} 
+
+We solved the clique game for $K=4, N=6$ and $ N=7$. In this section we
+describe the partial game trees which were created during solving that games. We
+use \sec{weak PN-search} and \sec{transposition to DAG} with normalising function
+\sec{sorting by vertex and neighbours degrees} and \sec{no free winning set}.
+We call this combination \com{K4Weak}.
  
 %N 7 M 22
 %CACHE_SIZE 16777216, CACHE_PATIENCE 100, MAXNODES 6000000
 %DEBUG WEAK STATS NORM2 TURNDDELETECHILDRENST 0 NOFREEK4 UPDATEANCESTORS2 
 
 \begin{table} 
+\centering
 \begin{tabular}{l|c|c|c}
 level & \sec{all} & \sec{created} & \sec{solved} \\
 \hline
-$\sum$ & 10165779& 1241 (0,12)& 110\\
-0& 1& 0 (0,0)& 1\\
-1& 16& 1 (0,0)& 1\\
-2& 240& 2 (0,0)& 1\\
-3& 1680& 7 (0,0)& 6\\
-4& 10920& 26 (0,0)& 5\\
-5& 43680& 73 (0,0)& 28\\
-6& 160160& 190 (0,0)& 14\\
-7& 400400& 306 (0,0)& 31\\
-8& 900900& 273 (0,0)& 23\\
-9& 1441440& 363 (0,12)& 0\\
-10& 2018016& 0 (0,0)& 0\\
-11& 2018016& 0 (0,0)& 0\\
-12& 1681680& 0 (0,0)& 0\\
-13& 960960& 0 (0,0)& 0\\
-14& 411840& 0 (0,0)& 0\\
-15& 102960& 0 (0,0)& 0\\
-16& 12870& 0 (0,0)& 0\\
+$\sum$ & 10 165 779& 1 241 (0,12)& 110\\
+0& 1& 1 (0, 0)& 1\\
+1& 16& 1 (0, 0)& 1\\
+2& 240& 2 (0, 0)& 1\\
+3& 1 680& 7 (0, 0)& 6\\
+4& 10 920& 26 (0, 0)& 5\\
+5& 43 680& 73 (0, 0)& 28\\
+6& 160 160& 190 (0, 0)& 14\\
+7& 400 400& 306 (0, 0)& 31\\
+8& 900 900& 273 (0, 0)& 23\\
+9& 1 441 440& 363 (0, 12)& 0\\
+10& 2 018 016& 0& 0\\
+11& 2 018 016& 0& 0\\
+12& 1681 680& 0& 0\\
+13& 960 960& 0& 0\\
+14& 411 840& 0& 0\\
+15& 102 960& 0& 0\\
+16& 12 870& 0& 0\\
 \end{tabular}
-\caption{Property of game tree of the clique game ($N=6,K=4$).}
+\caption{Properties of the game tree for (6,4)-clique game.}
 \label{stats6}
 \end{table}
 
 \begin{table}
+\centering
 \begin{tabular}{l|c|c|c}
 level & \sec{all} & \sec{created} & \sec{solved} \\
 \hline $\sum$ & 6 377 181 825& 65 979 (92, 605)& 2 356\\
-0& 1& 0 (0, 0)& 1\\
+0& 1& 1 (0, 0)& 1\\
 1& 22& 1 (0, 0)& 1\\
 2& 462& 2 (0, 0)& 2\\
 3& 4 620& 7 (0, 0)& 7\\
@@ -70,87 +73,258 @@ level & \sec{all} & \sec{created} & \sec{solved} \\
 21& 7 759 752& 0& 0\\
 22& 705 432& 0& 0\\
 \end{tabular}
-\caption{Property of game tree of the clique game ($N=7,K=4$).}
+\caption{Properties of the game tree for (7,4)-clique game.}
 \label{stats7}
 \end{table}
 
-In the first case ($N=6$) algorithm does 337 iteration to solve the game. It the second
-case algorithm does 16489 iteration and solve it in tree second.
+In the first case ($N=6$) the algorithm needs 337 iterations to solve the game. In the second
+case the algorithm needs 16489 iterations and solves the game in three seconds on a desktop PC
+(AMD Athlon 3GHz).
 
-Tables \ref{stats6} and \ref{stats7} show information about levels in trees.
+Tables~\ref{stats6} and~\ref{stats7} show the properties of the game tree for each level.
 
-The column \sec{all} illustrate how many game state could exist on some level $L$. This
-number was computed as a number of edge coloring graph with $N$ nodes with $L$
-\fce{div} 2 red edges and $(L-1)$ \fce{div} 2 blue edges. So numbers from the first
-column are not exactly right because they count game states which have for example
-two $K_4$ with same color which cannot happen in real game.
+The column \sec{all} illustrates how many game states could exist on some level
+$L$. This number was computed as the number of edge-colored complete graphs
+with $N$ nodes with $\lfloor L / 2 \rfloor$ red edges and $\lfloor (L-1) / 2
+\rfloor$ blue edges. Numbers from the first column are not exact because they
+count also game states which have for example two $K_4$ with the same color
+which cannot happen in a real game.
 
-In the column \sec{created}  are number of nodes which was really created on each level. 
-In the bracket behind there how many of them was first evaluated as a \value{false} respectively
-how many of them are thread. There was no node which was first evaluated as \value{true},
-this is a god mark, because nodes with value \value{true} never helps to disprove anything and
-algorithm se jim vyhne.
+In the column \sec{created} we indicate the number of nodes which were actually created on each level. 
+In the parentheses we indicate how many of the nodes were first evaluated as \val{false} respectively
+marked as a~threat. There was no node which was first evaluated as \val{true} --
+this is a~good sign, because nodes with value \val{true} never help to disprove anything and
+the algorithm avoids them.
 
-In the column \sec{solved} there is how many of nodes was solved on its level.
-All of them was solved as a \value{false}.
+In the column \sec{solved} we indicate how many nodes were solved on level $L$.
+All of them were solved as an~\val{false}.
 
-\section{ \TODO{Meření zlepšení} }
+\section{Comparing enhancements}
 
-\TODO{obecny kec o mereni
-nezapomenout originalni cisla
-}
+In this section we compare the changes caused by various enhancements, as measured
+by several tests. We prepare some combination of enhancement and describe each
+whole combination by one name.
 
-\subsection{df}
-\TODO{ze df-pn moc nepomohlo ale usetrilo pamet
-df-proc mi moc nepomuze ze nezalezi na ceste ale na norm 
-nefunguje nofreeK4
-}
+\medskip
 
-\subsection{Weak pn-search}
-\TODO{
-zkusit jine kombinace \^2
-}
+The criteria we use for comparison: 
+\begin{itemize*}
+\item time needed to solve the game (in seconds)
+\item space which the program uses (number of created nodes)
+\item number of iterations 
+\item level of the deepest developed node 
+\end{itemize*}
 
-\subsection{Deleting solved subtrees} 
-\TODO{nepomohlo, ted uz neni}
+The number of created nodes is a representative value for space requirements when
+we do not use any enhancement which deletes nodes.
+In the time test we set the time limit for solving the game to 60 seconds.
 
-\subsection{\TODO{no free K4}}
+\subsection{Weak PN-search} 
+
+The enhancement \sec{weak PN-search}~\ref{weak} helps in every combination with
+other enhancements which we tried. The results are in Table~\ref{statsWeak}.
+
+\begin{table}
+\centering
+\begin{tabular}{c|l|c|c|c|c}
+$N$ & name & time & iterations & created nodes & max. level \\
+\hline
+6 & \com{K4} & 1.41s & 413 & 1 406 & 10\\
+6 & \com{K4Weak} & 1.03s & 337 & 1 241 & 8\\
+\hline
+7 & \com{K4} & 12.34s & 38 716 & 128 256 & 15\\
+7 & \com{K4Weak} & 2.79s & 16 489 & 65 979 & 14\\
+\hline
+6 & \com{basic} & 5.38s & 5 541 & 6 353 & 14 \\
+6 & \com{weak} & 2.48s & 4 237 & 6 079 & 14 \\
+\end{tabular}
+\caption{Comparing \sec{weak PN-search} variants.}
+\label{statsWeak}
+\end{table}
+
+
+\subsubsection{\com{K4Weak} and \com{K4}} 
+
+These two combinations use \sec{PN-search} with \sec{last changed nodes},
+\sec{no free winning set} and normalise function \sec{sorting by vertex and
+neighbours degrees}. Basic also uses \sec{weak PN-search}.
+
+\subsubsection{\com{weak} and \com{basic}}
+
+These two combinations are similar to previous ones but they both do not use the enhancement
+\sec{no free winning set}. They both do not solve game for $N=7$ within the time limit.
+
+\subsection{Deleting solved subtrees} \label{deletesolved2} 
+
+This enhancement~\ref{deletesolved} does not help, not even when we use it only
+with an ordinary \sec{PN-search}. It does not even considerably save
+memory.\footnote{In this case we measured actual memory allocation, not number
+of created nodes.}
+
+The reason is that most of the time the game tree is being developed and not many
+nodes are being solved. In the later part of the game when nodes are being
+solved and deleted we do not need the memory which is saved. The result is that
+when we run the program with and without this enhancement it needs approximately
+the same amount of memory and program with \sec{delete solved subtrees} runs
+longer. For this reason it is now not implemented in our code. Other
+reason is that it causes many complications when we use it together with
+\sec{transposition to DAG}, because \sec{deleting solved subtrees}
+can delete node $n$ which we might need because there is another path to $n$. 
+
+\subsection{No free winning set}
+
+This enhancement radically decreases the level of the deepest developed node.
+The number of nodes in subsequent levels of the complete game tree exponentially 
+rises. For this reason the enhancement \sec{no free winning set} is
+necessary to solve the  clique game for $N=7$. Results for $N=6$ are in
+Table~\ref{statsNofreeK4}.
+
+\begin{table}
+\centering
+\begin{tabular}{c|l|c|c|c|c}
+$N$ & name & time & iterations & created nodes & max. level \\
+\hline
+6 & \com{weak} & 2.48s & 4 237 & 6 079 & 14 \\
+6 & \com{K4Weak} & 1.03s & 337 & 1 241 & 8\\
+\hline
+6 & \com{basic} & 5.38s & 5 541 & 6 353 & 14 \\
+6 & \com{K4} & 1.41s & 413 & 1 406 & 10\\
+\end{tabular}
+\caption{Comparing \sec{no free winning set} variants.}
+\label{statsNofreeK4}
+\end{table}
 
 \subsection{Ordering of sons} 
-\TODO{nepomohlo, lepsi heuristiky?}
 
-\subsection{Deleting multiple edges}
+This enhancement is used in each variant of our solver. If we want not to use
+it we must randomly reorder sons. That is happening
+when we sort sons by their hash in Section~\ref{delpar}.
 
-\subsection{Cache}
+A~first heuristic is when we use the ordinary \sec{PN-search}
+and $developNode()$ creates sons this way that it try adding the new edge in
+alphabetical order.
 
-\subsection{\fce{selectMostProvingNode()} and \fce{updateAncestors()} }
-\TODO{jak dlouho za jakych okolnosti trvna select update}
+A~second heuristic is when we use \sec{PN-search} with \sec{transposition to DAG}
+with normalising function \sec{sorting by vertex degree} or \sec{sorting by
+vertex and neighbours degrees}. We first try colored the new
+edge to area with low degree. It is good for the second player when all
+vertices have similar degree. When the second player has draw strategy most node
+are solved as \val{false} so the ordering of sons of \node{or} is not important 
+node because we must solve them all.  Ordering of \node{and} node is good so
+this heuristic works.
 
-\subsection{\TODO{mereni obteceni}}
+We try one other heuristic. When we are creating sons by adding the edge $e$ we
+count the free winning sets including $e$ by function in Section~\ref{freeK4}.
+Then we sort the sons so that the leftmost one has the largest number. This heuristic was
+worse then second so currently it is not implemented.
 
-\section{ More about our implementation }
 
-Our software was created in order to solve clique game for $K=4$ and as higher
-$N$ as is possible. We knew that there is no chance to solve it for all $N$ up
-to 17 because only check if winning strategy is right needs to check so many
-states that it could be done. 
+\subsection{Deleting parallel edges} \label{delpar}
+As we explain in Section~\ref{multi-edges} there could be parallel edges if we use the enhancement
+\sec{transposition to DAG}. We implemented \sec{deleting parallel edges}, that
+is we delete duplicate sons in the function \fce{updateAncestors()}. We
+first create all the sons then normalise then, second we sort them by their hash and then check if nodes
+with the same hash are actually same, then delete duplicities. 
+
+However, after this the ordering of sons is different and it causes the partial
+game tree to be different. This could be a disadvantage and could overweight
+described advantages. The differences of the partial game trees are the reason
+why we do not measure this enhancement.
+
+\subsection{DF-PN-search}
+
+\sec{DF-PN-search} was described in Section~\ref{dfpn}. In our case it does not help as
+much as we expected. The reason is that it cannot be easily combined with
+\sec{no free winning set}. 
+
+To check if there are free $K_4$'s in a node $n$ is a slow operation. To make it faster we
+postpone it to the time when $n$ is developed. Then when we create a son by
+claiming an edge $e$ we check if there is a~free $K_4$ containing $e$ by the
+function described in Section \ref{freeK4}. When there is no free $K_4$ for any
+$e$, we assign the value \val{false} to $n$. When we use \sec{postpone testing}
+together with \sec{DF-PN-search} the algorithm continues searching the subtree
+of $n$ even if $n$ was solved.
+
+\sec{no free winning set} helps more then \sec{DF-PN-search}. For this reason
+\sec{DF-PN-search} is not included in the fastes variant. We show how it helps
+when we use it for $N=6$ without \sec{no free winning set} in Table
+\ref{statsDFPN}.
+
+\begin{table}
+\centering
+\begin{tabular}{c|l|c|c|c}
+$N$ & name & time & iterations & created nodes \\
+\hline
+6 & \com{weak} & 1.34s & 4 237 &  6 079 \\
+6 & \com{dfpn} & 0.96s & 1 018 & 2 228 \\
+\end{tabular}
+\caption{Comparing \sec{DF-PN-search} variants.}
+\label{statsDFPN}
+\end{table}
+
+%\subsection{Cache}
+%We use \ODO{nazev-prosim poradte.. srustajici retizky} cache. When we are adding new node to
+%cache we check in place with number equal to nodes hash. If this place is free
+%we insert the node here. If not we check if some of next $c$ places is free and
+%if so we insert the node on the first free place. If none of the places is free we
+%must delete some of this $c$ nodes. When we are searching for some node we
+%start checking on place with number equal to nodes hash and continue until we
+%found it or we found free place or we search $c$ places. In last two cases the
+%node is not in cache. 
+
+\section{More about our implementation}
+
+Our software was created in order to solve the clique game for $K=4$ and as high
+$N$ as possible. We knew that there is no chance to solve it for all $N$ up
+to 17 because just to check if a~strategy is winning needs checking so many
+states that it could not be done. 
  
-We chose language C. Our code is on github \TODO{jak se sazi adresa?} and
-it is under \TODO{licence - i udelat}.
+Our code is in C language and you can find it on
+github\footnote{https://github.com/jitka/rocnikac/tree/master/src}
+\TODO{licence - i udelat}.
 
-During crating this project we need to test if some heuristic helps or not.
-First we try to implemented something and after we decide if let it there or if
-deleted it. Later we decided to write enhancement into ifdefs. The result is
-that we can try combination of more enhancement and we can compare them.
-There are thousands of combination. Not all of them works perfectly. List
-of combination which was tested is in documentation of the project. 
+During the creation of this project we need to test if some heuristic helps or
+not.  First we tried to implement something and later we decided whether to
+keep it or delete it. Later we decided to enclose enhancement into ``ifdefs''.
+The result is that we can try combinations of more enhancements and we can
+compare them easily.  There are thousands of possible combinations, but not all
+of them works. List of combinations which were tested is in Makefile. 
 
-\subsection{ \TODO{nejrychlejsi verze} }
+\subsection{Implemented enhancements}
 
-\TODO{kde je pomala}
+We implemented almost all the enhancements which are mentioned in this thesis. 
+The enhancements which we do not compare helped in all the cases and currently it is
+not possible to switch them off in our code.
 
-\section{ Futher work }
+We implemented all the enhancements from the second chapter and the first four
+enhancements from the third chapter. We use the last described variant of
+\fce{updateAncestors()} and \fce{selectMostProving()}. We did not implemented
+enhancements \sec{Developing a~node without creating sons} from
+Section~\ref{lastenh}. For storing nodes we use \sec{adjacency matrix in line}.
+We implemented the first three normalise functions described in Section \ref{TODO} --
+the third normalize function \sec{Sorting by vertex and neighbours degrees} is the best
+in terms of efficiency and still fast enough.
 
-\TODO{ i na teorii 
-tabulky- zbytecne moc vytvorene
-}
+\subsection{The fastest variant}
+
+Our fastest variant is \sec{K4Weak}. This  variant is \sec{weak PN-search}
+with enhancements \sec{last changed nodes}, \sec{no free winning set} and normalise function
+\sec{sorting by vertex and neighbours degrees}.
+
+Most of the developed nodes are in levels in a middle of the complete game tree, see
+Tables~\ref{stats6} and~\ref{stats7}. 
+
+Solver spends most time by developing nodes. The program spends $21\%$ of
+execution time in \fce{cacheFind()} and at least another $23\%$ in
+\fce{normalise()} function which are both used in \fce{developNode()}.  Most of
+the rest time is consumed by different functions for working with game state
+which are mainly used also in \fce{developNode()}.
+
+Only $6\%$ is consumed by \fce{updateAncestor} and less then $1\%$ by
+\fce{selectMostProving()}. This is not surprise because in 13497 of 16489
+iterations the new most proving node is a son of the previous one.
+
+Time needed to solve the root depends on the size of the partial game tree.
+When we want to make the solver faster we should try to reduce the size of the
+partial game tree.
+

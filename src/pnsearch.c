@@ -181,7 +181,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		if (infinity) {
 			nodeSetDisproof( node, MAXPROOF);
 		} else if (sum >= MAXPROOF) {
-			printf("dosazeno nekonecna\n");
+			printf("dosazeno nekonecna or\n");
 		} else {
 			nodeSetDisproof( node, sum);
 		}
@@ -220,7 +220,7 @@ static inline void setProofAndDisproofNubers(node_t* node){
 			max = MAX(max,nodeProof(child));
 #else //WEAK
 			sum += nodeProof(child);
-			if (nodeDisproof(child) == MAXPROOF)
+			if (nodeProof(child) == MAXPROOF)
 				infinity = true;
 #endif //WEAK
 			min = MIN( min, nodeDisproof(child) );
@@ -238,7 +238,10 @@ static inline void setProofAndDisproofNubers(node_t* node){
 		if (infinity) {
 			nodeSetProof( node, MAXPROOF);
 		} else if (sum >= MAXPROOF) {
-			printf("dosazeno nekonecna\n");
+			printf("dosazeno nekonecna %d\n",MAXPROOF);
+			printNode(node);
+			printChildren(node);
+			scanf("%d",&infinity);
 		} else {
 			nodeSetProof( node, sum);
 		}

@@ -1,51 +1,169 @@
 \chapter{Games}
 
-\TODO{node, 
-game position
-game tree=DAG 
-free winning set,
-symmetric game 
-finite
-hrozba
-definice turn-to co bezne, to co ja,
-free edge/claim 
-grafem myslim dvoubarevny neorientovany
-ze druhy nema vyhravajici strategii
-definice strategie
-win,draw position
-free node
-} 
-\section{ Definition }
+In this chapter we introduce  combinatorial games and define several types of
+them. We will describe one such game in more details. 
 
-\subsection{ Two players sequential game}
+\section{Definitions}
 
-\subsection{ Positional game}
-\TODO{ala piskvorky}
+We explain the basic combinatorial game definition informally on the example of
+chess. There are two \emph{players} which alternate in their moves. There is
+a~board with 64 squares, some pieces placed on some squares and some player is
+on turn. We call this the \emph{game state}. The player \emph{turns} by moving
+some pieces to some other game state. 
+\TODO{pravopis}
+He decides how turn from a game state. All decision from each game state where
+is on turn is \emph{strategy}.
+When one of the players moves to a~\emph{winning
+state} called mate, he wins. Both players want to win. There are also \emph{draw
+states}, this is for example when there is no legal move. 
 
-\subsubsection{ Strong game }
+\subsection{Positional games}
 
-\subsubsection{ Maker-Breaker games }
+In \emph{positional games}, the game state is set of states of
+\emph{positions} which are either \emph{free} or \emph{claimed} by a~player.
+Tic-tac-toe is a~typical positional game. There are nine square positions. In
+each turn one of the two players claims one free position for example by drawing a
+cross. The rules of the game define a~set of positions called the \emph{winning
+set}. In tic-tac-toe, every straight line with three squares is a winning set.
+Winning set is \emph{claimed} by a~player when the player claimed all positions
+from the set. Winning set is \emph{free} for a player when no position in it is
+claimed by his opponent. The situation when all except one position of
+a~winning set is claimed by a~player and the last position is free is
+a~\emph{threat}.
 
-\subsection{ Other property }
-\TODO{ Hight symmetry, strong branching factor}
+There are two types of positional games. In the last paragraph we described a
+\emph{strong game}. In a~strong game, both players want to claim a~winning set
+and who claims first wins. In the other variant, called \emph{maker-breaker
+game} only the first player wants to claim a~winning set. The second player wins in the
+case that every position is claimed and the first player has not claimed a~winning
+set. There is no draw in the maker-breaker variant.
 
-\section{ Clique game }
+There are three possible endings of a~strong positional game: the first player
+wins, the second player wins, there is a~draw. As we will show in Theorem
+\ref{stealingStrategy}, if both players play their best possible strategies,
+the second player cannot win. The main question of this thesis is to find
+algorithm which \emph{solves} the game, i.e., determine if there is a~winning
+strategy for first player or a~draw strategy for the second player in the
+finite strong positional game.
 
-\subsection{ Rules }
+\newtheorem{stealingStrategy}{Theorem} 
+\begin{stealingStrategy} \label{stealingStrategy} 
 
-\subsection{ Ramsey theorem }
+In a strong positional game the second player cannot has a winning strategy.
+\TODO{brum: je z kontextu jasne co je strategie?}
 
-\subsection{ Solution for some N, K }
+\end{stealingStrategy}
 
-\subsection{ Space and time complexity }
-\TODO{
-neresim slozitost ale velikost stromu 
-udelat bubu jak je ten problem tezky
-rict ze nema smysl resit asimptotickou slozitost fci v N ze na konstantach a heuristikach zalezi vic
-}
+\begin{proof}
 
- 
+We prove it by contradiction. Suppose that the second player has a winning strategy
+$s$. We show a winning strategy $s'$ for the first player. 
 
-\section{ Other games }
-\TODO{treba ty ctverecky, mb varianta klikvo hry vysledky, citace, reversni varianta}
+The first player claims a random position $p$ in his first turn. In later
+turns, the first player imagines that the position $p$ is free and he plays
+according to the strategy $s$. When the strategy $s$ says to claim $p$, he claims
+another random free position $p'$ and from this moment, he will use $p'$ instead
+of $p$.
+
+The first player also has a~winning strategy, but both players cannot win.
+Contradiction. 
+
+\end{proof}
+
+There are several algorithms for solving general combinatorial games. We apply
+them to a~strong positional game. Description of these algorithms is simpler.
+The algorithms are usually designed for games with \emph{high branching factor}
+(that is the average number of possible moves in each game state is high --
+a typical example of such a game is Go) and \emph{low
+symmetry} (that is only few or no distinct game states are symmetrical). 
+
+
+\section{Clique game}
+
+In this section we define the clique game which we are going to use as the
+main example in this thesis.
+
+\subsection{Rules}
+
+The clique game is a strong positional game. 
+
+Two players play on a clique graph with
+$N$ vertices. In each turn, one player colors one edge by his color. The first
+player has red color and the second player blue color. The player who colored
+a~clique subgraph on $K$ vertices wins. 
+
+We call it ($N$,$K$)-clique game.
+See example of (5,3)-clique game game for in Figure \obr{-1)}.
+
+Solution of ($N$,4)-clique game for $N < 18$ are open problem mentioned
+by Beck~\cite{beck}.
+
+\subsection{Solution for some N, K}
+
+For some $N$ and $K$, the game can be solved by purely theoretical argument
+without computer backtracking.
+
+We will use Ramsey's theorem. There are many variants of Ramsey theorem, the weakest
+one is enough for us. For proof see, e.g. TODO jmenoautora~\cite{ramsey}. 
+
+\newtheorem{ramsey}{Theorem} 
+\begin{ramsey} 
+	
+For any positive integer $k$, there exists a~positive integer $n$ such that for
+any clique on at least $n$ vertices whose edges are colored red or blue, there
+exists either a~clique on $k$ vertices with has all edges red or has all edges
+blue.
+
+\end{ramsey}
+
+\newtheorem{solution}{Theorem} 
+\begin{solution} \label{solution} 
+	
+For fixed $K$, there exists $N_0$ such that in each ($N$,$K$)-clique game where
+$N > N_0$ is a winning strategy for the first player.  
+
+\end{solution}
+\begin{proof} 
+	
+We chose $N_0$ as a~$n$ in Ramsey theorem. We already proved that either the
+first player has a winning strategy or the second player has draw strategy. It
+suffices to prove that there is no draw in ($N$,$K$)-clique game. Draw game
+state is a game state where every edge is claimed -- it has a~red or blue color
+and there is no clique on $K$ vertices with all edges of the same color.
+However, this is not possible since according to the Ramsey's theorem, there is
+always such a clique. So there is no draw in ($N$,$K$)-clique game.
+
+\end{proof}
+
+\subsubsection{The case $K=2$}
+
+For every $N \ge 2$, the first player has a winning strategy. He just claims one edge
+and wins.
+
+\subsubsection{The case $K=3$}
+
+The number $n$ from Ramsey's theorem 6 for $k=3$. So for $N \ge
+6$ the first player has a winning strategy, as we proved in
+Theorem~\ref{solution}. 
+
+When $N=5$, the first player also has a~winning strategy. He plays similarly as in
+Figure \obr{-1}. First he marks edge $(u,v)$. When we count symmetry the second player has
+two possible moves to $(v,w)$ and to $(w,x)$. The first player turns to $(u,y)$ and
+creates a~threat. The second player must play $(y,v)$. The first player turns to
+$(u,x)$ which creates two threats $(x,v)$ and $(x,y)$ and he is going to win. 
+
+When $N \le 4$ the second player has a~draw strategy which can be found by simple
+backtracking over all position manually. 
+
+\subsubsection{The case $K=4$}
+
+When $N \le 5$ the second player has a~draw strategy. There are not enough edges to
+claim the whole $K_4$.
+
+When $N \ge 18$, the first player has a~winning strategy as we proved in Theorem
+\ref{solution}.
+
+An interesting question is what is the lowest $N$ for which the first player has
+a~winning strategy. Our solver proved that for $N=6$ and $N=7$ the second
+player has a~draw strategy.
 

@@ -1,47 +1,66 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-\TODO{
-% \%s/ a / a\\~/gc A
-% pn jen velkymy
-% mezery na kraich nazvu kapitol
-% 
-% complete/partial game tree
-% pocet synu se znaci k ne n; node n
-% 
-% \fce zacina malim na konci () velke pismena misto _  sedi se zdrojakem?
-% THE first, in THE first case
-% \sec pred \ref
-% 
-% zkontrolovat citace 2.kapitola
-% \openright a dalsi zakomentovane veci v thesis.tex 
-% casteji pojmenovavat nody 
-% vic podkapitol nazvy tabulek
-% v 2,3 kapitole nezminovat programovani!
-% norm ---> canonical
-% 
-% 
-% veta o df
-% 
-% Dotazy:
-% game position -> game state (i pri pouziti bez game) ??
-% isn't hasn`t
-% makro neorientovane hrany {}
-% kolem---nejsou mezery nebo -- s mezery
-} 
+This thesis introduces an algorithm for solving strong positional games
+with high symmetry. We describe the most important algorithm for solving 
+combinatorial games -- PN-search and its various enhancements which change
+it so much that they can be considered new algorithms. 
 
+%First, we present several known enhancements. Second, some enhancements
+%which we designed. Then we test them on the example of the clique game.
+%
+%Our solver proved that in (6,4) and (7,4)-clique game the second player has a draw
+%strategy. This was expected but not proved yet.
 
-\TODO{ 
-uvod + zaver
--
-ze predpokladam znalost grafu, 
-obsah kapitol 1,2 prevazne cizi 3,4 moje
-2,3 kdyz hra tak positional.
-2,3 popisiuji enhancements a 4 rika kombinace a rychlosti 
--
-ze je software
-jak se lysi hight brangching factor - dlouhe hledani a hight symetry - pomaly norm
-co jeste za zlepsovaky existuje a ze by toho slo jeste spoustu vymyslet
-} 
+\medskip
 
+PN-search was introduced by Allis~\cite{Allis} in 1994. It has become well know algorithm
+and basis for a lot of further work. It was successfully applied for a wide class
+of games and many enhancements was invited. We introduce some of them and how they can be useful
+in case of a game with high symmetry. We consider which  enhancements
+can be used together and what problems can arise in combinations.
+We also introduce some enhancements which we discovered independently.
 
+\medskip
+
+We do not determine neither asymptotic time complexity nor asymptotic space complexity of the algorithms in this thesis.
+It is not clear what time/space complexity means in games solving -- 
+if the input of the  algorithm are rules of the game most of games can be solved in constant time.
+
+On the other hand when the input of the algorithm is a game state
+of a positional game with $n$ positions solving the game is at least hard problem.
+($n = {N \choose 2}$ in ($N$,$K$)-clique game). The number of game states in
+such a game is \TODO{bigO} $O(2^{N \choose 2})$. It is not necessary to visit them all,
+however, the number of the game states we must visit even for proving that a strategy
+is winning is also $O(2^{N \choose 2})$. From this view all improvements in this
+thesis are just heuristic.
+
+The size of the partial game tree which we must create for solving the game is 
+much more important then asymptotic complexity.
+
+\subsubsection{Outline}
+
+In the first chapter we informally introduce some combinatorial
+games terminology. We suppose the reader has general knowledge about graph theory, 
+generally see Deisel \ref{TODO}. In the first chapter we also define clique game and give
+solutions of some cases of a clique game.
+
+Known algorithms and their enhancements are introduced in the second chapter. Usually
+algorithms are designed for general combinatorial game. We apply them to
+strong positional games, which simplifies the descriptions. We start with a meta
+algorithm of game solving. Some specific algorithms are described after. We choose PN-search to
+implement and to be described in detail.
+
+Theoretical results which we found independently are described in the third chapter.
+In subsections \ref{} to \ref{} TODO are enhancements of PN-search. Then we introduce some rules for
+deleting from cache which are designed for strong positional games. We consider
+a problem which can occur when we combine some enhancement and we
+propose solution for the problem. In the end of the chapter we focus on
+a graph of a clique game \TODO{toto do dreti kap}. We describe several ways of storing
+the game state and also how to normalize them.
+
+The last chapter introduces our software and presents experimental results.
+First, we describe the partial game tree created by our solver during solving
+(6,4) and (7,4)-clique games. Then we compare some mentioned enhancements. We
+study if they help to solve clique game. In the end of the chapter we describe in
+more detail the software implementation.
