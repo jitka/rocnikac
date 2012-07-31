@@ -1,0 +1,46 @@
+Tento projekt vznikl jako program na řešení klikové hry. Nyní
+umí řešit pozice v této hře a srovnávat vylepšení algoritmu
+pn-search.
+
+Popis klikové hry, pn-searche a i všech použitých vylepšení
+najdete v mé bakalářské práci.
+
+Program je napsán pro Linux a je potřeba jej nejprve přeložit a to příkazem:
+N=i make variantaj
+kde i je 6 nebo 7 (případně i 8 ale to nejspíš nedoběhne)
+a j je číslo varianty
+
+Po té už lze spustit a buď  ./program-opt nebo ./program-dbg.
+
+V main.c je samontá fce main() v ní lze komentování zvolit jinou variantu fungování
+programu.
+1.varianta: program řeší od kořene danou hru
+2.varianta: program načte seznam pozic a po té každou nejdřív vypíše a po té řeší a vypíše výsledek.
+
+Formát vstupu pro 2.variantu:
+Protože 2.varianta je napsána jen pro interní použití musí být vstup korektní.
+Vstupem nemůže být počáteční pozice.
+Celý vstup je v hranatých závorkách v niž jsou čárkami oddělené jednotlivé
+herní pozice.
+Herní pozice je dvojice seznamů hran v kulatých závorkách.
+Seznam hran je v hranatých závorkách a jednotlivé hrany zapsané
+ klasicky (i,j) jsou odděleny opět čárkami.
+Příklad:
+[([(3,5),(4,5)],[(2,4),(3,4)]),([(1,2)],[])]
+
+V setting.h je jsou základní makra používaná v celém projektu.
+
+V pnsearch.c nalezneme samotný prohledávací algoritmus.
+
+V struct.h je definovaná struktura nodu a spojáku na nody.
+
+V nodefce.h jsou funkce pracující se strukturou nodu. Ten má být malý
+a má s ním jít pracovat rychle. Proto jsou všechny fce na práci s
+ním static inline.
+
+V norm.c jsou nurmujici fce.
+
+V stats.c jsou funcke na přidávání událostí do statistiky a jejich výpis.
+
+V cache.c jsou překvapivě fce starající se o cache.
+
