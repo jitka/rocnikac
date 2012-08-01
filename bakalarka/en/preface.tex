@@ -14,7 +14,7 @@ it so much that they can be considered new algorithms.
 
 \medskip
 
-PN-search was introduced by Allis~\cite{Allis} in 1994. It has become well know algorithm
+PN-search was introduced by Allis~\cite{allis} in 1994. It has become well know algorithm
 and basis for a lot of further work. It was successfully applied for a wide class
 of games and many enhancements was invited. We introduce some of them and how they can be useful
 in case of a game with high symmetry. We consider which  enhancements
@@ -30,9 +30,9 @@ if the input of the  algorithm are rules of the game most of games can be solved
 On the other hand when the input of the algorithm is a game state
 of a positional game with $n$ positions solving the game is at least hard problem.
 ($n = {N \choose 2}$ in ($N$,$K$)-clique game). The number of game states in
-such a game is \TODO{bigO} $O(2^{N \choose 2})$. It is not necessary to visit them all,
+such a game is $\mathcal{O}(2^{N \choose 2})$. It is not necessary to visit them all,
 however, the number of the game states we must visit even for proving that a strategy
-is winning is also $O(2^{N \choose 2})$. From this view all improvements in this
+is winning is also $\mathcal{O}(2^{N \choose 2})$. From this view all improvements in this
 thesis are just heuristic.
 
 The size of the partial game tree which we must create for solving the game is 
@@ -42,7 +42,7 @@ much more important then asymptotic complexity.
 
 In the first chapter we informally introduce some combinatorial
 games terminology. We suppose the reader has general knowledge about graph theory, 
-generally see Deisel \ref{TODO}. In the first chapter we also define clique game and give
+generally see Diestel \cite{ramsey}. In the first chapter we also define clique game and give
 solutions of some cases of a clique game.
 
 Known algorithms and their enhancements are introduced in the second chapter. Usually
@@ -52,11 +52,11 @@ algorithm of game solving. Some specific algorithms are described after. We choo
 implement and to be described in detail.
 
 Theoretical results which we found independently are described in the third chapter.
-In subsections \ref{} to \ref{} TODO are enhancements of PN-search. Then we introduce some rules for
+In subsections \ref{ord} to \ref{lastenh} are enhancements of PN-search. Then we introduce some rules for
 deleting from cache which are designed for strong positional games. We consider
 a problem which can occur when we combine some enhancement and we
 propose solution for the problem. In the end of the chapter we focus on
-a graph of a clique game \TODO{toto do dreti kap}. We describe several ways of storing
+a graph of a clique game. We describe several ways of storing
 the game state and also how to normalize them.
 
 The last chapter introduces our software and presents experimental results.

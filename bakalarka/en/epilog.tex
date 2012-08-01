@@ -3,16 +3,15 @@
 In this thesis we introduced algorithms for solving strong positional games,
 mainly PN-search and its enhancements.
 
-We focused on games with high symmetry. The high symmetry allows,
-by joining several isomorph game state into one, to narrow the
-partial game tree. When partial game tree is narrow we can
-search in it deeper. The other feature which keeps the tree narrow is that we do
-not deal with high branching factor. For example we can compare
-our game with the game TODO{Tzarr},
-which has high branching factor and low symmetry. Despite of
-clever heuristics and optimizations the best bot playing the game searches the game tree
-only into depth 4 \TODO{\cite{Paulie}}. For comparison, one variant of our solver 
-for (7,4)-clique game solved the game tree to depth 16.
+We focused on games with high symmetry. The high symmetry allows, by joining
+several isomorph game state into one, to narrow the partial game tree. When
+partial game tree is narrow we can search in it deeper. The other feature which
+keeps the tree narrow is that we do not deal with high branching factor. For
+example we can compare our game with the game Tzaar, which has high branching
+factor and low symmetry. Despite of clever heuristics and optimizations the
+best bot playing the game searches the game tree only into depth
+4~\cite{paulie}. For comparison, one variant of our solver for (7,4)-clique
+game solved the game tree to depth 16.
 
 There are other features distinguishing games with high symmetry. It is much
 more important to join the nodes. We must treat carefully the lifetime of
@@ -24,10 +23,10 @@ in Figure \obr{10)}.
 \subsubsection{Further work}
 
 There are many enhancements which we did not implemented and even do
-not mention. For example 1+$\epsilon$ trick \cite{TODO} and PN-set.
+not mention. For example 1+$\epsilon$ trick..
 
-It could also be useful to implement enhancement \TODO{ref posledni} described
-in Section~\ref{TODO} and study if it can significantly reduce the partial game
+It could also be useful to implement enhancement ``dveloping a~node without creating sons''
+in Section~\ref{lastenh} and study if it can significantly reduce the partial game
 tree. Also to might it may be interesting to try it on other games.
 
 Of course, there is space for more new enhancements and heuristics. 

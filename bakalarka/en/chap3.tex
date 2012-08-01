@@ -1,7 +1,7 @@
 \chapter{Further theoretical improvements}
 
-In this chapter we examine various improvements to pn-search, clique
-game and general positional games on complete graph. All results
+In this chapter we examine various improvements to pn-search and clique
+game. All results
 were independently discovered by the author of this thesis.
 
 \section{Other enhancements of PN-search} 
@@ -176,7 +176,7 @@ claimed by all players or we can save this information in the node.
 
 %\section{\TODO{veta o df}}
 
-\section{Graph representation for games on complete graph} 
+\section{Graph representation for the clique game} 
 
 We need to store a game state during searching the partial game tree. In other words we
 need to save which edges are claimed and which color they have. In
@@ -297,7 +297,7 @@ We can compute the color degree of any vertex $v$ very quickly. We precompute ta
 $2^N$ containing all the answers for degree queries. Then we just index this table by
 the $v$-th row of the adjacency matrix. 
 
-\section{Normalizing function for games on a complete graph} \label{norm} 
+\section{Normalizing function for the clique game} \label{norm} 
 
 Many nodes with isomorphic graphs and their subtrees are traversed during an ordinary
 \sec{PN-search}. If we want to use the advantage of a high symmetry of the

@@ -46,13 +46,12 @@ algorithm which \emph{solves} the game, i.e., determine if there is a~winning
 strategy for first player or a~draw strategy for the second player in the
 finite strong positional game.
 
-\newtheorem{stealingStrategy}{Theorem} 
-\begin{stealingStrategy} \label{stealingStrategy} 
+\newtheorem{theorem}{Theorem} 
+\begin{theorem} \label{stealingStrategy} 
 
 In a strong positional game the second player cannot has a winning strategy.
-\TODO{brum: je z kontextu jasne co je strategie?}
 
-\end{stealingStrategy}
+\end{theorem}
 
 \begin{proof}
 
@@ -104,25 +103,24 @@ For some $N$ and $K$, the game can be solved by purely theoretical argument
 without computer backtracking.
 
 We will use Ramsey's theorem. There are many variants of Ramsey theorem, the weakest
-one is enough for us. For proof see, e.g. TODO jmenoautora~\cite{ramsey}. 
+one is enough for us. For proof see, e.g. Diestel~\cite{ramsey}. 
 
-\newtheorem{ramsey}{Theorem} 
-\begin{ramsey} 
+\begin{theorem} 
 	
 For any positive integer $k$, there exists a~positive integer $n$ such that for
 any clique on at least $n$ vertices whose edges are colored red or blue, there
 exists either a~clique on $k$ vertices with has all edges red or has all edges
 blue.
 
-\end{ramsey}
+\end{theorem}
 
-\newtheorem{solution}{Theorem} 
-\begin{solution} \label{solution} 
+\begin{theorem} \label{solution} 
 	
 For fixed $K$, there exists $N_0$ such that in each ($N$,$K$)-clique game where
 $N > N_0$ is a winning strategy for the first player.  
 
-\end{solution}
+\end{theorem}
+
 \begin{proof} 
 	
 We chose $N_0$ as a~$n$ in Ramsey theorem. We already proved that either the

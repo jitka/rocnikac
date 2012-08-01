@@ -206,98 +206,123 @@ three steps the (dis)proof numbers are again correct, because only numbers
 above most proving node could have changed.
 
 \begin{table}
-\begin{verbatim}
-$procedure proofNumberSearch(root);
-evaluate(root);
-setProofAndDisproofNumbers(root);
-while root.proof \ne 0 and root.disproof \ne 0 and resourcesAviable() do
-mostProvingNode := selectMostProving(root);
-devolopNode(mostProvingNode);
-updateAncestors(mostProvingNode);
-od;
-if root.proof = 0 then root.value := true
-elseif root.disproof = 0 then root.value := false
-else root.value := unknown
-end$
-\end{verbatim}
+  \fce{procedure proofNumberSearch(root)}
+  \begin{itemize*}
+    \item [] \fce{evaluate(root)}
+    \item [] \fce{setProofAndDisproofNumbers(root)}
+    \item [] \fce{while root.proof $\ne$ 0 and root.disproof $\ne$ 0 and resourcesAviable() do}
+      \begin{itemize*}
+      \item [] \fce{mostProvingNode := selectMostProving(root)}
+      \item [] \fce{devolopNode(mostProvingNode)}
+      \item [] \fce{updateAncestors(mostProvingNode)}
+      \end{itemize*}
+    \item [] \fce{od}
+    \item [] \fce{if root.proof = 0 then root.value := true}
+    \item [] \fce{elseif root.disproof = 0 then root.value := false}
+    \item [] \fce{else root.value := unknown}
+  \end{itemize*}
+  \fce{end}
 \caption{PN-search algorithm.}
 \label{pn-searchcode}
 \end{table}
 
 \begin{table}
-\begin{verbatim}
-$function selectMostProving(node);
-while node.expanded do
-case node.type of
-or:
-i:=1;
-while node.children[i].proof \ne node.proof do
-i := i+1;
-od
-and:
-i:=1;
-while node.children[i].disproof \ne node.disproof do
-i:= i+1;
-od;
-esac;
-node := node.children[i]
-od;
-return node
-end$
-\end{verbatim}
+  \fce{function selectMostProving(node)}
+  \begin{itemize*}
+    \item [] \fce{while node.expanded do}
+    \begin{itemize*}
+      \item [] \fce{case node.type of}
+      \item [] \fce{or:}
+      \begin{itemize*}
+        \item [] \fce{i:=1}
+        \item [] \fce{while node.children[i].proof $\ne$ node.proof do}
+        \begin{itemize*}
+           \item [] \fce{i := i+1}
+        \end{itemize*}
+        \item [] \fce{od}
+      \end{itemize*}
+      \item [] \fce{and:}
+      \begin{itemize*}
+        \item [] \fce{i:=1}
+        \item [] \fce{while node.children[i].disproof $\ne$ node.disproof do}
+        \begin{itemize*}
+          \item [] \fce{i:= i+1}
+        \end{itemize*}
+        \item [] \fce{od}
+      \end{itemize*}
+      \item [] \fce{esac}
+      \item [] \fce{node := node.children[i]}
+    \end{itemize*}
+    \item [] \fce{od}
+    \item [] \fce{return node}
+  \end{itemize*}
 \caption{Most-proving node selection algorithm.}
 \label{selectMostProving}
 \end{table}
 
 \begin{table}
-\begin{verbatim}
-$procedure setProofAndDisproofNumbers(node);
-if node.expanded then
-case node.type of
-and:
-node.proof := \sum_{N\in children(node)}N.proof;
-node.disproof := \min_{N\in children(node)}N.disproof;
-or:
-node.proof := \min_{N\in children(node)}N.proof;
-node.disproof := \sum_{N\in children(node)}N.disproof;
-esac
-elseif node.evaluated then
-case node.value of
-false: node.proof := \infty; node.disproof := 0
-true: node.proof := 0; node.disproof := \infty
-unknown: node.proof := 1; node.disproof := 1
-esac
-else node.proof := 1; node.disproof:=1
-fi
-end$
-\end{verbatim}
+  \fce{procedure setProofAndDisproofNumbers(node)}
+    \begin{itemize*}
+    \item [] \fce{if node.expanded then}
+      \begin{itemize*}
+      \item [] \fce{case node.type of}
+      \item [] \fce{and:}
+        \begin{itemize*}
+        \item [] \fce{node.proof := $\sum_{N\in children(node)}$N.proof}
+        \item [] \fce{node.disproof := $\min_{N\in children(node)}$N.disproof}
+        \end{itemize*}
+      \item [] \fce{or:}
+        \begin{itemize*}
+        \item [] \fce{node.proof := $\min_{N\in children(node)}$N.proof}
+        \item [] \fce{node.disproof := $\sum_{N\in children(node)}$N.disproof}
+        \end{itemize*}
+      \item [] \fce{esac}
+      \end{itemize*}
+    \item [] \fce{elseif node.evaluated then}
+      \begin{itemize*}
+      \item [] \fce{case node.value of}
+        \begin{itemize*}
+        \item [] \fce{false: node.proof := $\infty$; node.disproof := 0}
+        \item [] \fce{true: node.proof := 0; node.disproof := $\infty$}
+        \item [] \fce{unknown: node.proof := 1; node.disproof := 1}
+        \end{itemize*}
+      \item [] \fce{esac}
+      \end{itemize*}
+    \item [] \fce{else node.proof := 1; node.disproof:=1}
+    \item [] \fce{fi}
+    \end{itemize*}
+  \fce{end}
 \caption{Proof and disproof numbers calculation algorithm.}
 \label{setProofAndDisproofNumbers}
 \end{table}
 
 \begin{table}
-\begin{verbatim}
-$procedure develop(node);
-generateAllChildren(node);
-for i:=1 to node.numberOfChildren do
-evaluate(node.children[i]);
-setProofAndDisproofNumbers(node.children[i])
-od
-end$
-\end{verbatim}
+  \fce{procedure develop(node)}
+    \begin{itemize*}
+    \item [] \fce{generateAllChildren(node)}
+    \item [] \fce{for i:=1 to node.numberOfChildren do}
+      \begin{itemize*}
+      \item [] \fce{evaluate(node.children[i])}
+      \item [] \fce{setProofAndDisproofNumbers(node.children[i])}
+      \end{itemize*}
+    \item [] \fce{od}
+    \end{itemize*}
+  \fce{end}
 \caption{Node-development algorithm.}
 \label{devolopNode}
 \end{table}
 
 \begin{table}
-\begin{verbatim}
-$procedure updateAncestors(node);
-while node \ne nil do
-setProofAndDisproofNumbers(node);
-node := node.parent
-od
-end $
-\end{verbatim}
+  \fce{procedure updateAncestors(node)}
+    \begin{itemize*}
+    \item [] \fce{while node $\ne$ nil do}
+      \begin{itemize*}
+      \item [] \fce{setProofAndDisproofNumbers(node)}
+      \item [] \fce{node := node.parent}
+      \end{itemize*}
+    \item [] \fce{od}
+    \end{itemize*}
+  \fce{end }
 \caption{Ancestor-updating algorithm.}
 \label{updateAncestors}
 \end{table}
@@ -330,11 +355,10 @@ in a~slightly different sense and treat them more like variables.
 Proof number search is best-first search. Its major disadvantage is that
 searching for a~most proving node takes a~lot of time. 
 
-\newtheorem*{currentPath}{Definition}	
-\begin{currentPath}
+\begin{theorem}
 	A~{\sl current path} is the path from the root to the most proving node.
 	This path was traversed in the last search for the most proving node.
-\end{currentPath}
+\end{theorem}
 
 In \sec{PN-search}, each iteration starts at the root and descends down. After developing
 the most proving node we update the proof and disproof numbers starting in the most proving node and 
