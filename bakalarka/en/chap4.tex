@@ -1,12 +1,12 @@
 \chapter{Experimental results}
 
-In this chapter we describe directly our solver and results
+In this chapter, we describe directly our solver and results
 illustrating which enhancements help with solving the clique
 game. 
 
 \section{Clique game} 
 
-We solved the clique game for $K=4, N=6$ and $ N=7$. In this section we
+We solved the clique game for $K=4, N=6$ and $ N=7$. In this section, we
 describe the partial game trees which were created during solving that games. We
 use \sec{weak PN-search} and \sec{transposition to DAG} with normalising function
 \sec{sorting by vertex and neighbours degrees} and \sec{no free winning set}.
@@ -77,8 +77,8 @@ level & \sec{all} & \sec{created} & \sec{solved} \\
 \label{stats7}
 \end{table}
 
-In the first case ($N=6$) the algorithm needs 337 iterations to solve the game. In the second
-case the algorithm needs 16489 iterations and solves the game in three seconds on a desktop PC
+In the first case ($N=6$), the algorithm needs 337 iterations to solve the game. In the second
+case, the algorithm needs 16489 iterations and solves the game in three seconds on a~desktop PC
 (AMD Athlon 3GHz).
 
 Tables~\ref{stats6} and~\ref{stats7} show the properties of the game tree for each level.
@@ -87,8 +87,8 @@ The column \sec{all} illustrates how many game states could exist on some level
 $L$. This number was computed as the number of edge-colored complete graphs
 with $N$ nodes with $\lfloor L / 2 \rfloor$ red edges and $\lfloor (L-1) / 2
 \rfloor$ blue edges. Numbers from the first column are not exact because they
-count also game states which have for example two $K_4$ with the same color
-which cannot happen in a real game.
+count also game states which cannot happen in a~real game, for example two
+$K_4$ with the same color.
 
 In the column \sec{created} we indicate the number of nodes which were actually created on each level. 
 In the parentheses we indicate how many of the nodes were first evaluated as \val{false} respectively
@@ -101,13 +101,13 @@ All of them were solved as an~\val{false}.
 
 \section{Comparing enhancements}
 
-In this section we compare the changes caused by various enhancements, as measured
+In this section, we compare the changes caused by various enhancements, as measured
 by several tests. We prepare some combination of enhancement and describe each
 whole combination by one name.
 
 \medskip
 
-The criteria we use for comparison: 
+The criteria~we use for comparison: 
 \begin{itemize*}
 \item time needed to solve the game (in seconds)
 \item space which the program uses (number of created nodes)
@@ -115,7 +115,7 @@ The criteria we use for comparison:
 \item level of the deepest developed node 
 \end{itemize*}
 
-The number of created nodes is a representative value for space requirements when
+The number of created nodes is a~representative value for space requirements when
 we do not use any enhancement which deletes nodes.
 In the time test we set the time limit for solving the game to 60 seconds.
 
@@ -197,26 +197,26 @@ $N$ & name & time & iterations & created nodes & max. level \\
 \subsection{Ordering of sons} 
 
 This enhancement is used in each variant of our solver. If we want not to use
-it we must randomly reorder sons. That is happening
+it, we must randomly reorder sons. That is happening
 when we sort sons by their hash in Section~\ref{delpar}.
 
 A~first heuristic is when we use the ordinary \sec{PN-search}
-and $developNode()$ creates sons this way that it try adding the new edge in
+and $developNode()$ creates sons this way that it tries adding the new edge in
 alphabetical order.
 
 A~second heuristic is when we use \sec{PN-search} with \sec{transposition to DAG}
 with normalising function \sec{sorting by vertex degree} or \sec{sorting by
 vertex and neighbours degrees}. We first try colored the new
-edge to area with low degree. It is good for the second player when all
-vertices have similar degree. When the second player has draw strategy most node
-are solved as \val{false} so the ordering of sons of \node{or} is not important 
-node because we must solve them all.  Ordering of \node{and} node is good so
+edge to area with a~low degree. It is good for the second player when all
+vertices have similar degree. When the second player has draw strategy, most nodes
+are solved as \val{false}. The ordering of sons of an \node{or} node is not important 
+because we must solve them all. Ordering of an \node{and} node is good so
 this heuristic works.
 
 We try one other heuristic. When we are creating sons by adding the edge $e$ we
 count the free winning sets including $e$ by function in Section~\ref{freeK4}.
 Then we sort the sons so that the leftmost one has the largest number. This heuristic was
-worse then second so currently it is not implemented.
+worse than the second, so currently it is not implemented.
 
 
 \subsection{Deleting parallel edges} \label{delpar}
@@ -227,28 +227,27 @@ first create all the sons then normalise then, second we sort them by their hash
 with the same hash are actually same, then delete duplicities. 
 
 However, after this the ordering of sons is different and it causes the partial
-game tree to be different. This could be a disadvantage and could overweight
+game tree to be different. This could be a~disadvantage and could overweight
 described advantages. The differences of the partial game trees are the reason
 why we do not measure this enhancement.
 
 \subsection{DF-PN-search}
 
-\sec{DF-PN-search} was described in Section~\ref{dfpn}. In our case it does not help as
+\sec{DF-PN-search} was described in Section~\ref{dfpn}. In our case, it does not help as
 much as we expected. The reason is that it cannot be easily combined with
 \sec{no free winning set}. 
 
-To check if there are free $K_4$'s in a node $n$ is a slow operation. To make it faster we
-postpone it to the time when $n$ is developed. Then when we create a son by
+To check if there are free $K_4$'s in a~node $n$ is a~slow operation. To make it faster, we
+postpone it to the time when $n$ is developed. Then when we create a~son by
 claiming an edge $e$ we check if there is a~free $K_4$ containing $e$ by the
-function described in Section \ref{freeK4}. When there is no free $K_4$ for any
+function described in Section~\ref{freeK4}. When there is no free $K_4$ for any
 $e$, we assign the value \val{false} to $n$. When we use \sec{postpone testing}
-together with \sec{DF-PN-search} the algorithm continues searching the subtree
-of $n$ even if $n$ was solved.
+together with \sec{DF-PN-search}, the algorithm continues searching the subtree
+of $n$ even if $n$ is solved.
 
 \sec{no free winning set} helps more then \sec{DF-PN-search}. For this reason
 \sec{DF-PN-search} is not included in the fastes variant. We show how it helps
-when we use it for $N=6$ without \sec{no free winning set} in Table
-\ref{statsDFPN}.
+when we use it for $N=6$ without \sec{no free winning set} in Table~\ref{statsDFPN}.
 
 \begin{table}
 \centering
@@ -279,29 +278,29 @@ $N$ as possible. We knew that there is no chance to solve it for all $N$ up
 to 17 because just to check if a~strategy is winning needs checking so many
 states that it could not be done. 
  
-Our code is in C language and you can find it on
+Our code is in C language and it is on
 github\footnote{https://github.com/jitka/rocnikac/tree/master/src}
 \TODO{licence - i udelat}.
 
-During the creation of this project we need to test if some heuristic helps or
-not.  First we tried to implement something and later we decided whether to
+During the creation of this project, we need to test if some heuristic helps or
+not. First we tried to implement something and later we decided whether to
 keep it or delete it. Later we decided to enclose enhancement into ``ifdefs''.
 The result is that we can try combinations of more enhancements and we can
-compare them easily.  There are thousands of possible combinations, but not all
+compare them easily. There are thousands of possible combinations, but not all
 of them works. List of combinations which were tested is in Makefile. 
 
 \subsection{Implemented enhancements}
 
 We implemented almost all the enhancements which are mentioned in this thesis. 
-The enhancements which we do not compare helped in all the cases and currently it is
+The enhancements which we do not compare helped in all cases and currently it is
 not possible to switch them off in our code.
 
 We implemented all the enhancements from the second chapter and the first four
 enhancements from the third chapter. We use the last described variant of
-\fce{updateAncestors()} and \fce{selectMostProving()}. We did not implemented
+\fce{updateAncestors()} and \fce{selectMostProving()}. We did not implement
 enhancements \sec{Developing a~node without creating sons} from
 Section~\ref{lastenh}. For storing nodes we use \sec{adjacency matrix in line}.
-We implemented the first three normalise functions described in Section \ref{norm} --
+We implemented the first three normalise functions described in Section~\ref{norm} --
 the third normalize function \sec{Sorting by vertex and neighbours degrees} is the best
 in terms of efficiency and still fast enough.
 
@@ -311,20 +310,20 @@ Our fastest variant is \sec{K4Weak}. This  variant is \sec{weak PN-search}
 with enhancements \sec{last changed nodes}, \sec{no free winning set} and normalise function
 \sec{sorting by vertex and neighbours degrees}.
 
-Most of the developed nodes are in levels in a middle of the complete game tree, see
+Most of the developed nodes are in levels in a~middle of the complete game tree, see
 Tables~\ref{stats6} and~\ref{stats7}. 
 
-Solver spends most time by developing nodes. The program spends $21\%$ of
+Solver spends most of the time by developing nodes. The program spends $21\%$ of
 execution time in \fce{cacheFind()} and at least another $23\%$ in
-\fce{normalise()} function which are both used in \fce{developNode()}.  Most of
-the rest time is consumed by different functions for working with game state
+\fce{normalise()} function, which are both used in \fce{developNode()}.  Most of
+the rest time is consumed by different functions for working with game state,
 which are mainly used also in \fce{developNode()}.
 
-Only $6\%$ is consumed by \fce{updateAncestor} and less then $1\%$ by
-\fce{selectMostProving()}. This is not surprise because in 13497 of 16489
-iterations the new most proving node is a son of the previous one.
+Only $6\%$ is consumed by \fce{updateAncestor} and less than $1\%$ by
+\fce{selectMostProving()}. This is not surprising, because in 13497 of 16489
+iterations the new most proving node is a~son of the previous one.
 
 Time needed to solve the root depends on the size of the partial game tree.
-When we want to make the solver faster we should try to reduce the size of the
+When we want to make the solver faster, we should try to reduce the size of the
 partial game tree.
 

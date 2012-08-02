@@ -36,28 +36,6 @@ void norm(node_t* node){
 	}
 #endif //NORM2
 
-//	for (int v = 0; v < N; v++){		printf("%d ",fce2[v]);	} printf(" lepsi \n");
-//	for (int v = 0; v < N; v++){		printf("%d ",fce[v]);	} printf(" horsi \n");
-//	printNode(node);
-
-//	printf("%d %d\n",*u,*v);
-//	printNode(node);
-#ifdef NOVECHANGE //NEFUNGUJE JE POTREBA MENIT HASH I PRO SLOUPCE
- //TOHLE BY MELO BYT RYCHLEJSI
- /*
-	for (int i = 0; i < N; i++){
-		int min = i;
-		for (int j = i+1; j < N; j++){
-			if (fce[min] > fce[j])
-				min = j;
-		}
-		if (i != min){
-			int tmp = fce[i]; fce[i] = fce[min]; fce[min] = tmp;
-			nodeChangeNodes(graph, i, min);
-		}
-	}
-	*/
-#else
 	for (int i = 0; i < N; i++){
 		for (int j = i+1; j < N; j++){
 			if (fce[i] > fce[j]){
@@ -95,6 +73,5 @@ void norm(node_t* node){
 
 	//prohodi souradnice posledni hrany
 	nodeSetLastEdge(node,nodes2[nodeLastEdgeI(node)],nodes2[nodeLastEdgeJ(node)]);
-#endif
 
 }

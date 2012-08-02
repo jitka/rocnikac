@@ -1,26 +1,26 @@
 \chapter{Further theoretical improvements}
 
-In this chapter we examine various improvements to pn-search and clique
+In this chapter, we examine various improvements to pn-search and clique
 game. All results
 were independently discovered by the author of this thesis.
 
 \section{Other enhancements of PN-search} 
-Here we describe several enhancements
+Here, we describe several enhancements
 and also show some solutions for problems which arise when we combine several
 \sec{PN-search} enhancements together. 
 
 \subsection{Ordering of sons} \label{ord}
 
 The ordering of sons of some node could be important. When there are two or more
-sons with a~minimal (dis)proof number we usually choose the leftmost but there could
+sons with a~minimal (dis)proof number we usually choose the leftmost, but there could
 be better variant so we order sons by some heuristic.
 
 \subsection{Deleting solved sons}
 
 When we disproof a~son of \node{or} node (and symmetrically when we proof a~son
-of \node{and} node) we do not solve the node but we can we can delete the edge
-between them. The node will have less sons so the sum or max or min of numbers
-could be counted faster and update ancestors will be also faster. A~bigger
+of \node{and} node) we do not solve the node, but we can we can delete the edge
+between them. The node will have fewer sons so the sum or max or min of numbers
+could be counted faster, and update ancestors will also run faster. A~bigger
 improvement is when using the \sec{weak PN-search}. \sec{Weak PN-search} depends on
 the branching factor, which decreases.
 
@@ -36,63 +36,84 @@ subsection, it is a~good idea to change parallel edges to a~single edge.
 \subsection{Developing a~node without creating sons} \label{lastenh}
 
 This enhancement saves memory. The partial game tree is largest when the root is
-solved. In this state there is a~lot of nodes which are undeveloped. \obr{ 11) vysvetlivky
-hotovy strom se spoustou listu} We could reduce memory requirements if we do not
+solved. In this state, there is a~lot of nodes which are undeveloped, see 
+Figure~\ref{jedenact}a). We could reduce memory requirements if we do not
 create part of them. 
 
-When we are developing a~node $n$ we create and evaluate all $n$ sons in order to
-get proof and disproof numbers, as usually. Afterwards, we delete these sons. When
-we find that the  most proving node is a~son of $n$ we create all sons of $n$ again and
-now let them stay in the partial game tree. Every node is created at most twice so
-time requirements rise at most twice. \obr{12) 11) po tomhle} 
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig11.eps}}}
+	\caption{The partial game tree a)without b)with enhancement~\ref{lastenh}}
+	\label{jedenact}
+\end{figure}
+
+When we are developing a~node $n$, we create and evaluate all $n$ sons, in order
+to get proof and disproof numbers, as usually. Afterwards, we delete these
+sons. When we find that the  most proving node is a~son of $n$ we create all
+sons of $n$ again, and now let them stay in the partial game tree, see
+Figure~\ref{jedenact}b). Every node is created at most twice so time
+requirements rise at most twice.  
 
 Perhaps we can save even more memory when we use some counter in nodes
 and save only the developed sons or all the sons if the percentage or number 
 of developed sons is above some threshold.
 
+\subsection{Even more symmetry} \label{lastenh2}
+
+We can join even more nodes. When we give position which the first player
+occupied to the second player and naopak from the game state $s_1$ we have game
+state $s_2$. Players \emph{changed sides}. There is possibility to join them
+together as $s$, but we must do some other changes. 
+
+The edge between $s$ an its parents $p$ is called \emph{changed edge} if there
+is turn from $p$, with changed players side to $s$.  In the function
+\fce{updateAncestors()}, \fce{setProofAndDisproofNumbers()} and when we count
+thresholds in \sec{DF-PN-search} we are using numbers from sons.  If sons is
+join by the changed edge, we must change proof and disproof numbers (and also
+thresholds).
+
 \subsection{Cache}
 
-There is a~possibility to use a node cache, instead of the representation of the whole
+There is a~possibility to use a~node cache, instead of the representation of the whole
 tree, when we use \sec{DF-PN-search}.
-We can use a cache also when we use ordinary \sec{PN-search} but we must
+We can use a~cache also when we use ordinary \sec{PN-search}, but we must
 do some modifications in this case: 
 
 \begin{enumerate}
 \item Do not delete nodes on the current path.
 \item Stop \fce{updateAncestors()} when an ancestor is missing from the cache.
-\item When a son is missing in the cache, create it again.
+\item When a~son is missing in the cache, create it again.
 \end{enumerate}
 
 Both \sec{DF-PN-search} and modified \sec{PN-search} perform poorly when the
-cache is really small (slightly more then the maximal current path length). In
-this case it could happen that algorithm never solves the root. It could happen
+cache is really small (slightly more than the maximal current path length). In
+this case, it could happen that algorithm never solves the root. It could happen
 that the root has two sons $s_1$ and $s_2$  and algorithm runs for a~while in
 the subtree of $s_1$ and then in the subtree of $s_2$, deleting all the nodes
 of the subtree of $s_1$ from the cache. When it returns back below $s_1$ to
 improve it, it cannot because it must create the nodes again (hence deleting
 the nodes from subtree of $s_2$) and the situation repeats ad infinitum.
-Hopefully this does not happen with a big cache.
+Hopefully this does not happen with a~big cache.
 
-Here we specify how to decide which node to delete from the cache. We cannot
-delete a node from the current path and sons of a node which is just being
+Here, we specify how to decide which node to delete from the cache. We cannot
+delete a~node from the current path and sons of a~node which is just being
 developed. We can set other rules about which nodes cannot be deleted or set
 priorities for deleting. This can have significant impact on the performance of
-the algorithm as we might delete results which took a long time to compute.
+the algorithm as we might delete results which took a~long time to compute.
 
-When we set too many rules it can happen that there is no node which can be
-deleted and in this case we halt whole program. In our experience with our
+When we set too many rules, it can happen that there is no node which can be
+deleted, and in this case we halt whole program. In our experience with our
 solver is that it happens very soon after program starts or never.
 
 \subsubsection{List of possible rules for deleting from cache:}
 \begin{itemize}
-\item Do not delete a node on the current path and sons of a node which is being developed.
+\item Do not delete a~node on the current path and sons of a~node which is being developed.
 \item Do not prefer nodes with value \val{true} or \val{false} -- they are 
-      more important than the nodes with value \val{unknown} (but we need a really big
-      cache for it).
+more important than the nodes with value \val{unknown} (but we need a~really big
+		cache for it).
 \item Do not prefer nodes with many parents -- these are more important than nodes
-      with few parents.
+with few parents.
 \item Prefer nodes which are not developed -- we do not lose any important information
-      when we delete these. 
+when we delete these. 
 \end{itemize}
 
 \subsection{Variants of \fce{updateAncestors()}}
@@ -102,30 +123,52 @@ There are three enhancements which influence the function \fce{updateAncestors()
 The first is using \sec{last changed node} to shorten the path. 
 
 The second is \sec{DF-PN-search} (even if there is no function named \fce{updateAncestors()} and it is
-updating lazily).
+		updating lazily).
 
 The third is \sec{transposition to DAG}. We found no article
-considering changes in \fce{updateAncestors()} when node has more then one parent.
+considering changes in \fce{updateAncestors()} when node has more than one parent.
 
 When we use the ordinary \fce{updateAncestors()} together with
-\sec{transposition to DAG} and one of the other two enhancements,
-\TODO{pravopis} it could happen that some numbers are changed on the current path
-above an unchanged node. For an example, see Figure \obr{10)} root
-was changed and its son on current path no. It could also happen that the most
-proving node found by the algorithm could be different than most proving node
-by the definition, see Figure \obr{15)}. This is not as big problem as it seems to be -- the
-algorithm is still correct. An unusual situation can happen when we also use
-\sec{deleting solved subtrees} -- as a~Czech proverb warns we could ``saw off
-a~branch which is holding us''
- 
-To avoid it we must use new \fce{updateAncestors()} which updates \emph{all}
+\sec{transposition to DAG} and one of the other two enhancements, it can happen
+that some numbers are changed on the current path above an unchanged node. For
+an example, see Figure~\ref{deset} -- the root was changed, but its son on
+current path was not. Genesis of such situation is illustrated in
+Figure~\ref{desetvznik} It could also happen that the most proving node found
+by the algorithm is different than the most proving node as per the definition
+-- see Figure~\ref{patnact}. This is not as big problem as it seems to be --
+the algorithm is still correct. An unusual situation can happen when we also
+use \sec{deleting solved subtrees} -- as a~Czech proverb warns we could ``saw
+off a~branch which is holding us''
+
+
+\begin{figure}
+\centerline{\mbox{\includegraphics{figg/fig10.eps}}}
+\caption{Numbers are changed on the current path above an unchanged node.}
+\label{deset}
+\end{figure}
+
+
+\begin{figure}
+\centerline{\mbox{\includegraphics{figg/fig102.eps}}}
+\caption{Genesis of situation in Figure~\ref{deset}.}
+\label{desetvznik}
+\end{figure}
+
+\begin{figure}
+\centerline{\mbox{\includegraphics{figg/fig15.eps}}}
+\caption{The most proving node is in different place than expected.}
+\label{patnact}
+\end{figure}
+
+
+To avoided, it we must use new \fce{updateAncestors()} which updates \emph{all}
 paths up to root, and better \fce{selectMostProving()} as we show in the next
 subsection. 
 
 \subsubsection{Simple updateAncestors()}
 
 A~simple way how to define such \fce{updateAncestors()} is recursively. The
-function updates a node and if it changed either proof or disproof
+function updates a~node, and if it changed either proof or disproof
 number, we call the function recursively on parents. It could happen that
 some nodes are updated many times. So its parents are also updated many times
 and the number of updates is growing with the number of possible paths.
@@ -139,26 +182,26 @@ we do the same on a~higher level.
 \subsubsection{One-visit updateAncestors()}
 
 Another solution is to store more information, namely in which iteration of
-\sec{PN-search} was the node last updated. In this case we can update
+\sec{PN-search} was the node last updated. In this case, we can update
 recursively and stop when we would update some node twice. It could happen
-that this algorithm does not count right values but we can still use it as an effective 
+that this algorithm does not count right values, but we can still use it as an effective 
 approximation.
 
 \subsection{Variants of \fce{selectMostProving()}}
 
-As you can see in Figure \obr{10}, it could happen that some numbers are changed on
+As shown in Figure~\ref{deset}, it could happen that some numbers are changed on
 the current path above an unchanged node. So the observation from Section \sec{last changed
-node} (\ref{last}) does not hold and it can happen that the algorithm select a most
-proving node wrongly. There is an~example in Figure \obr{15}. We found several solutions.
+node} (\ref{last}) does not hold, and it can happen that the algorithm select a~most
+proving node wrongly. There is an~example in Figure~\ref{patnact}. We found several solutions.
 
 \subsubsection{Start from the root}
 
 The simplest solution is to use neither enhancement \sec{last changed node}
-nor \sec{DF-PN-search}. In each iteration we start the search from the root.
+nor \sec{DF-PN-search}. In each iteration, we start the search from the root.
 
 \subsubsection{Start at the highest changed level}
 
-We can use this solution when we have the current path in a stack, which usually
+We can use this solution when we have the current path in a~stack, which usually
 happens when we use recursion. Function \fce{updateAncestors()} will compute the level of
 the highest changed node. We pop enough nodes from the stack so that the stack has
 the length equal to the level of the highest changed node. In the next iteration, we can
@@ -170,55 +213,53 @@ use the same argument as in Section \sec{last changed node} (\ref{last}) to prov
 
 Another variant is to start at the level of the highest changed node of the current path.
 We hold the whole current path in an array. In every
-node which is updated we test if it is in the current path which can be done
+node, which is updated, we test if it is in the current path, which can be done
 quickly. The level of the updated node can be found as a~number of positions
 claimed by all players or we can save this information in the node.
 
-%\section{\TODO{veta o df}}
-
 \section{Graph representation for the clique game} 
 
-We need to store a game state during searching the partial game tree. In other words we
+We need to store a~game state during searching the partial game tree. In other words, we
 need to save which edges are claimed and which color they have. In
 this section, we introduce several suitable solutions and their properties.
 
-Generally, we use an adjacency matrix but there are several ways how to
+Generally, we use an adjacency matrix, but there are several ways how to
 represent it in memory. An adjacency matrix is preferred over other structures
 (adjacency list etc.) because most game states we search are in depth where the
 colored subgraph is dense.
 
-\subsection{Basic representation }
+\subsection{Basic representation}
 The adjacency matrix is straightforwardly represented as two 
 dimensional array $N \times N$ of numbers where the value on the position
 $(i,j)$ is zero if edge $(i,j)$ is free, or color number of the player who claimed it.
 
-\subsection{Triangle in a~line }
+\subsection{Triangle in a~line}
 
-The previous representation is unnecessarily large. For saving space we need just
-two-bit information for every edge and we can use the symmetry of the adjacency
+The previous representation is unnecessarily large. For saving space, we need just
+two-bit information for every edge, and we can use the symmetry of the adjacency
 matrix. 
 
 In this solution, we store the lower triangular part of the adjacency matrix in a~line of
 bits. Supposing that the size of the computer word is at least ${N
-\choose 2} \cdot 2$ bits we can use a single word. If this does not hold we can use more
+\choose 2} \cdot 2$ bits we can use a~single word. If this does not hold, we can use more
 words instead. For each edge $(i,j)$, we set two bits. First, if the edge is free
 we set the bit at the position $({u \choose 2}+v)\cdot2$. Second, to store the color of
 the edge we set the bit at the position $({u \choose 2}+v)\cdot2+1$.
 
 \subsubsection{Two small improvements}
 
-There is still space for improvement. Imagine that every two bits in a line form
-a binary number -- it can be 0, 1 or 2, never 3. So, the structure from the last
+There is still space for improvement. Imagine that every two bits in a~line form
+a~binary number -- it can be 0, 1 or 2, never 3. So, the structure from the last
 paragraph is a~number in base three. We can convert this number into base two
-before storing and convert it back before reading. In this case the structure has
+before storing and convert it back before reading. In this case, the structure has
 size $ \log_2(3)/\log_2(4) \doteq 79\% $ of the original structure. It is the best solution if we care
 only about space, but converting between bases is slow.
 
-A faster possibility is to break the number into parts by three edges (stored
+A~faster possibility is to break the number into parts by three edges (stored
 in six bits) and convert these short numbers into binary, which can be done
-quickly using a translation table. This structure has the size $5/6 \doteq 83\%
-$ of the original. A similar procedure can be used for parts of $n$ edges. If
-$n=5$ the structure has size $8/10=80\%$. For a bigger $n$ the reduction in space
+quickly using a~translation table. This structure has the size $5/6 \doteq 83\%
+$ of the original. A~similar procedure can be used for parts of $n$ edges. If
+$n=5$ the structure has size $8/10=80\%$. For a~bigger $n$, the reduction in space
 usage is not much better.
 
 \subsection{Adjacency matrix in a~line}
@@ -233,29 +274,35 @@ This structure is slightly more than twice as large than \sec{triangle in a~line
 several advantages in speed of operations, and it is easier for programming which
 is also important. 
 
-\subsubsection{A trick: Detect common neighbours}
+\subsubsection{A~trick: Detect common neighbours}
 
 We often need to know which nodes $v$ have red (resp. blue) edges to nodes $i$ and $j$
-simultaneously. If we use basic representation there is one obvious way to find it.
+simultaneously. If we use basic representation, there is one obvious way to find it.
 We look if red edges $(i,v)$ and $(j,v)$ exist for every node $v$ ($v \ne i \;
-\& \; v \ne j$). 
+\& \; v \ne j$).
 
-If we use \sec{adjacency matrix in line}, there is a better trick. We can
+If we use \sec{adjacency matrix in line}, there is a~better trick. We can
 use binary mask and binary shift to get $i$-th and $j$-th row of the matrix, that is, bits
 on positions $i \cdot N, \ldots, (i\!+\!1)\! \cdot \!N\!-\!1$ and $j \cdot N, \ldots,
 (j\!+\!1)\!\cdot\!N\!-\!1 $. Then we just apply logical \fce{and} on these rows. Every nonzero bit
 indicates such vertex $v$.
 
-\subsubsection{Finding a claimed winning set} 
+\subsubsection{Finding a~claimed winning set} 
 
 When the red player claims the edge $(i,j)$ we want to know if he wins (determine if he
-created red $K_4$). A straightforward solution is to test every edge between every set
-of four nodes which contain $i$ and $j$. 
+created red $K_4$). A~straightforward solution is to test every edge between every set
+of four nodes, which contain $i$ and $j$. 
 
-We can also use the trick from previous subsection to do it faster. We find all
+We can also use the trick from the previous subsection to do it faster. We find all
 the nodes which have red edges to both $i$ and $j$. Then we test if in this
 set are distinct nodes $u$ and $v$ such that red edge $(u,v)$ exists. This is illustrated
-in Figure \obr{13z)}.
+in Figure~\ref{trinact}a).
+
+\begin{figure}
+\centerline{\mbox{\includegraphics{figg/fig13.eps}}}
+\caption{}
+\label{trinact}
+\end{figure}
 
 
 \subsubsection{Finding free winning sets} \label{freeK4}
@@ -280,16 +327,16 @@ types of threats.
  
 \begin{enumerate} 
 	\item The free edge begins on node $i$ or $j$ (without loss of generality $i$). 
-	\item The free edge does not contains any of them.  
+	\item The free edge does not contain any of them.  
 \end{enumerate}
 
-In the first case we use the trick to find all nodes $u$ which are neighbours of both
+In the first case, we use the trick to find all nodes $u$ which are neighbours of both
 $i$ and $j$, and again to find all nodes $v$ which are neighbours of
 both $j$ and $u$. If there are such $u$ and $v$, we check if there is free edge
-$(i,v)$. If yes then $\{i,j,u,v\}$ is a threat. See Figure \obr{ 13a) hrozba}.
+$(i,v)$. If yes then $\{i,j,u,v\}$ is a~threat. See Figure~\ref{trinact}b).
 
-The second case is similar to finding a claimed winning set. We just check if there is a free
-edge between $u,v$ instead of a red edge. See Figure \obr{ 13b) hrozba}.
+The second case is similar to finding a~claimed winning set. We just check if there is a~free
+edge between $u,v$ instead of a~red edge. See Figure~\ref{trinact}c).
 
 \subsubsection{Computing vertex degree}
 
@@ -300,38 +347,38 @@ the $v$-th row of the adjacency matrix.
 \section{Normalizing function for the clique game} \label{norm} 
 
 Many nodes with isomorphic graphs and their subtrees are traversed during an ordinary
-\sec{PN-search}. If we want to use the advantage of a high symmetry of the
-game we need to join these positions and hence reduce the  number of subtrees we must
+\sec{PN-search}. If we want to use the advantage of a~high symmetry of the
+game, we need to join these positions, and hence reduce the number of subtrees we must
 search.
 
 In each node is a~clique game state which is an undirected complete graph with
 edges colored by three colors (red, blue, free).
-In an~ideal case we would search the subtree of isomorphism class
-only once. When we are creating a new graph $G$ we compute a canonical
+In an~ideal case, we would search the subtree of isomorphism class
+only once. When we are creating a~new graph $G$ we compute a~canonical
 representation $H$ of the isomorphic class where $G$ belongs, and then use $H$ instead
 of $G$. The enhancement \sec{transpositions to DAG} causes that the
 subtree of two isomorphic graphs will be searched at most once.
 
-However, in computing a canonical representative of a graph is a difficult
-problem (see \cite{canonical}). So we compute an almost representative graph
-instead. We call them a~normalise graphs.
+However, in computing a~canonical representative of a~graph is a~difficult
+problem (see~\cite{canonical}). So we compute an almost representative graph
+instead. We call them a~normalised graphs.
 
 \newtheorem*{norm}{Definition}	
 \begin{norm}
-{\sl A~normalising function} is a~function that for
-every graph $G$ returns a~graph $H$ such that $H$ is isomorph with $G$. We we will call
-$H$ a~{\sl normalise graph}.
+{\sl A~normalising function} is a~function, that for
+every graph $G$, returns a~graph $H$, such that $H$ is isomorph with $G$. We we will call
+$H$ a~{\sl normalised graph}.
 \end{norm}
 
-We want to find a normalise function which can be computed fast and which is
-effective. Here efficiency means if we apply the function to every graph of an
-isomorphism class we receive as small set of normalised graphs as possible, or
+We want to find a~normalise function which can be computed fast and which is
+effective. Here, efficiency means if we apply the function to every graph of an
+isomorphism class we receive as a~small set of normalised graphs as possible, or
 in other words there are only few distinct normalised graphs which are
 isomorphic.
 
 We introduce several such functions and compare their effectiveness and speed
 on graphs\footnote{undirected 3-colored complete graphs} with five nodes and
-$k$ edges colored as in clique game. See Table \ref{statsNorm}. 
+$k$ edges colored as in clique game. See Table~\ref{statsNorm}. 
 
 \begin{table}
 \centering
@@ -352,32 +399,35 @@ Trivial to compute but ineffective.
 
 \subsubsection{2 Sorting by vertex degree} \label{norm1}
 
-We can compute the degree of each node and sort the nodes by degree. A basic improvement
-is to count every red edge $M$ times where $M$ is the number of edges in a complete
+We can compute the degree of each node and sort the nodes by degree. A~basic improvement
+is to count every red edge $M$ times where $M$ is the number of edges in a~complete
 graph. This improvement decreases the number of normalised graphs which are isomorphic.
 
 \subsubsection{3 Sorting by vertex and neighbours degrees} \label{norm2}
 
-Previous function fails in case shown in Figure \obr{14) }. In case of a tie, tt helps to
+Previous function fails in the case shown in Figure~\ref{ctrnact}: first two graphs are normalized
+using the previous function, but in fact isomorph. In case of a~tie, it helps to
 consider the degree of adjacent nodes. We define functions $f$ and $g$ on the  nodes.
-\obr{14)obrazek popis: This two graphs was both normalise but isomorph before
-improvement but now normalise function must return same graph.}
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig14.eps}}}
+	\caption{Normalised graphs.}
+	\label{ctrnact}
+\end{figure}
 
 \begin{eqnarray*} 
-f(v) = \mbox{blueDeg}(v) + \mbox{redDeg}(v) \cdot M^3.
+f(v) &=& \mbox{blueDeg}(v) + \mbox{redDeg}(v) \cdot M^3. \\
+g(v) &=& f(v) \cdot M^2 + \sum_{(u,v) \mbox{is red}}{f(u) \cdot M} + \sum_{(u,v) \mbox{is blue}}{f(u)}.
 \end{eqnarray*}
 
-\begin{eqnarray*} 
-g(v) = f(v) \cdot M^2 + \sum_{(u,v) \mbox{is red}}{f(u) \cdot M} + \sum_{(u,v) \mbox{is blue}}{f(u)}.
-\end{eqnarray*}
-
-Then the normalising function just sorts the vertices by $g$.
+Then, the normalising function just sorts the vertices by $g$. See third graph
+in Figure~\ref{ctrnact}
 
 This function is asymptoticly slower than the previous one, but still polynomial
 and more effective.
 
 \subsubsection{4 Ideal case} 
-We assign the canonical representation of graph.
+We assign the canonical representation of the graph.
 This is the most effective solution but hard to compute as we noted before.
 This function was not implemented so we cannot measure its speed.
 Efficiency was computed in the following way: We use the previous normalising function

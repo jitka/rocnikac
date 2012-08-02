@@ -65,7 +65,7 @@
 \addcontentsline{toc}{chapter}{#1}
 }
 
-% Toto makro slouží k poznámkám, text se zobrazi červeně
+% Me makra.
 \newenvironment{itemize*}%
 {\begin{itemize}%
 \setlength{\itemsep}{30pt}%
@@ -73,9 +73,6 @@
 {\end{itemize}}
 
 \def\TODO#1{
-\texttt{\textcolor{red}{#1}}
-}
-\def\obr#1{
 \texttt{\textcolor{red}{#1}}
 }
 \let \node \textsf
@@ -91,16 +88,6 @@
 \righthyphenmin=2
 
 %%% Titulní strana práce
-
-\TODO{velke
-a~ A ref cite !! i na konci radku, i tento soubor\\
-isn't\\
-commintnout zdrojak\\
-todo ve zdrojaku\\
-\\Dotazy:\\
-tabulky do ramecku a do seznamu tabulek\\
-je treba vydani u citace? jak se tam oddeluji autori? jak kdyz nevim skoro nic? 
-}
 \pagestyle{empty}
 \begin{center}
 
@@ -164,9 +151,12 @@ Prague 2012
 \openright
 
 \noindent
-Dedication.
-\TODO{ Tom, rodiče, Roman - laděni, Tom - vše, Honza - podpora +?angličtina, 
-Paulie -předvyber článku, Pavel to s Cachy, Brum - chytre rady}
+I want to thank a~lot of people who helped me with this thesis. First I want to
+thank Jan Kulveit, Tomáš Gavenčiak and Martin Mareš - I'm grateful for their
+time, support, good advice and also proofreading. I thank Pavel Veselý, Pavel
+Dvořák and Roman Smrž for helpful discussions and aid with debugging my code.
+Finally I thank my advisor, TV, for an unrelenting supply of fresh ideas what
+can be extended and improved.
 
 \newpage
 
@@ -181,8 +171,8 @@ sources, literature and other professional sources.
 \medskip\noindent
 I understand that my work relates to the rights and obligations under the Act No.
 121/2000 Coll., the Copyright Act, as amended, in particular the fact that the Charles
-University in Prague has the right to conclude a license agreement on the use of this
-work as a school work pursuant to Section 60 paragraph 1 of the Copyright Act.
+University in Prague has the right to conclude a~license agreement on the use of this
+work as a~school work pursuant to Section 60 paragraph 1 of the Copyright Act.
 
 \vspace{10mm}
 
@@ -219,9 +209,23 @@ RNDr. Tomáš Valla, Informatický ústav Univerzity Karlovy
 % Jméno a příjmení s tituly, pracoviště
 % dle Organizační struktury MFF UK, případně plný název pracoviště mimo MFF UK
 
-Abstrakt:
+Abstrakt: {\parskip=0pt
 % abstrakt v rozsahu 80-200 slov; nejedná se však o opis zadání bakalářské práce
-\TODO{+ zkontrolovat jestli sedi s anglictinou}
+
+V této práce představujeme několik algoritmů pro počítačové řešení silných
+pozičních her a to především algoritmů založených na algoritmu PN-search.
+
+Zaměřujeme se na hry s vysokou symetrií herního plánu. Spojováním mnoha
+izomorfních pozic jsme dosáhli velkého zmenšení části herního
+strumu, kterou je potřeba prohledat. 
+
+Představujeme již známa vylepšení a také navrhujeme vlastní. Ověřujeme
+jak tyto heuristiky funguji na příkladu klikové hry.
+
+K práci je přiložen software pro řešení silné klikové hry pro $K=4$ a
+$N=5\dots8$. Software zvládl vyřešit (6,4) a (7,4)-klikovou hru a dokázal, že
+druhý hráč má neprohrávající strategii, což se očekávalo, ale dosud nebylo
+potvrzeno.}
 
 Klíčová slova:
 % 3 až 5 klíčových slov
@@ -248,10 +252,23 @@ RNDr. Tomáš Valla, Informatický ústav Univerzity Karlovy
 % dle Organizační struktury MFF UK, případně plný název pracoviště
 % mimo MFF UK v angličtině
 
-Abstract:
+Abstract: {\parskip=0pt
 % abstrakt v rozsahu 80-200 slov v angličtině; nejedná se však o překlad
 % zadání bakalářské práce
-\TODO{ neni}
+
+In this thesis, we analyse several algorithms for solving strong positional games, 
+mostly based on PN-search.
+
+We focus on games with high symmetry of the game plan, where it is possible to 
+substantially reduce the partial game tree by joining isomorph positions.
+
+We review several known enhancements of PN-search and also propose some of our own design. 
+We measure the effect of the enhancements on the clique game.
+
+A part of the thesis is a software solver for clique game for $K=4$ and $N=5\dots8$. We were able 
+to solve (6,4) and (7,4) clique games and prove that the second player has a draw 
+strategy, which was expected but not shown previously.
+}
 
 Keywords:
 % 3 až 5 klíčových slov v angličtině

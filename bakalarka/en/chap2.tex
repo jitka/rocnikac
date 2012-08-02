@@ -1,6 +1,6 @@
 \chapter{Solver algorithms and their enhancements}
 
-In this chapter we introduce some heuristic algorithms for solving the
+In this chapter, we introduce some heuristic algorithms for solving the
 combinatorial game and their enhancements.
 
 \section{Overview of algorithms}
@@ -11,9 +11,8 @@ player or draw strategy for the second.
 
 \subsection{Meta algorithm}
 
-All game states can be represented as a~rooted tree. Each game state is a
-node and if someone can turn from game state $u$ to game state $v$, there is an
-edge between then and we will denote it $(u,v)$. The \emph{level} of a~node
+All game states can be represented as a~rooted tree. Each game state is a~node and if someone can turn from game state $u$ to game state $v$, there is an
+edge between them, and we will denote it $(u,v)$. The \emph{level} of a~node
 is the distance from the root. 
 
 We will not try to build a~\emph{complete game tree}, representing every possible game
@@ -24,38 +23,44 @@ trying to keep the partial game tree as small as possible.
 We assign to each node one of three possible values -- \val{true},
 \val{false}, \val{unknown}. A~node will have value \val{true} when we prove
 that there is a~winning strategy for the first player and value \val{false}
-when we prove that there is a~draw strategy for the second player. Otherwise
+when we prove that there is a~draw strategy for the second player. Otherwise,
 the node has value \val{unknown}. We say that node is \emph{solved} if it has value
 \val{true} or \val{false}.
 
-The algorithm starts with one node with value \val{unknown}. In each iteration the
+The algorithm starts with one node with value \val{unknown}. In each iteration, the
 algorithm does one of the two things:
 
 \begin{itemize} 
 	\item \textbf{Develop node.} We choose one leaf node with value \val{unknown}
 		and \emph{develop} it, which means that we create its sons. When 
-		a son is created we evaluate it (we check whether one of the players
+		a~son is created we evaluate it (we check whether one of the players
 		won).
 	\item \textbf{Update node.} We choose one developed node with value \val{unknown}
-		and look over its sons. We check if we can assign value \val{true} 
+		and examine its sons. We check if we can assign value \val{true} 
 		or \val{false} to the node.
 \end{itemize}
 
-Algorithm ends when the root is solved and so game is determined.
+Algorithm ends when the root is solved, and so game is determined.
 
 There are two types of nodes. When the first player is on turn it is an~\node{or}
 node. To assign value \val{true} for it, it is enough if one of its sons
 have value \val{true}. Then, the first player has a~winning strategy which starts by the
 turn to the node with value \val{true}. On the other hand, when the first player has
 no winning strategy after any turn he has no winning strategy at all. So we can
-assign value \val{false} when all sons have value \val{false}. If none of above holds
+assign value \val{false} when all sons have value \val{false}. If none of above holds,
 the value of the node remains \val{unknown}. Hence value of an~\node{or} node can be found by
 an operation which is very similar to logical \fce{or}.
 
 The second type of node is an~\node{and} node. The second player is on turn. Assigning values
 works in a~similar way, we just use \fce{and}-like operation instead of \fce{or}-like.
 
-See how it works in Figure \obr{obrazek 1) and kolecko}.
+See how it works in Figure~\ref{dva}.
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig1.eps}}}
+	\caption{A~partial game tree with assigned values.}
+	\label{dva}
+\end{figure}
 
 \subsection{Depth-first search} We can use ordinary depth-first search for
 searching the complete game tree and solving the root. We start by creating
@@ -71,14 +76,14 @@ algorithm can find a~solution for clique game with $N=5, K=4$ and maybe more.
 \subsection{Alpha-beta}
 
 Alpha-beta is a~well known algorithm for finding good strategies. It is described for
-example in \cite{alphabeta}.
+example in~\cite{alphabeta}.
 We can use it for any node $n$. It searches a~part of the subtree under $n$ and for
 nodes in some depth uses a~rating function and returns the rating of $n$. The rating
 which \sec{alpha-beta} returns can be used for deciding to which game state to turn. It
 is useful as a~heuristic and can be used for example in Artifical Intelligence
 and also in the clique game.
-We can use depth-first search and when we make a~decision which sons
-to solve, we first rate all its sons by \sec{alpha-beta} and then solve them in order
+We can use the depth-first search, and when we make a~decision which sons
+to solve, we first rate all its sons by \sec{alpha-beta} and then solve them in the order
 determined by the ratings.
 
 \subsection{PN-search}
@@ -88,7 +93,7 @@ variant of it which is better suited for our problem, because a~test if a~game s
 quick.
 
 \sec{PN-search} is a~best-first search\footnote{We traverse the tree in the order prescribed by a~priority
-function indicateing which node helps us most to find the solution.}. We need to specify which node is the best for our problem.
+function indicating which node helps us most to find the solution.}. We need to specify which node is the best for our problem.
 We start with some definitions, which were used in~\cite{allis}. 
 
 \medskip\noindent
@@ -96,19 +101,19 @@ We start with some definitions, which were used in~\cite{allis}.
 
 \begin{itemize}
 \item
-We say that we \emph{prove} a~node if we prove that the first player has winning strategy
-from it and we can assign \val{true} to it. 
+We say that we \emph{prove} a~node if we prove that the first player has a~winning strategy
+from it, and we can assign \val{true} to it. 
 
 \item
-We say that we \emph{disprove} node if we prove that the second player has draw strategy
-from it and we can assign \val{false} to it. 
+We say that we \emph{disprove} node if we prove that the second player has a~draw strategy
+from it, and we can assign \val{false} to it. 
 
 \item
-For any partial game tree $T$ a~set of leaf nodes with value \val{unknown} $S$ is a~{\sl proof set}
+For any partial game tree $T$, a~set of leaf nodes with value \val{unknown} $S$ is a~{\sl proof set}
 if proving all nodes within $S$ proves $T$.
 
 \item
-For any partial game tree $T$ a~set of leaf nodes with value \val{unknown} $S$ is a~{\sl disproof set}
+For any partial game tree $T$, a~set of leaf nodes with value \val{unknown} $S$ is a~{\sl disproof set}
 if disproving all nodes within $S$ disproves $T$.
 
 \item
@@ -121,19 +126,31 @@ cardinality of the smallest disproof set of $T$.
 \end{itemize}
 
 We will show how proof and disproof numbers work and how they can be calculated
-on some examples. At Figure \obr{2)} you can see a~game tree with proof
+on some examples. At Figure~\ref{tri}, we show a~game tree with proof
 numbers. Nodes with value \val{true} have proof number 0 -- there is nothing
 left to prove. Nodes with value \val{false} have proof number $ \infty $ --
 there exists no set of nodes which proves it. Leaf nodes with value
 \val{unknown} have proof number 1 because it is enough to prove the node
-itself. Internal \node{and} node has proof number which is equal to sum of the
+itself. An internal \node{and} node has proof number, which is equal to sum of the
 proof numbers of its sons, because for proving the \node{and} node we must
-prove all its sons by proving their proof sets. Internal \node{or} node has
-proof number equal to minimum of proof numbers of it sons because we need to
+prove all its sons, by proving their proof sets. An internal \node{or} node has
+proof number equal to the minimum of proof numbers of it sons because we need to
 prove at least one of its son.
 
-Determining the disproof number works in a~similar way. As you can see in
-Figure \obr{3)}. 
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig2.eps}}}
+	\caption{A~partial game tree with proof numbers.}
+	\label{tri}
+\end{figure}
+
+Determining the disproof number works in a~similar way. See
+Figure~\ref{ctyri}. 
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig3.eps}}}
+	\caption{A~partial game tree with disproof numbers.}
+	\label{ctyri}
+\end{figure}
 
 \newtheorem*{mostProvingNode}{Definition}	
 \begin{mostProvingNode}
@@ -186,23 +203,26 @@ until the root is solved.
 
 \medskip
 
-The first step is \fce{selectMostProving(root)} (see Table
-\ref{selectMostProving}). This function works similarly to the proof that a
-most proving node exists. \obr{4)obrazek} We start in the root and continue by
+The first step is \fce{selectMostProving(root)} (see Table~\ref{selectMostProving}). This function works similarly to the proof that 
+a~most proving node exists, see Figure~\ref{pet} We start in the root and continue by
 choosing the son which has the minimal proof number when we are in \node{and}
 node, respectively the minimal disprove number in \node{or} node, until we are
 in a~leaf node. When there are more sons with a~minimal number we choose the
 leftmost one (we fix an~arbitrary ordering). 
 
-The second step is \fce{developNode(mostProvingNode)} (see Table
-\ref{developNode}). There we create sons of the most proving node and evaluate
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig4.eps}}}
+	\caption{Selecting the most proving node.}
+	\label{pet}
+\end{figure}
+
+The second step is \fce{developNode(mostProvingNode)} (see Table~\ref{developNode}). There, we create sons of the most proving node and evaluate
 them.
 
-The third step is \fce{updateAncestors(mostProvingNode)} (see Table
-\ref{updateAncestors}). Proof and disproof numbers in partial game tree have
+The third step is \fce{updateAncestors(mostProvingNode)} (see Table~\ref{updateAncestors}). Proof and disproof numbers in partial game tree have
 changed so we must update their stored values. We start updating most proving
 node and continue by updating its ancestors up to the root. At the end of these
-three steps the (dis)proof numbers are again correct, because only numbers
+three steps, the (dis)proof numbers are again correct, because only numbers
 above most proving node could have changed.
 
 \begin{table}
@@ -309,7 +329,7 @@ above most proving node could have changed.
     \end{itemize*}
   \fce{end}
 \caption{Node-development algorithm.}
-\label{devolopNode}
+\label{developNode}
 \end{table}
 
 \begin{table}
@@ -335,7 +355,7 @@ algorithms in many domains, as shown by Allis~\cite{allis} and~\cite{divne} on s
 
 Regardless of the algorithm used, it is highly desirable to work on a~game DAG
 (as defined in section~\ref{DAG}) instead of a~plain tree. However, using DAG deforms some
-of the criteria used by both algorithms. In case of \sec{PN-search} we know methods to
+of the criteria used by both algorithms. In case of \sec{PN-search}, we know methods to
 overcome those problems.
 
 Additionally, \sec{alpha-beta} can be used as a~heuristic in some of the \sec{PN-search} variants.
@@ -343,8 +363,8 @@ Additionally, \sec{alpha-beta} can be used as a~heuristic in some of the \sec{PN
 \section{Enhancements of PN-search}
 
 We show several enhancements to the basic \sec{PN-search} algorithm. Each
-of them is basically a~new algorithm and study them separately
-unless stated otherwise. For a~reference for most of the enhancements
+of them is basically a~new algorithm, and study them separately,
+unless noted otherwise. For a~reference for most of the enhancements
 in this chapter, see~\cite{allis}.
 
 Some of the enhancements use proof and disproof numbers and other concepts
@@ -352,7 +372,7 @@ in a~slightly different sense and treat them more like variables.
 
 \subsection{Path from the root}
 
-Proof number search is best-first search. Its major disadvantage is that
+Proof number search is best-first search. Its main disadvantage is that
 searching for a~most proving node takes a~lot of time. 
 
 \begin{theorem}
@@ -361,8 +381,8 @@ searching for a~most proving node takes a~lot of time.
 \end{theorem}
 
 In \sec{PN-search}, each iteration starts at the root and descends down. After developing
-the most proving node we update the proof and disproof numbers starting in the most proving node and 
-return all the way back to the root. So we traverse the current path twice. 
+the most proving node, we update the proof and disproof numbers, starting in the most proving node and 
+returning all the way back to the root. So we traverse the current path twice. 
 
 There are two enhancements which reduce the number of nodes traversed to select the
 most proving node. 
@@ -378,24 +398,42 @@ only in part where proof or disproof number was updated.
 
 \newtheorem*{currentNode}{Definition}	
 \begin{currentNode}
-A~{\sl current node} is the lowest unchanged node from current path, or
-the root if everything was changed.
+A~{\sl current node} is the lowest unchanged node from the current path, or
+the root if everything were changed.
 \end{currentNode}
 
 Enhanced \sec{PN-search} works like ordinary \sec{PN-search}. It has one variable
 called $currentNode$, at the beginning the value of $currentNode$ is the root. Each
 \fce{selectMostProving()} starts in $currentNode$. And each \fce{updateAncestors()}
 ends at the node where proof and disproof numbers have not been changed and sets 
-$currentNode$ to the first unchanged node. You can see an~example in figure \obr{(5))}.
+$currentNode$ to the first unchanged node. See an~example in Figure~\ref{sest}.
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig5.eps}}}
+	\caption{Enhancement \sec{last changed node}.}
+	\label{sest}
+\end{figure}
 
 \subsubsection{Depth-first PN-search} \label{dfpn}
 
-Here we describe depth-first \sec{PN-search}, first introduced by Nagai et al.~\cite{nagai}
-which saves even more traversing. In two consecutive iterations the current
-paths have a~common beginning. See figure \obr{6.1)}. We reduced the part when
+Here we describe depth-first \sec{PN-search}, first introduced by Nagai et al.~\cite{nagai},
+which saves even more traversing. In two consecutive iterations, the current
+paths have a~common beginning. See Figure~\ref{sestjedna}. We reduced the part when
 proof and disproof numbers stay same, but we can also postpone some updates as
-shown in \obr{6.2b)}. We need to know the highest node which will not be in the
+shown in~\ref{sestdva}. We need to know the highest node which will not be in the
 new current path. 
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig61.eps}}}
+	\caption{Two consecutive paths with the same beginning.}
+	\label{sestjedna}
+\end{figure}
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig62.eps}}}
+	\caption{Postponed updates in depth-first PN-search}
+	\label{sestdva}
+\end{figure}
 
 We introduce \emph{proof and disproof thresholds} -- two new numbers for each node on
 the current path. They are set so that when (dis)proof number is larger or
@@ -405,11 +443,17 @@ the next most proving node is in the same subtree.
 Let $p$ and $d$ be proof and disproof numbers of node $n$. Let $pt$ and $dt$ be
 their thresholds. When $n$ is \node{and} node we assume that its sons $1\ldots k$
 are ordered so that $p_1 < p_2 < \ldots < p_k$. You can see an~example in
-Figure \obr{6.3)}. Rules for setting new thresholds were deduced in~\cite{epsilon}:
+Figure~\ref{sesttri}. Rules for setting new thresholds were deduced in~\cite{epsilon}:
 \begin{eqnarray*} 
 	pt_1 &=& min(pt, p_2+1), \\
 	dt_1 &=& dt - d + d_1.
 \end{eqnarray*}
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig63.eps}}}
+	\caption{Setting proof and disproof thresholds.}
+	\label{sesttri}
+\end{figure}
 
 When $n$ is \node{or} node we assume that $d_1 < d_2 < \ldots < d_k$. Rules
 are symmetrical:  
@@ -425,48 +469,64 @@ Main point is that we do not need to store the whole partial game tree we have t
 enough to store nodes from the current path. Such algorithm could be implemented
 recursively and for this reason it is called depth-first.
 It is not a~typical depth-first search because one node can be visited more
-then once. 
+than once. 
 
 The so called DF-PN search is typically implemented with a~cache used for storing as many
 nodes from the partial game tree as possible. 
 
 \subsection{Transpositions to DAG} \label{DAG}
  
-We are visiting some
-game states many times in game tree. A~basic enhancement is to join these nodes into one as 
-you can see in Figure \obr{8)} of tic-tac-toe game tree.
+We are visiting some game states many times in the game tree. A~basic
+enhancement is to join these nodes into one as shown in Figure~\ref{osm}
+of the tic-tac-toe game tree.
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig8.eps}}}
+	\caption{Identical game states are joined in the tic-tac-toe game.}
+	\label{osm}
+\end{figure}
 
 The problem is that we now have a~game DAG \footnote{There are no directed cycles
 because in a~positional game, all edges lead to game states with more positions
 claimed.} instead of a~game tree. There, proof and disproof numbers cannot be
 computed like above, because one node can increase the proof number of another
-node more than once \obr{7)obr Proof and disproof numbers a) by definition --
-disproof set for the root are three undeveloped nodes b) computed as above}.
+node more than once, see Figure~\ref{sedm} for example. 
 However, proof and disproof numbers computed by \sec{PN-search} can be useful even
 though they can be higher than proof and disproof numbers as they was defined. 
+
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig7.eps}}}
+	\caption{Proof and disproof numbers a) computed as usually b) by definition}
+	\label{sedm}
+\end{figure}
 
 We can modify \sec{PN-search} to work with a~DAG. First, when we generate sons we
 check whether they already exist. We can use a~hash table for this. Second, we
 need to update \emph{all} the parents. This could cause problems if used
 together with other enhancements such as \sec{last changed node} defined in
-Section~\ref{last} but if we use ordinary \sec{PN-search} it works. Allis shows it in
-\cite{allis}.
+Section~\ref{last} but if we use ordinary \sec{PN-search} it works. Allis shows it in~\cite{allis}.
 
 One game state in turn $t$ can be visited in the worst case approximately $t!$ times because
 positions can be claimed in any order. So joining them is a~good idea and
 there exist many enhancements of this enhancement.
 
-In this thesis we try to use the advantage of symmetry as much as possible.
-Additionally, we join the game states which are isomorph. See \obr{9) }
-for an~example  on tic-tac-toe game tree. However in clique game we cannot join
-all isomorphic game state into one because finding canonical 
+In this thesis, we try to use the advantage of symmetry as much as possible.
+Additionally, we join the game states which are isomorph. See~\ref{devet}
+for an~example on tic-tac-toe game tree. However, in clique game we cannot join
+all isomorphic game state into one, because finding canonical 
 representation of a~colored graph is a~difficult problem (no polynomial algorithm
-is known \cite{canonical}).
+is known~\cite{canonical}).
 Instead, we use a~heuristic to find a~normalized graph representation 
 (me may not united \emph{all} the isomorphic game states). 
 See section~\ref{norm} for details.
 
-\textbf{Note}: We use ``game tree'' even if we talk about a~game DAG. It can be a~little confusing 
+\begin{figure}
+	\centerline{\mbox{\includegraphics{figg/fig9.eps}}}
+	\caption{Game tree of the tic-tac-toe before and after joining isomorph position.}
+	\label{devet}
+\end{figure}
+
+\textbf{Note}: We use ``game tree'' even if we talk about a~game DAG. It can be a~little confusing,
 but in many cases there is no reason to distinguish between them. 
 We use ``leaf node'' when we are talk about an~undeveloped node. 
 
@@ -493,21 +553,15 @@ In weak \sec{PN-search}, we count the proof and disproof numbers in a~different 
 		
 \subsection{Deleting solved subtrees} \label{deletesolved}
 
-As a~minor optimization to save memory, we can delete a~node after it is solved
-and delete the subtree under it. We discuss this enhancement below in~\ref{deletesolved2}.
+As a~minor optimization to save memory, we can delete a~node after it is solved,
+together with the subtree under it. We discuss this enhancement below in~\ref{deletesolved2}.
 
 \subsection{No free winning set} \label{nofreeK4}
 
-In \sec{PN-search} we assign value \val{false} to a~node in three cases. When it
-is winning state for second player, when  all positions are occupied and finally
+In \sec{PN-search}, we assign value \val{false} to a~node in three cases. When it
+is winning state for the second player, when all positions are occupied, and finally
 when we determined from its sons that node is \val{false}.
 
 It is obvious that when there is no free winning set we can also assign
 value \val{false} and cut it's subtree without visiting it.
-
-%\subsection{PN-set}
-%\TODO{dopsat az napragramuju}
-%
-%\subsection{1+$\epsilon$ trick}
-%\TODO{dopsat az napragramuju}
 

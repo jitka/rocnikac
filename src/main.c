@@ -10,8 +10,6 @@
 
 // TODO BAKALARKA
 // defaultni hodne ukecany stats
-// ifdef DEBUG HEURISTIC1
-// uplne smazat nove change
 // smazat maxnodes
 // update ancestors vycistit
 // lechce mensi node_t
@@ -44,11 +42,7 @@
 void printSetting(){
 
 	printf("N %d M %d\n",N,M);
-	printf("CACHE_SIZE %d, CACHE_PATIENCE %d, MAXNODES %d\n", CACHE_SIZE, CACHE_PATIENCE, MAXNODES);
-#ifdef DEBUG 
-	printf("DEBUG ");
-#endif
-
+	printf("CACHE_SIZE %d, CACHE_PATIENCE %d\n", CACHE_SIZE, CACHE_PATIENCE);
 #ifdef WEAK 
 	printf("WEAK ");
 #endif

@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include "linkedlist.h"
 
-#ifdef DEBUG
 #include "nodefce.h" 
 #include "print.h"
-#endif //DEBUG
 
 void ll2New( ll2_t* ll){
 	ll->first = NULL;
@@ -18,10 +16,8 @@ bool ll2Empty( ll2_t* ll){
 
 ll_t* newItem( node_t* data, ll_t* prev, ll_t* next){
 	ll_t* item = malloc(sizeof(ll_t));
-#ifdef DEBUG
 	if (item == NULL)
 		perror("malloc item");
-#endif //DEBUG
 	item->data = data;
 	item->next = next;
 	item->prev = prev;
@@ -31,10 +27,8 @@ ll_t* newItem( node_t* data, ll_t* prev, ll_t* next){
 void ll2AddNodeEnd( ll2_t* ll, node_t* node){
 	ll_t* item = newItem(node,ll->last,NULL);
 	if (ll->last == NULL){
-#ifdef DEBUG
 		if (ll->first != NULL)
 			printf("blbost e\n");
-#endif //DEBUG
 		ll->first = item;
 		ll->last = item;
 	} else {
@@ -47,10 +41,8 @@ void ll2AddNodeEnd( ll2_t* ll, node_t* node){
 void ll2AddNodeBegin( ll2_t* ll, node_t* node){
 	ll_t* item = newItem(node,NULL,ll->first);
 	if (ll->first == NULL){
-#ifdef DEBUG
 		if (ll->last != NULL)
 			printf("blbost b\n");
-#endif //DEBUG
 		ll->first = item;
 		ll->last = item;
 	} else {
@@ -131,9 +123,6 @@ void ll2Delete( ll2_t* ll, node_t* node){
 			return;
 		}
 	}
-#ifdef DEBUG
-	perror("neni co mazat");
-#endif //DEBUG
 }
 
 int ll2Length( ll2_t* ll){

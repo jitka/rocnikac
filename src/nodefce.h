@@ -8,10 +8,8 @@
 #include "tabs.h"
 #include "cache.h"
 
-#ifdef DEBUG
 #include <stdio.h>
 #include "print.h"
-#endif //DEBUG
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -140,17 +138,13 @@ static inline void nodeSetLastEdge(node_t * node, int i, int j){
 	node->last_j = j;
 }
 static inline u8 nodeLastEdgeI(node_t *node){
-#ifdef DEBUG
 	if( nodeTurn(node) == 0 )
 		perror("neni predchozi tah");
-#endif
 	return node->last_i;
 }
 static inline u8 nodeLastEdgeJ(node_t *node){
-#ifdef DEBUG
 	if( nodeTurn(node) == 0 )
 		perror("neni predchozi tah");
-#endif
 	return node->last_j;
 }
 
@@ -231,10 +225,8 @@ static inline u32 nodeProof(node_t * node){
 	return node->proof;
 }
 static inline void nodeSetProof(node_t * node, u32 proof){
-#ifdef DEBUG
 	if (proof > MAXPROOF)
 		perror("velky proof");
-#endif //DEBUG
 	node->proof = proof;
 }
 
@@ -243,20 +235,16 @@ static inline u32 nodeDisproof(node_t * node){
 	return node->disproof;
 }
 static inline void nodeSetDisproof(node_t * node, u32 disproof){
-#ifdef DEBUG
 	if (disproof > MAXPROOF)
 		perror("velky disproof");
-#endif //DEBUG
 	node->disproof = disproof;
 }
 
 
 #ifdef UPDATEANCESTORS2
 static inline void nodeUpdate(node_t * node, u32 update){
-#ifdef DEBUG
 	if (update > MAXPROOF)
 		perror("moc update, pretece");
-#endif //DEBUG
 	node->update = update;
 }
 
@@ -281,18 +269,14 @@ static inline u32 nodeThDisproof(node_t * node){
 
 
 //new
-#ifdef DEBUG
 extern int numberOfNodes; //abych vedela kolik zeru pameti
-#endif //DEBUG
 static inline node_t* nodeNew(u8 turn){
 	node_t* node = malloc(sizeof(node_t));
 	graph_t * parents2 = malloc( sizeof(graph_t) * 2 );
 	graph_t * children2 = malloc( sizeof(graph_t) * MAXCHILD(turn) );
-#ifdef DEBUG
 	numberOfNodes++;
 	if (node == NULL || parents2 == NULL || children2 == NULL)
 		perror("malloc node");
-#endif //DEBUG
 
 #ifdef STATS
 	node->set_stats = 0;
@@ -322,9 +306,7 @@ static inline void nodeDelete(node_t * node){
 	free(node->parents);
 	free(node->children);
 	free(node);
-#ifdef DEBUG
 	numberOfNodes--;
-#endif //DEBUG
 }
 
 static inline u8 nodeChildrenN(node_t * node){
@@ -336,12 +318,10 @@ static inline void nodeSetChildrenN(node_t * node, u8 childrenN){
 }
 
 static inline void nodeAddChild(node_t * node, graph_t * child){
-#ifdef DEBUG
 	assert( node->childrenN < MAXCHILD(nodeTurn(node)) );
 	assert( child != NULL );
 	assert( node != NULL );
 	assert( node->children != NULL );
-#endif //DEBUG
 	memcpy( &node->children[node->childrenN++], child, sizeof(graph_t) );
 }
 
@@ -371,9 +351,7 @@ static inline void nodeAddParent(node_t * node, graph_t * parent){
 #endif //DELETEUSELESSPARENTS
 	//pripadne zvetsim pole
 	if (node->parentsN >= node->parentsMAX){
-#ifdef DEBUG
 		assert(node->parentsMAX < M*2); //kdyby bylo moc rodicu je to jen divne ne nutne blble
-#endif //DEBUG
 		node->parentsMAX *= 2;
 		graph_t * parents = malloc( sizeof(graph_t) * node->parentsMAX);
 		assert(parents != NULL);
@@ -404,17 +382,13 @@ static inline u32 graphHash(graph_t * graph){
 }
 
 static inline bool graphIdentical(graph_t * a, graph_t * b){
-#ifdef DEBUG
 	assert( (a!=NULL) && (b!=NULL) );
-#endif //DEBUG
 	return ((a->graph[0] == b->graph[0]) && (a->graph[1] == b->graph[1]));
 }
 
 static inline bool graphCompare(graph_t * a, graph_t * b){
        	//vrati true pokud je a alfabeticky mensi nez b
-#ifdef DEBUG
 	assert( (a!=NULL) && (b!=NULL) );
-#endif //DEBUG
 	if (a->hash <= b->hash)
 		return true;
 	if (a->graph[0] <= b->graph[0])
@@ -575,43 +549,6 @@ static inline bool graphThreat(graph_t * graph, int i, int j, color color){
 		}
 	return false;
 }
-
-
-#ifdef DEBUG
-/*
-static inline bool nodeSimetric(node_t * a){
-	for (int u = 0; u < N; u++){
-		for (int v = 0; v < N; v++){
-			for (int c = 0; c < 2; c++){
-				if ( (!!(a->graph.graph[c] & (1ULL<<(u*N+v)))) != (!!(a->graph.graph[c] & (1ULL<<(v*N+u)))) ){
-//					printf("%d %d %d %llu %llu \n",u,v,c,a->graph[c] & (1ULL<<(u*N+v)), a->graph[c] & (1ULL<<(v*N+u)) );
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-static inline bool nodeTurnChack(node_t * a){
-	u8 turn = 0;
-	for (int u = 0; u < N; u++){
-		for (int v = u+1; v < N; v++){
-			for (int c = 0; c < 2; c++){
-				if ( nodeColorEdgeExist(a,u,v,c) ){
-					turn++;
-				}
-			}
-		}
-	}
-//	printf("turn %d %d\n",turn,a->turn);
-	return turn == nodeTurn(a);
-
-}
-*/
-#endif
-
-
 
 #endif
 

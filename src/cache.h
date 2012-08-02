@@ -3,9 +3,7 @@
 
 #include "struct.h"
 
-#ifdef DEBUG
 extern int cacheMiss;
-#endif //DEBUG
 
 void cacheInit();
 void cacheInsert(node_t* node);

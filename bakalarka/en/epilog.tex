@@ -5,9 +5,9 @@ mainly PN-search and its enhancements.
 
 We focused on games with high symmetry. The high symmetry allows, by joining
 several isomorph game state into one, to narrow the partial game tree. When
-partial game tree is narrow we can search in it deeper. The other feature which
+partial game tree is narrow, we can search in it deeper. The other feature which
 keeps the tree narrow is that we do not deal with high branching factor. For
-example we can compare our game with the game Tzaar, which has high branching
+example, we can compare our game with the game Tzaar, which has high branching
 factor and low symmetry. Despite of clever heuristics and optimizations the
 best bot playing the game searches the game tree only into depth
 4~\cite{paulie}. For comparison, one variant of our solver for (7,4)-clique
@@ -18,12 +18,12 @@ more important to join the nodes. We must treat carefully the lifetime of
 the nodes, that is, we do not want to delete nodes from cache especially when their
 solution was expensive because as we may find another ancestor of these nodes.
 Finally in games with high symmetry much more often happens situation described
-in Figure \obr{10)}.
+in Figure~\ref{deset}.
 
 \subsubsection{Further work}
 
 There are many enhancements which we did not implemented and even do
-not mention. For example 1+$\epsilon$ trick..
+not mention. For example 1+$\epsilon$ trick.
 
 It could also be useful to implement enhancement ``dveloping a~node without creating sons''
 in Section~\ref{lastenh} and study if it can significantly reduce the partial game

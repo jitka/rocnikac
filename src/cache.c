@@ -34,9 +34,7 @@ void cacheInsert(node_t* node){
 				continue;
 			int where = 0;
 			for(int j = 0; j < nodeParentsN(child); j++){
-#ifdef DEBUG
 				assert(&child->parents[j]!=NULL);
-#endif //DEBUG
 				if ( graphIdentical( nodeGraph(old), &child->parents[j]) ){
 					continue;
 				} else {
@@ -67,9 +65,7 @@ node_t* cacheFind(graph_t* graph){
 			return cache[where];
 		}
 	}
-#ifdef DEBUG
 	cacheMiss++;
-#endif //DEBUG
 	return NULL;
 }
 
