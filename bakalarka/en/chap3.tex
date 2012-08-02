@@ -59,17 +59,20 @@ of developed sons is above some threshold.
 
 \subsection{Even more symmetry} \label{lastenh2}
 
-We can join even more nodes. When we give position which the first player
-occupied to the second player and naopak from the game state $s_1$ we have game
-state $s_2$. Players \emph{changed sides}. There is possibility to join them
-together as $s$, but we must do some other changes. 
-
-The edge between $s$ an its parents $p$ is called \emph{changed edge} if there
-is turn from $p$, with changed players side to $s$.  In the function
-\fce{updateAncestors()}, \fce{setProofAndDisproofNumbers()} and when we count
-thresholds in \sec{DF-PN-search} we are using numbers from sons.  If sons is
-join by the changed edge, we must change proof and disproof numbers (and also
-thresholds).
+We can join even more nodes by considering additional symmetry, which
+may be called ``swap of players'': it connects game states where
+positions occupied by the first player in state $a$ are occupied by
+the second player in state $a'$, and positions occupied by the second
+player in $a$ are taken by the first player in state $a'$. We can join
+the states to $a$ provided we make some other changes - we introduce a
+new type of edge for this purpose. We call a swap edge an edge between
+a parent p and a son s, if there is a turn from $p$ to $s'$, that is,
+we can get to the game state by a move and a swap of players. This is
+possible by modification of functions \fce{updateAncestors()},
+\fce{setProofAndDisproofNumbers()} and when we count thresholds in
+DF-PN-search. When we follow the swap edge, we have to use proof numbers in
+place of disproof numbers, and vice versa. The same is done with
+thresholds.
 
 \subsection{Cache}
 
